@@ -1,6 +1,9 @@
+#include <fstream>
+#include <iostream>
 #include <optional>
 #include <filesystem>
 #include <yaml-cpp/yaml.h>
+#include <boost/algorithm/string.hpp>
 
 #include "config.hpp"
 
@@ -46,6 +49,21 @@ namespace oul
 
 		return cfg;
 	}
+	void create_json_config(const std::string& name)
+	{
+		throw exception("coming soon");
+	}
+	void create_yaml_config(const std::string& name)
+	{
+		using namespace YAML;
+		Node root;
+		root["metadata"]["name"] = name;
+
+		ofstream o("oul.config.yaml");
+		o << root;
+
+		clog << "The oul.config.yaml configuration file was created." << endl;
+	}
 
 	string find_configaration()
 	{
@@ -80,6 +98,31 @@ namespace oul
 		else
 		{
 			return read_yaml(config_file);
+		}
+	}
+	void initialize()
+	{
+		if (find_configaration() == "")
+		{
+			string name;
+			string format;
+			cout << "Enter the project name: ";
+			cin >> name;
+			cout << "Do you prefer JSON or YAML for the configuration? (j/y): ";
+			cin >> format;
+			boost::algorithm::to_lower(format);
+			if (format == "j" || format == "json")
+			{
+				create_json_config(name);
+			}
+			else
+			{
+				create_yaml_config(name);
+			}
+		}
+		else
+		{
+			cerr << "Configuration file was already created." << endl;
 		}
 	}
 }

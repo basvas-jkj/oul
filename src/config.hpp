@@ -11,7 +11,6 @@ namespace oul
 		std::string url;
 		std::vector<std::string> content;
 	};
-
 	struct CONFIG
 	{
 		std::string name;
@@ -20,4 +19,5 @@ namespace oul
 
 	std::string find_configaration();
 	std::optional<CONFIG> read_configuration(const std::string&);
+	void initialize();
 }
