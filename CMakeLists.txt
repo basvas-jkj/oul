@@ -9,10 +9,12 @@ add_executable(oul "src/main.cpp" "src/config.cpp" "src/download.cpp")
 
 find_package(libzippp REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(nlohmann_json REQUIRED)
 find_package(Boost REQUIRED algorithm filesystem process)
 
 target_link_libraries(oul PRIVATE libzippp::libzippp)
 target_link_libraries(oul PRIVATE yaml-cpp::yaml-cpp)
+target_link_libraries(oul PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(oul PRIVATE Boost::algorithm)
 target_link_libraries(oul PRIVATE Boost::filesystem)
 target_link_libraries(oul PRIVATE Boost::process)

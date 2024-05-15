@@ -3,6 +3,7 @@
 #include <optional>
 #include <filesystem>
 #include <yaml-cpp/yaml.h>
+#include <nlohmann/json.hpp>
 #include <libzippp/libzippp.h>
 #include <boost/algorithm/string.hpp>
 
@@ -28,11 +29,100 @@ namespace oul
 		component.close();
 		return content;
 	}
+	string find_configaration()
+	{
+		path current = current_path();
+		do
+		{
+			path parent = current.parent_path();
+			current.append("oul.config.json");
 
+			if (exists(current))
+			{
+				return current.string();
+			}
+			
+			current.replace_filename("oul.config.yaml");
+			if (exists(current))
+			{
+				return current.string();
+			}
+
+			current = parent;
+		}
+		while (!equivalent(current, current.root_path()));
+		return "";
+	}
+
+#pragma region JSON
 	optional<CONFIG> read_json(const string& config_file)
 	{
-		throw exception("coming soon");
+		using namespace nlohmann;
+
+		ifstream f(config_file);
+		json root = json::parse(f);
+		CONFIG cfg;
+
+		json name = root["metadata"]["name"];
+		if (name.is_string())
+		{
+			cfg.name = name.get<string>();
+		}
+		else
+		{
+			return nullopt;
+		}
+
+		json components = root["components"];
+		if (components.is_array())
+		{
+			for (auto&& c : components)
+			{
+				if (c["content"].is_array() && c["repository"]["url"].is_string())
+				{
+					cfg.components.push_back({
+						.url = c["repository"]["url"].get<string>(),
+						.content = c["content"].get<vector<string>>()
+						});
+				}
+			}
+		}
+
+		return cfg;
+
 	}
+	void create_json_config(const std::string& name)
+	{
+		using namespace nlohmann;
+		json root;
+		root["metadata"]["name"] = name;
+
+		ofstream o("oul.config.json");
+		o << root;
+
+		clog << "The oul.config.json configuration file was created." << endl;
+	}
+	void add_component_json(const string& config, const string& url, const vector<string> content)
+	{
+		using namespace nlohmann;
+		ifstream f(config);
+		json root = json::parse(f);
+		json component;
+
+		for (const string& s : content)
+		{
+			component["content"].push_back(s);
+
+		}
+
+		component["repository"]["url"] = url;
+		root["components"].push_back(component);
+
+		ofstream output(config);
+		output << root;
+	}
+#pragma endregion
+#pragma region YAML
 	optional<CONFIG> read_yaml(const string& config_file)
 	{
 		using namespace YAML;
@@ -66,10 +156,6 @@ namespace oul
 
 		return cfg;
 	}
-	void create_json_config(const std::string& name)
-	{
-		throw exception("coming soon");
-	}
 	void create_yaml_config(const std::string& name)
 	{
 		using namespace YAML;
@@ -81,31 +167,26 @@ namespace oul
 
 		clog << "The oul.config.yaml configuration file was created." << endl;
 	}
-
-	string find_configaration()
+	void add_component_yaml(const string& config, const string& url, const vector<string> &content)
 	{
-		path current = current_path();
-		do
+		using namespace YAML;
+		Node root = LoadFile(config);
+		Node component;
+
+		for (const string& s : content)
 		{
-			path parent = current.parent_path();
-			current.append("oul.config.json");
+			component["content"].push_back(s);
 
-			if (exists(current))
-			{
-				return current.string();
-			}
-			
-			current.replace_filename("oul.config.yaml");
-			if (exists(current))
-			{
-				return current.string();
-			}
-
-			current = parent;
 		}
-		while (!equivalent(current, current.root_path()));
-		return "";
+
+		component["repository"]["url"] = url;
+		root["components"].push_back(component);
+
+		ofstream output(config);
+		output << root;
 	}
+#pragma endregion
+
 	optional<CONFIG> read_configuration(const string& config_file)
 	{
 		if (config_file.ends_with(".json"))
@@ -142,26 +223,19 @@ namespace oul
 			cerr << "Configuration file was already created." << endl;
 		}
 	}
-
 	void add_component(const string& url, const string& zip_component)
 	{
-		using namespace YAML;
 		string config = find_configaration();
 		vector<string> content = get_content(zip_component);
 
-		Node root = LoadFile(config);
-		Node component;
-
-		for (string& s : get_content(zip_component))
+		if (config.ends_with(".json"))
 		{
-			component["content"].push_back(s);
-
+			add_component_json(config, url, content);
 		}
-
-		component["repository"]["url"] = url;
-		root["components"].push_back(component);
-
-		ofstream output(config);
-		output << root;
+		else
+		{
+			add_component_yaml(config, url, content);
+		}
+		
 	}
 }
