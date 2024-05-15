@@ -20,4 +20,6 @@ namespace oul
 	std::string find_configaration();
 	std::optional<CONFIG> read_configuration(const std::string&);
 	void initialize();
+
+	void add_component(const std::string&, const std::string&);
 }

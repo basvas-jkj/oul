@@ -3,6 +3,7 @@
 #include <optional>
 #include <filesystem>
 #include <yaml-cpp/yaml.h>
+#include <libzippp/libzippp.h>
 #include <boost/algorithm/string.hpp>
 
 #include "config.hpp"
@@ -12,6 +13,22 @@ using namespace std::filesystem;
 
 namespace oul
 {
+	vector<string> get_content(const string& zip_component)
+	{
+		using namespace libzippp;
+
+		ZipArchive component(zip_component);
+ 		component.open();
+
+		vector<string> content;
+		for (ZipEntry& entry : component.getEntries())
+		{
+			content.push_back(entry.getName());
+		}
+		component.close();
+		return content;
+	}
+
 	optional<CONFIG> read_json(const string& config_file)
 	{
 		throw exception("coming soon");
@@ -124,5 +141,27 @@ namespace oul
 		{
 			cerr << "Configuration file was already created." << endl;
 		}
+	}
+
+	void add_component(const string& url, const string& zip_component)
+	{
+		using namespace YAML;
+		string config = find_configaration();
+		vector<string> content = get_content(zip_component);
+
+		Node root = LoadFile(config);
+		Node component;
+
+		for (string& s : get_content(zip_component))
+		{
+			component["content"].push_back(s);
+
+		}
+
+		component["repository"]["url"] = url;
+		root["components"].push_back(component);
+
+		ofstream output(config);
+		output << root;
 	}
 }
