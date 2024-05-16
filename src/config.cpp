@@ -76,11 +76,12 @@ namespace oul
 		return cfg;
 
 	}
-	void create_json_config(const std::string& name)
+	void create_json_config(const string& name, const string& default_url)
 	{
 		using namespace nlohmann;
 		json root;
 		root["metadata"]["name"] = name;
+		root["metadata"]["default_url"] = name;
 
 		ofstream o("oul.config.json");
 		o << root;
@@ -141,11 +142,12 @@ namespace oul
 
 		return cfg;
 	}
-	void create_yaml_config(const std::string& name)
+	void create_yaml_config(const string& name, const string& default_url)
 	{
 		using namespace YAML;
 		Node root;
 		root["metadata"]["name"] = name;
+		root["metadata"]["default_url"] = default_url;
 
 		ofstream o("oul.config.yaml");
 		o << root;
@@ -189,18 +191,22 @@ namespace oul
 		{
 			string name;
 			string format;
+			string default_url;
 			cout << "Enter the project name: ";
 			cin >> name;
 			cout << "Do you prefer JSON or YAML for the configuration? (j/y): ";
 			cin >> format;
+			cout << "Enter URL used by default during installing components: ";
+			cin >> default_url;
+			
 			boost::algorithm::to_lower(format);
 			if (format == "j" || format == "json")
 			{
-				create_json_config(name);
+				create_json_config(name, default_url);
 			}
 			else
 			{
-				create_yaml_config(name);
+				create_yaml_config(name, default_url);
 			}
 		}
 		else
