@@ -58,6 +58,8 @@ namespace oul
 			return nullopt;
 		}
 
+		cfg.default_url = root["metadata"]["default_url"].get<string>();
+
 		json components = root["components"];
 		if (components.is_array())
 		{
@@ -124,6 +126,8 @@ namespace oul
 		{
 			return nullopt;
 		}
+		
+		cfg.default_url = root["metadata"]["default_url"].as<string>();
 
 		Node components = root["components"];
 		if (components.IsSequence())

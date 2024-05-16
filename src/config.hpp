@@ -14,6 +14,7 @@ namespace oul
 	struct CONFIG
 	{
 		std::string name;
+		std::string default_url;
 		std::vector<ITEM> components;
 	};
 
