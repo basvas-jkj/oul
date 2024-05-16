@@ -16,12 +16,17 @@ namespace oul
 	{
 		path temp = unique_path("%%%%-%%%%-%%%%-%%%%.zip");
 		path curl = search_path("curl");
-		child ch(curl, url, "-o", temp, std_err > stderr);
+		child ch(curl, url, "-o", temp, std_err > null);
 		ch.wait();
 		
 		if (ch.exit_code() == 0)
 		{
 			return temp.string();
+		}
+		else
+		{
+			cerr << "Component could not be downloaded." << endl;
+			return "";
 		}
 	}
 }
