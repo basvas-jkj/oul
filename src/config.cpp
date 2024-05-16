@@ -14,21 +14,6 @@ using namespace std::filesystem;
 
 namespace oul
 {
-	vector<string> get_content(const string& zip_component)
-	{
-		using namespace libzippp;
-
-		ZipArchive component(zip_component);
- 		component.open();
-
-		vector<string> content;
-		for (ZipEntry& entry : component.getEntries())
-		{
-			content.push_back(entry.getName());
-		}
-		component.close();
-		return content;
-	}
 	string find_configaration()
 	{
 		path current = current_path();
@@ -223,10 +208,9 @@ namespace oul
 			cerr << "Configuration file was already created." << endl;
 		}
 	}
-	void add_component(const string& url, const string& zip_component)
+	void add_component(const string& url, const string& zip_component, const vector<string>& content)
 	{
 		string config = find_configaration();
-		vector<string> content = get_content(zip_component);
 
 		if (config.ends_with(".json"))
 		{
