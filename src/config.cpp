@@ -58,7 +58,10 @@ namespace oul
 			return nullopt;
 		}
 
-		cfg.default_url = root["metadata"]["default_url"].get<string>();
+		if (root["metadata"]["default_url"].is_string())
+		{
+			cfg.default_url = root["metadata"]["default_url"].get<string>();
+		}
 
 		json components = root["components"];
 		if (components.is_array())
@@ -83,7 +86,7 @@ namespace oul
 		using namespace nlohmann;
 		json root;
 		root["metadata"]["name"] = name;
-		root["metadata"]["default_url"] = name;
+		root["metadata"]["default_url"] = default_url;
 
 		ofstream o("oul.config.json");
 		o << root;
