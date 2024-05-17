@@ -5,7 +5,7 @@ project(oul LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(oul "src/main.cpp" "src/config.cpp" "src/download.cpp")
+add_executable(oul "src/main.cpp" "src/config.cpp" "src/download.cpp" "src/zip.cpp")
 
 find_package(libzippp REQUIRED)
 find_package(yaml-cpp REQUIRED)
