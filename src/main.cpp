@@ -14,20 +14,18 @@ int main(int argc, char* argv[])
 	vector<string> args(argv + 1, argv + argc);
 	if (argc > 1)
 	{
-		string config_file = find_configaration();
-
 		if (args[0] == "init")
 		{
-			initialize();
+			CONFIG::initialize();
 		}
-		else if (config_file == "")
+		else if (CONFIG::find() == "")
 		{
 			cerr << "Configuration file not found." << endl;
 			return 1;
 		}
 		else
 		{
-			optional<CONFIG> c = read_configuration(config_file);
+			optional<CONFIG> c = CONFIG::read();
 			if (!c.has_value())
 			{
 				cerr << "Configuration file is corrupted." << endl;
@@ -42,13 +40,13 @@ int main(int argc, char* argv[])
 					return 2;
 				}
 
-				string url = c->default_url + "/" + args[1];
+				string url = c->get_url(args[1]);
 				string component = download(url);
 
 				if (component != "")
 				{
 					vector<string> content = unzip(component, "");
-					add_component(url, component, content);
+					c->add_component(url, component, content);
 					filesystem::remove(component);
 				}
 			}
