@@ -45,9 +45,11 @@ namespace oul
         {
             for (auto&& c : components)
             {
-                if (c["content"].is_array() && c["repository"]["url"].is_string())
+                if (c["name"].is_string() && c["content"].is_array()
+                    && c["repository"]["url"].is_string())
                 {
                     cfg.components.push_back({
+                        .name = c["name"].get<string>(),
                         .url = c["repository"]["url"].get<string>(),
                         .content = c["content"].get<vector<string>>()
                         });
@@ -70,7 +72,7 @@ namespace oul
 
         clog << "The oul.config.json configuration file was created." << endl;
     }
-    void CONFIG::add_component_json(const string& url, const vector<string>& content) const
+    void CONFIG::add_component_json(const string &name, const string& url, const vector<string>& content) const
     {
         using namespace nlohmann;
         ifstream f(location);
@@ -83,6 +85,7 @@ namespace oul
 
         }
 
+        component["name"] = name;
         component["repository"]["url"] = url;
         root["components"].push_back(component);
 
@@ -117,9 +120,10 @@ namespace oul
         {
             for (auto&& c : components)
             {
-                if (c["content"] && c["repository"]["url"])
+                if (c["name"] && c["content"] && c["repository"]["url"])
                 {
                     cfg.components.push_back({
+                        .name = c["name"].as<string>(),
                         .url = c["repository"]["url"].as<string>(),
                         .content = c["content"].as<vector<string>>()
                     });
@@ -141,7 +145,7 @@ namespace oul
 
         clog << "The oul.config.yaml configuration file was created." << endl;
     }
-    void CONFIG::add_component_yaml(const string& url, const vector<string>& content) const
+    void CONFIG::add_component_yaml(const string& name, const string& url, const vector<string>& content) const
     {
         using namespace YAML;
         Node root = LoadFile(location);
@@ -153,6 +157,7 @@ namespace oul
 
         }
 
+        component["name"] = name;
         component["repository"]["url"] = url;
         root["components"].push_back(component);
 
@@ -231,15 +236,15 @@ namespace oul
             return read_yaml(config_file);
         }
     }
-    void CONFIG::add_component(const string& url, const string& zip_component, const vector<string>& content)
+    void CONFIG::add_component(const string& name, const string& url, const vector<string>& content)
     {
         if (location.ends_with(".json"))
         {
-            add_component_json(url, content);
+            add_component_json(name, url, content);
         }
         else
         {
-            add_component_yaml(url, content);
+            add_component_yaml(name, url, content);
         }
     }
 
