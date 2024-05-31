@@ -46,17 +46,22 @@ int main(int argc, char* argv[])
 				if (component != "")
 				{
 					vector<string> content = unzip(component, "");
-					c->add_component(url, component, content);
+                    c->add_component(args[2], url, content);
 					filesystem::remove(component);
 				}
 			}
-		}
-	}
+            else if (args[0] == "list")
+            {
+                c->list_components();
+            }
+        }
+    }
 	else
 	{
 		cout << "Commands:" << endl;
-		cout << "    init    creates configuration file" << endl;
-		cout << "    add     downloads component and adds it into configuration" << endl;
+        cout << "    init       creates configuration file" << endl;
+        cout << "    add        downloads component and adds it into configuration" << endl;
+        cout << "    list       writes list of all installed or localy created components" << endl;
 	}
 
 	return 0;

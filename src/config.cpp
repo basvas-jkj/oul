@@ -52,7 +52,7 @@ namespace oul
                         .name = c["name"].get<string>(),
                         .url = c["repository"]["url"].get<string>(),
                         .content = c["content"].get<vector<string>>()
-                        });
+                    });
                 }
             }
         }
@@ -245,6 +245,15 @@ namespace oul
         else
         {
             add_component_yaml(name, url, content);
+        }
+    }
+    void CONFIG::list_components()
+    {
+        cout << "List of components used in this project:" << endl;
+        for (ITEM& i : components)
+        {
+            const string& url = (i.url.empty()) ? "(local only)" : i.url;
+            cout << "    " << i.name << '\t' << url << endl;
         }
     }
 
