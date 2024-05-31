@@ -89,7 +89,7 @@ namespace oul
 		root["metadata"]["default_url"] = default_url;
 
 		ofstream o("oul.config.json");
-		o << root;
+        o << root.dump(4);
 
 		clog << "The oul.config.json configuration file was created." << endl;
 	}
@@ -110,7 +110,7 @@ namespace oul
 		root["components"].push_back(component);
 
 		ofstream output(config);
-		output << root;
+        output << root.dump(4);
 	}
 #pragma endregion
 #pragma region YAML
