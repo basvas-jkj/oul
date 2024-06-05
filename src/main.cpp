@@ -45,7 +45,10 @@ int main(int argc, char* argv[])
 
 				if (component != "")
 				{
-					vector<string> content = unzip(component, "");
+                    ZIP_COMPONENT zip(component);
+
+
+                    vector<string> content(zip.unzip(component, ""));
                     c->add_component(args[2], url, content);
 					filesystem::remove(component);
 				}

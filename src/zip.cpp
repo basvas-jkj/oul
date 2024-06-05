@@ -1,45 +1,55 @@
-#include <fstream>
 #include <iostream>
 #include <filesystem>
-#include <libzippp/libzippp.h>
 
 #include "zip.hpp"
 
 using namespace std;
-using namespace std::filesystem;
 using namespace libzippp;
+namespace fs = std::filesystem;
 
 namespace oul
 {
-	vector<string> get_content(const ZipArchive& component)
+	ZIP_COMPONENT::ZIP_COMPONENT(const string& zip): zip_file(zip), archiv(zip)
 	{
-		vector<string> content;
-		for (ZipEntry& entry : component.getEntries())
-		{
-			content.push_back(entry.getName());
-		}
-		return content;
-	}
-	vector<string> unzip(const string& zip_component, const string& location)
-	{
-		ZipArchive component(zip_component);
-		component.open();
+		archiv.open();
 
-		vector<string> content = get_content(component);
-		for (string& entry_name : content)
+		if (archiv.hasEntry("oul.config.json"))
 		{
-			path p = path(location) / path(entry_name);
+			using namespace nlohmann;
+			json config(archiv.getEntry("oul.config.json").readAsText());
+			c = CONFIG::read_json(config).value();
+			
+		}
+		else if (archiv.hasEntry("oul.config.yaml"))
+		{
+			using namespace YAML;
+			Node config(archiv.getEntry("oul.config.json").readAsText());
+			c = CONFIG::read_yaml(config).value();
+		}
+	}
+	ZIP_COMPONENT::~ZIP_COMPONENT()
+	{
+		archiv.close();
+		fs::remove(zip_file);
+	}
+	vector<string> ZIP_COMPONENT::unzip(const string& zip_component, const string& location)
+	{
+		auto view = c.get_components();
+		vector<string> content(view.begin(), view.end());
+
+		for (const std::string& entry_name : content)
+		{
+			fs::path p = fs::path(location) / fs::path(entry_name);
 			if (p.has_parent_path())
 			{
 				create_directories(p.parent_path());
 			}
 
 			ofstream output(p);
-			ZipEntry entry = component.getEntry(entry_name);
+			ZipEntry entry = archiv.getEntry(entry_name);
 			entry.readContent(output);
 		}
 
-		component.close();
 		return content;
 	}
 }
