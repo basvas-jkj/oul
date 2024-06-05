@@ -17,24 +17,15 @@ namespace oul
     // -------------------
     //		  JSON
     // -------------------
-    optional<CONFIG> CONFIG::read_json(const string& config_file)
+    static bool is_valid(const nlohmann::json& root)
+    {
+        return root["metadata"]["name"].is_string();
+    }
+    void CONFIG::read_json(CONFIG& cfg, const nlohmann::json& root)
     {
         using namespace nlohmann;
 
-        CONFIG cfg(config_file);
-        ifstream f(config_file);
-        json root = json::parse(f);
-
-        json name = root["metadata"]["name"];
-        if (name.is_string())
-        {
-            cfg.name = name.get<string>();
-        }
-        else
-        {
-            return nullopt;
-        }
-
+        cfg.name = root["metadata"]["name"].get<string>();
         if (root["metadata"]["default_url"].is_string())
         {
             cfg.default_url = root["metadata"]["default_url"].get<string>();
@@ -52,14 +43,43 @@ namespace oul
                         .name = c["name"].get<string>(),
                         .url = c["repository"]["url"].get<string>(),
                         .content = c["content"].get<vector<string>>()
-                    });
+                        });
                 }
             }
         }
-
-        return cfg;
-
     }
+    optional<CONFIG> CONFIG::read_json(const string& config_file)
+    {
+        using namespace nlohmann;
+
+        CONFIG cfg(config_file);
+        ifstream f(config_file);
+        json root = json::parse(f);
+
+        if (is_valid(root))
+        {
+            read_json(cfg, root);
+            return cfg;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+    optional<CONFIG> CONFIG::read_json(const nlohmann::json& root)
+    {
+        CONFIG cfg;
+        if (is_valid(root))
+        {
+            read_json(cfg, root);
+            return cfg;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+
     void create_json_config(const string& name, const string& default_url)
     {
         using namespace nlohmann;
@@ -96,43 +116,69 @@ namespace oul
     // -------------------
     //        YAML        
     // -------------------
-    optional<CONFIG> CONFIG::read_yaml(const string& config_file)
+    static bool is_valid(const YAML::Node& root)
+    {
+        return root["metadata"]["name"].IsScalar();
+    }
+    void CONFIG::read_yaml(CONFIG& cfg, const YAML::Node& root)
     {
         using namespace YAML;
 
-        CONFIG cfg(config_file);
-        Node root = LoadFile(config_file);
-
-        Node name = root["metadata"]["name"];
-        if (name)
+        cfg.name = root["metadata"]["name"].as<string>();
+        if (root["metadata"]["default_url"].IsScalar())
         {
-            cfg.name = name.as<string>();
+            cfg.default_url = root["metadata"]["default_url"].as<string>();
         }
-        else
-        {
-            return nullopt;
-        }
-        
-        cfg.default_url = root["metadata"]["default_url"].as<string>();
 
         Node components = root["components"];
         if (components.IsSequence())
         {
             for (auto&& c : components)
             {
-                if (c["name"] && c["content"] && c["repository"]["url"])
+                if (c["name"].IsScalar() && c["content"].IsSequence()
+                    && c["repository"]["url"].IsScalar())
                 {
                     cfg.components.push_back({
                         .name = c["name"].as<string>(),
                         .url = c["repository"]["url"].as<string>(),
                         .content = c["content"].as<vector<string>>()
-                    });
+                        });
                 }
             }
         }
-
-        return cfg;
     }
+    optional<CONFIG> CONFIG::read_yaml(const string& config_file)
+    {
+        using namespace nlohmann;
+
+        CONFIG cfg(config_file);
+        ifstream f(config_file);
+        json root = json::parse(f);
+
+        if (is_valid(root))
+        {
+            read_json(cfg, root);
+            return cfg;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+    optional<CONFIG> CONFIG::read_yaml(const YAML::Node& root)
+    {
+        CONFIG cfg;
+        if (is_valid(root))
+        {
+            read_yaml(cfg, root);
+            return cfg;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+
     void create_yaml_config(const string& name, const string& default_url)
     {
         using namespace YAML;
