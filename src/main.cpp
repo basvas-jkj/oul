@@ -9,6 +9,80 @@
 using namespace std;
 using namespace oul;
 
+class ARGS
+{
+public:
+	enum COMMAND_TYPE { none, init, add, create, list };
+
+private:
+	COMMAND_TYPE command;
+	set<string> options;
+	deque<string> arguments;
+
+public:
+	ARGS(int argc, char* argv[]): command(none)
+	{
+		const map<string, COMMAND_TYPE> command_names =
+		{
+			{"init", ARGS::init},
+			{"add", ARGS::add},
+			{"create", ARGS::create},
+			{"list", ARGS::list}
+		};
+
+		vector<string> args(argv + 1, argv + argc);
+		for (string& s : args)
+		{
+			if (s == "")
+			{
+				cerr << ":-)" << endl;
+			}
+			else if (s[0] == '-')
+			{
+				options.insert(move(s));
+			}
+			else if (command == none)
+			{
+				auto i = command_names.find(s);
+				if (i == command_names.end())
+				{
+					cerr << "First non-option argument should be a valid command." << endl;
+				}
+				else
+				{
+					command = i->second;
+				}
+			}
+			else
+			{
+				arguments.push_back(move(s));
+			}
+
+		}
+	}
+	string next_arg()
+	{
+		if (arguments.size() == 0)
+		{
+			return "";
+		}
+		else
+		{
+			string a = move(arguments.front());
+			arguments.pop_front();
+			return a;
+		}
+	}
+	bool is(COMMAND_TYPE command) const
+	{
+		return command == this->command;
+	}
+	bool has_options(const string& option) const
+	{
+		return options.contains(option);
+	}
+};
+
 int main(int argc, char* argv[])
 {
 	vector<string> args(argv + 1, argv + argc);
