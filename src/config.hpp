@@ -16,7 +16,18 @@ namespace oul
     {
         std::string name;
         std::string url;
-        std::vector<std::string> content;
+        std::vector<std::string> documentation;
+        std::vector<std::string> source_files;
+        std::vector<std::string> test_files;
+
+        nlohmann::json to_json()
+        {
+
+        }
+        YAML::Node to_yaml()
+        {
+
+        }
     };
     class CONFIG
     {

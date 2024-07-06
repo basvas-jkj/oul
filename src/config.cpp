@@ -20,6 +20,13 @@ namespace oul
     {
         return root["metadata"]["name"].is_string();
     }
+    static bool is_valid_component(const nlohmann::json& c)
+    {
+        return c["name"].is_string() && c["documentation"].is_array()
+            && c["source_files"].is_array() && c["test_files"].is_array()
+            && c["repository"]["url"].is_string();
+    }
+
     void CONFIG::read_json(CONFIG& cfg, const nlohmann::json& root)
     {
         using namespace nlohmann;
@@ -35,13 +42,14 @@ namespace oul
         {
             for (auto&& c : components)
             {
-                if (c["name"].is_string() && c["content"].is_array()
-                    && c["repository"]["url"].is_string())
+                if (is_valid_component(c))
                 {
                     cfg.components.push_back({
                         .name = c["name"].get<string>(),
                         .url = c["repository"]["url"].get<string>(),
-                        .content = c["content"].get<vector<string>>()
+                        .documentation = c["documentation"].get<vector<string>>(),
+                        .source_files = c["source_files"].get<vector<string>>(),
+                        .test_files = c["test_files"].get<vector<string>>()
                         });
                 }
             }
@@ -119,6 +127,13 @@ namespace oul
     {
         return root["metadata"]["name"].IsScalar();
     }
+    static bool is_valid_component(const YAML::Node& c)
+    {
+        return c["name"].IsScalar() && c["documentation"].IsSequence()
+            && c["source_files"].IsSequence() && c["test_files"].IsSequence()
+            && c["repository"]["url"].IsScalar();
+    }
+
     void CONFIG::read_yaml(CONFIG& cfg, const YAML::Node& root)
     {
         using namespace YAML;
@@ -130,17 +145,18 @@ namespace oul
         }
 
         Node components = root["components"];
-        if (components.IsSequence())
+        if (components.IsDefined() && components.IsSequence())
         {
             for (auto&& c : components)
             {
-                if (c["name"].IsScalar() && c["content"].IsSequence()
-                    && c["repository"]["url"].IsScalar())
+                if (is_valid_component(c))
                 {
                     cfg.components.push_back({
                         .name = c["name"].as<string>(),
                         .url = c["repository"]["url"].as<string>(),
-                        .content = c["content"].as<vector<string>>()
+                        .documentation = c["documentation"].as<vector<string>>(),
+                        .source_files = c["source_files"].as<vector<string>>(),
+                        .test_files = c["test_files"].as<vector<string>>()
                         });
                 }
             }
@@ -198,7 +214,6 @@ namespace oul
         for (const string& s : content)
         {
             component["content"].push_back(s);
-
         }
 
         component["name"] = name;
