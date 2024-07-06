@@ -17,14 +17,14 @@ namespace oul
 		{
 			using namespace nlohmann;
 			json config(archiv.getEntry("oul.config.json").readAsText());
-			c = CONFIG::read_json(config).value();
+			c = CONFIG::read_json(config).second;
 			
 		}
 		else if (archiv.hasEntry("oul.config.yaml"))
 		{
 			using namespace YAML;
 			Node config(archiv.getEntry("oul.config.json").readAsText());
-			c = CONFIG::read_yaml(config).value();
+			c = CONFIG::read_yaml(config).second;
 		}
 	}
 	ZIP_COMPONENT::~ZIP_COMPONENT()

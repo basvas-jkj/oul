@@ -1,8 +1,11 @@
-﻿#include <iostream>
-#include <optional>
+﻿#include <set>
+#include <map>
+#include <deque>
+#include <iostream>
 #include <filesystem>
 
 #include "zip.hpp"
+#include "help.hpp"
 #include "config.hpp"
 #include "download.hpp"
 
@@ -85,61 +88,60 @@ public:
 
 int main(int argc, char* argv[])
 {
-	vector<string> args(argv + 1, argv + argc);
-	if (argc > 1)
+	ARGS a(argc, argv);
+	string conf = CONFIG::find();
+
+	if (a.is(ARGS::none))
 	{
-		if (args[0] == "init")
-		{
-			CONFIG::initialize();
-		}
-		else if (CONFIG::find() == "")
-		{
-			cerr << "Configuration file not found." << endl;
-			return 1;
-		}
-		else
-		{
-			optional<CONFIG> c = CONFIG::read();
-			if (!c.has_value())
-			{
-				cerr << "Configuration file is corrupted." << endl;
-				return 1;
-			}
-			else if (args[0] == "add")
-			{
-				if (argc < 3)
-				{
-					cerr << "No component to download." << endl;
-					cerr << "Call this command with one additional argument." << endl;
-					return 2;
-				}
-
-				string url = c->get_url(args[1]);
-				string component = download(url);
-
-				if (component != "")
-				{
-                    ZIP_COMPONENT zip(component);
-
-
-                    vector<string> content(zip.unzip(component, ""));
-                    c->add_component(args[2], url, content);
-					filesystem::remove(component);
-				}
-			}
-            else if (args[0] == "list")
-            {
-                c->list_components();
-            }
-        }
-    }
+		write_short_help();
+	}
+	else if (a.is(ARGS::init))
+	{
+		CONFIG::initialize();
+	}
+	else if (conf == "")
+	{
+		cerr << "Configuration file not found." << endl;
+		cerr << "Call „oul init“ or move into an initialized project." << endl;
+		return 1;
+	}
 	else
 	{
-		cout << "Commands:" << endl;
-        cout << "    init       creates configuration file" << endl;
-        cout << "    add        downloads component and adds it into configuration" << endl;
-        cout << "    list       writes list of all installed or localy created components" << endl;
-	}
+		auto [valid, c] = CONFIG::read(conf);
+		if (!valid)
+		{
+			cerr << "Configuration file is corrupted." << endl;
+			cerr << "Remove it and initialize again or move into another project.";
+			return 1;
+		}
+		else if (a.is(ARGS::add))
+		{
+			string arg = a.next_arg();
+			if (arg == "")
+			{
+				cerr << "No component to download." << endl;
+				cerr << "Call this command with one additional argument." << endl;
+				return 2;
+			}
 
+			string url = c.get_url(arg);
+			string component = download(url);
+
+			if (component != "")
+			{
+				ZIP_COMPONENT zip(component);
+				vector<string> content(zip.unzip(component, ""));
+				arg = a.next_arg();
+
+				c.add_component(arg, url, content);
+				filesystem::remove(component);
+			}
+		}
+		else if (a.is(ARGS::list))
+		{
+			c.list_components();
+		}
+	}
+	
 	return 0;
 }

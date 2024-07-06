@@ -3,13 +3,15 @@
 #include <ranges>
 #include <string>
 #include <vector>
-#include <optional>
 #include <algorithm>
 #include <nlohmann/json.hpp>
 #include <yaml-cpp/yaml.h>
 
 namespace oul
 {
+    template <class T>
+    using optional = std::pair<bool, T>;
+
     struct ITEM
     {
         std::string name;
@@ -24,10 +26,10 @@ namespace oul
         std::vector<ITEM> components;
 
         static void read_json(CONFIG&, const nlohmann::json&);
-        static std::optional<CONFIG> read_json(const std::string&);
+        static optional<CONFIG> read_json(const std::string&);
 
         static void read_yaml(CONFIG&, const YAML::Node&);
-        static std::optional<CONFIG> read_yaml(const std::string&);
+        static optional<CONFIG> read_yaml(const std::string&);
 
         void add_component_json(const std::string&, const std::string&, const std::vector<std::string>&) const;
         void add_component_yaml(const std::string&, const std::string&, const std::vector<std::string>&) const;
@@ -38,10 +40,10 @@ namespace oul
     public:
         CONFIG() {}
         static std::string find();
-        static std::optional<CONFIG> read();
-        static std::optional<CONFIG> read(const std::string&);
-        static std::optional<CONFIG> read_json(const nlohmann::json&);
-        static std::optional<CONFIG> read_yaml(const YAML::Node&);
+        static optional<CONFIG> read();
+        static optional<CONFIG> read(const std::string&);
+        static optional<CONFIG> read_json(const nlohmann::json&);
+        static optional<CONFIG> read_yaml(const YAML::Node&);
         static void initialize();
 
         void add_component(const std::string&, const std::string&, const std::vector<std::string>&);

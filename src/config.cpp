@@ -1,6 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <optional>
 #include <filesystem>
 #include <yaml-cpp/yaml.h>
 #include <nlohmann/json.hpp>
@@ -59,11 +58,11 @@ namespace oul
         if (is_valid(root))
         {
             read_json(cfg, root);
-            return cfg;
+            return {true, cfg};
         }
         else
         {
-            return nullopt;
+            return {false, cfg};
         }
     }
     optional<CONFIG> CONFIG::read_json(const nlohmann::json& root)
@@ -72,11 +71,11 @@ namespace oul
         if (is_valid(root))
         {
             read_json(cfg, root);
-            return cfg;
+            return {true, cfg};
         }
         else
         {
-            return nullopt;
+            return {false, cfg};
         }
     }
 
@@ -149,20 +148,19 @@ namespace oul
     }
     optional<CONFIG> CONFIG::read_yaml(const string& config_file)
     {
-        using namespace nlohmann;
+        using namespace YAML;
 
         CONFIG cfg(config_file);
-        ifstream f(config_file);
-        json root = json::parse(f);
+        Node root = LoadFile(config_file);
 
         if (is_valid(root))
         {
-            read_json(cfg, root);
-            return cfg;
+            read_yaml(cfg, root);
+            return {true, cfg};
         }
         else
         {
-            return nullopt;
+            return {false, cfg};
         }
     }
     optional<CONFIG> CONFIG::read_yaml(const YAML::Node& root)
@@ -171,11 +169,11 @@ namespace oul
         if (is_valid(root))
         {
             read_yaml(cfg, root);
-            return cfg;
+            return {true, cfg};
         }
         else
         {
-            return nullopt;
+            return {false, cfg};
         }
     }
 
