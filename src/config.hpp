@@ -19,45 +19,24 @@ namespace oul
         std::vector<std::string> documentation;
         std::vector<std::string> source_files;
         std::vector<std::string> test_files;
-
-        nlohmann::json to_json()
-        {
-
-        }
-        YAML::Node to_yaml()
-        {
-
-        }
     };
-    class CONFIG
+    struct CONFIG
     {
         std::string location;
         std::string name;
         std::string default_url;
         std::vector<ITEM> components;
 
-        static void read_json(CONFIG&, const nlohmann::json&);
-        static optional<CONFIG> read_json(const std::string&);
-
-        static void read_yaml(CONFIG&, const YAML::Node&);
-        static optional<CONFIG> read_yaml(const std::string&);
-
-        void add_component_json(const std::string&, const std::string&, const std::vector<std::string>&) const;
-        void add_component_yaml(const std::string&, const std::string&, const std::vector<std::string>&) const;
-
+        CONFIG() {}
         CONFIG(const std::string& l): location(l)
         {}
 
-    public:
-        CONFIG() {}
         static std::string find();
         static optional<CONFIG> read();
         static optional<CONFIG> read(const std::string&);
-        static optional<CONFIG> read_json(const nlohmann::json&);
-        static optional<CONFIG> read_yaml(const YAML::Node&);
         static void initialize();
 
-        void add_component(const std::string&, const std::string&, const std::vector<std::string>&);
+        void add_component(const ITEM& i);
         void list_components();
         auto get_components()
         {

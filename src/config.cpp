@@ -7,6 +7,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include "config.hpp"
+#include "data_file/data_file.hpp"
 
 using namespace std;
 using namespace std::filesystem;
@@ -14,218 +15,7 @@ using namespace std::filesystem;
 namespace oul
 {
     // -------------------
-    //		  JSON
-    // -------------------
-    static bool is_valid(const nlohmann::json& root)
-    {
-        return root["metadata"]["name"].is_string();
-    }
-    static bool is_valid_component(const nlohmann::json& c)
-    {
-        return c["name"].is_string() && c["documentation"].is_array()
-            && c["source_files"].is_array() && c["test_files"].is_array()
-            && c["repository"]["url"].is_string();
-    }
-
-    void CONFIG::read_json(CONFIG& cfg, const nlohmann::json& root)
-    {
-        using namespace nlohmann;
-
-        cfg.name = root["metadata"]["name"].get<string>();
-        if (root["metadata"]["default_url"].is_string())
-        {
-            cfg.default_url = root["metadata"]["default_url"].get<string>();
-        }
-
-        json components = root["components"];
-        if (components.is_array())
-        {
-            for (auto&& c : components)
-            {
-                if (is_valid_component(c))
-                {
-                    cfg.components.push_back({
-                        .name = c["name"].get<string>(),
-                        .url = c["repository"]["url"].get<string>(),
-                        .documentation = c["documentation"].get<vector<string>>(),
-                        .source_files = c["source_files"].get<vector<string>>(),
-                        .test_files = c["test_files"].get<vector<string>>()
-                        });
-                }
-            }
-        }
-    }
-    optional<CONFIG> CONFIG::read_json(const string& config_file)
-    {
-        using namespace nlohmann;
-
-        CONFIG cfg(config_file);
-        ifstream f(config_file);
-        json root = json::parse(f);
-
-        if (is_valid(root))
-        {
-            read_json(cfg, root);
-            return {true, cfg};
-        }
-        else
-        {
-            return {false, cfg};
-        }
-    }
-    optional<CONFIG> CONFIG::read_json(const nlohmann::json& root)
-    {
-        CONFIG cfg;
-        if (is_valid(root))
-        {
-            read_json(cfg, root);
-            return {true, cfg};
-        }
-        else
-        {
-            return {false, cfg};
-        }
-    }
-
-    void create_json_config(const string& name, const string& default_url)
-    {
-        using namespace nlohmann;
-        json root;
-        root["metadata"]["name"] = name;
-        root["metadata"]["default_url"] = default_url;
-
-        ofstream o("oul.config.json");
-        o << root.dump(4);
-
-        clog << "The oul.config.json configuration file was created." << endl;
-    }
-    void CONFIG::add_component_json(const string &name, const string& url, const vector<string>& content) const
-    {
-        using namespace nlohmann;
-        ifstream f(location);
-        json root = json::parse(f);
-        json component;
-
-        for (const string& s : content)
-        {
-            component["content"].push_back(s);
-
-        }
-
-        component["name"] = name;
-        component["repository"]["url"] = url;
-        root["components"].push_back(component);
-
-        ofstream output(location);
-        output << root.dump(4);
-    }
-
-    // -------------------
-    //        YAML        
-    // -------------------
-    static bool is_valid(const YAML::Node& root)
-    {
-        return root["metadata"]["name"].IsScalar();
-    }
-    static bool is_valid_component(const YAML::Node& c)
-    {
-        return c["name"].IsScalar() && c["documentation"].IsSequence()
-            && c["source_files"].IsSequence() && c["test_files"].IsSequence()
-            && c["repository"]["url"].IsScalar();
-    }
-
-    void CONFIG::read_yaml(CONFIG& cfg, const YAML::Node& root)
-    {
-        using namespace YAML;
-
-        cfg.name = root["metadata"]["name"].as<string>();
-        if (root["metadata"]["default_url"].IsScalar())
-        {
-            cfg.default_url = root["metadata"]["default_url"].as<string>();
-        }
-
-        Node components = root["components"];
-        if (components.IsDefined() && components.IsSequence())
-        {
-            for (auto&& c : components)
-            {
-                if (is_valid_component(c))
-                {
-                    cfg.components.push_back({
-                        .name = c["name"].as<string>(),
-                        .url = c["repository"]["url"].as<string>(),
-                        .documentation = c["documentation"].as<vector<string>>(),
-                        .source_files = c["source_files"].as<vector<string>>(),
-                        .test_files = c["test_files"].as<vector<string>>()
-                        });
-                }
-            }
-        }
-    }
-    optional<CONFIG> CONFIG::read_yaml(const string& config_file)
-    {
-        using namespace YAML;
-
-        CONFIG cfg(config_file);
-        Node root = LoadFile(config_file);
-
-        if (is_valid(root))
-        {
-            read_yaml(cfg, root);
-            return {true, cfg};
-        }
-        else
-        {
-            return {false, cfg};
-        }
-    }
-    optional<CONFIG> CONFIG::read_yaml(const YAML::Node& root)
-    {
-        CONFIG cfg;
-        if (is_valid(root))
-        {
-            read_yaml(cfg, root);
-            return {true, cfg};
-        }
-        else
-        {
-            return {false, cfg};
-        }
-    }
-
-    void create_yaml_config(const string& name, const string& default_url)
-    {
-        using namespace YAML;
-        Node root;
-        root["metadata"]["name"] = name;
-        root["metadata"]["default_url"] = default_url;
-
-        ofstream o("oul.config.yaml");
-        o << root;
-
-        clog << "The oul.config.yaml configuration file was created." << endl;
-    }
-    void CONFIG::add_component_yaml(const string& name, const string& url, const vector<string>& content) const
-    {
-        using namespace YAML;
-        Node root = LoadFile(location);
-        Node component;
-
-        for (const string& s : content)
-        {
-            component["content"].push_back(s);
-        }
-
-        component["name"] = name;
-        component["repository"]["url"] = url;
-        root["components"].push_back(component);
-
-        ofstream output(location);
-        output << root;
-    }
-
-    // -------------------
-    //       general        
+    //       CONFIG        
     // -------------------
     string CONFIG::find()
     {
@@ -262,18 +52,15 @@ namespace oul
             cin >> name;
             cout << "Do you prefer JSON or YAML for the configuration? (j/y): ";
             cin >> format;
+            boost::algorithm::to_lower(format);
             cout << "Enter URL used by default during installing components: ";
             cin >> default_url;
             
-            boost::algorithm::to_lower(format);
-            if (format == "j" || format == "json")
-            {
-                create_json_config(name, default_url);
-            }
-            else
-            {
-                create_yaml_config(name, default_url);
-            }
+            string location = (format.starts_with('j')) ? "oul.config.json" : "oul.config.yaml";
+            CONFIG cfg(location);
+            cfg.name = name;
+            cfg.default_url = default_url;
+            write_config(cfg);
         }
         else
         {
@@ -286,25 +73,12 @@ namespace oul
     }
     optional<CONFIG> CONFIG::read(const string& config_file)
     {
-        if (config_file.ends_with(".json"))
-        {
-            return read_json(config_file);
-        }
-        else
-        {
-            return read_yaml(config_file);
-        }
+        return load_config(config_file);
     }
-    void CONFIG::add_component(const string& name, const string& url, const vector<string>& content)
+    void CONFIG::add_component(const ITEM& i)
     {
-        if (location.ends_with(".json"))
-        {
-            add_component_json(name, url, content);
-        }
-        else
-        {
-            add_component_yaml(name, url, content);
-        }
+        components.push_back(i);
+        write_config(*this);
     }
     void CONFIG::list_components()
     {
