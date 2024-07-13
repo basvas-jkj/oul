@@ -11,7 +11,7 @@ namespace oul
 {
 	class ZIP_COMPONENT
 	{
-		CONFIG c;
+		ITEM c;
 		std::string zip_file;
 		libzippp::ZipArchive archiv;
 
@@ -19,6 +19,6 @@ namespace oul
 		ZIP_COMPONENT(const std::string& zip);
 		~ZIP_COMPONENT();
 
-		std::vector<std::string> unzip(const std::string&, const std::string&);
+		ITEM unzip(const std::string&);
 	};
 }
