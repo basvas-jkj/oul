@@ -42,6 +42,30 @@ namespace oul
 			ZipEntry entry = archiv.getEntry(entry_name);
 			entry.readContent(output);
 		}
+		for (string& entry_name : c.test_files)
+		{
+			fs::path p = fs::path(where) / fs::path(entry_name);
+			if (p.has_parent_path())
+			{
+				create_directories(p.parent_path());
+			}
+
+			ofstream output(p);
+			ZipEntry entry = archiv.getEntry(entry_name);
+			entry.readContent(output);
+		}
+		for (string& entry_name : c.documentation)
+		{
+			fs::path p = fs::path(where) / fs::path(entry_name);
+			if (p.has_parent_path())
+			{
+				create_directories(p.parent_path());
+			}
+
+			ofstream output(p);
+			ZipEntry entry = archiv.getEntry(entry_name);
+			entry.readContent(output);
+		}
 
 		return c;
 	}
