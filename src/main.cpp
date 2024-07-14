@@ -4,10 +4,9 @@
 #include <iostream>
 #include <filesystem>
 
-#include "zip.hpp"
 #include "help.hpp"
 #include "config.hpp"
-#include "download.hpp"
+#include "component_manager.hpp"
 
 using namespace std;
 using namespace oul;
@@ -15,7 +14,7 @@ using namespace oul;
 class ARGS
 {
 public:
-	enum COMMAND_TYPE { none, init, add, create, list };
+	enum COMMAND_TYPE {none, init, add, create, list};
 
 private:
 	COMMAND_TYPE command;
@@ -116,17 +115,18 @@ int main(int argc, char* argv[])
 		}
 		else if (a.is(ARGS::add))
 		{
-			string arg = a.next_arg();
-			if (arg == "")
+			string name = a.next_arg();
+			string save_as = a.next_arg();
+			if (name == "")
 			{
 				cerr << "No component to download." << endl;
 				cerr << "Call this command with one additional argument." << endl;
 				return 2;
 			}
-
-			string url = c.get_url(arg);
-			string component = download(url);
-
+			else
+			{
+				add_component(c, name, save_as);
+			}
 			if (component != "")
 			{
 				ZIP_COMPONENT zip(component);
