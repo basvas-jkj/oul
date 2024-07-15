@@ -100,9 +100,9 @@ namespace oul
     // -----------------------------
     //       WRITE CONFIG FILE
     // -----------------------------
-    static json write_component_json(const ITEM& i)
+    static ordered_json write_component_json(const ITEM& i)
     {
-        json component;
+        ordered_json component;
         component["name"] = i.name;
         component["repository"]["url"] = i.url;
 
@@ -123,13 +123,13 @@ namespace oul
     }
     static void write_config_json(const CONFIG& cfg)
     {
-        json root;
+        ordered_json root;
         root["metadata"]["name"] = cfg.name;
         root["metadata"]["default_url"] = cfg.default_url;
 
         for (const ITEM& i : cfg.components)
         {
-            json component = write_component_json(i);
+            ordered_json component = write_component_json(i);
             root["components"].push_back(component);
         }
 
