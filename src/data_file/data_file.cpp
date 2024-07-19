@@ -70,13 +70,15 @@ namespace oul
             Node components = root["components"];
             if (components.IsDefined() && components.IsSequence())
             {
-                for (auto&& c : components)
+                int f = 0;
+                while (components[f].IsDefined())
                 {
-                    auto [valid, component] = read_component(c);
+                    auto [valid, component] = read_component(components[f]);
                     if (valid)
                     {
                         cfg.components.push_back(component);
                     }
+                    f += 1;
                 }
             }
 
