@@ -18,7 +18,7 @@ public:
 
 private:
 	COMMAND_TYPE command;
-	set<string> options;
+	map<string, string> options;
 	deque<string> arguments;
 
 public:
@@ -33,7 +33,7 @@ public:
 		};
 
 		vector<string> args(argv + 1, argv + argc);
-		for (string& s : args)
+		for (std::string& s : args)
 		{
 			if (s == "")
 			{
@@ -41,7 +41,18 @@ public:
 			}
 			else if (s[0] == '-')
 			{
-				options.insert(move(s));
+				size_t position = s.find('=');
+				 
+				if (position == s.npos)
+				{
+					options.insert({move(s), ""});
+				}
+				else
+				{
+					string option = s.substr(0, position);
+					string value = s.substr(position);
+					options.insert({move(option), move(value)});
+				}
 			}
 			else if (command == none)
 			{
@@ -82,6 +93,18 @@ public:
 	bool has_options(const string& option) const
 	{
 		return options.contains(option);
+	}
+	string get_option(const string& option)
+	{
+		auto i = options.find(option);
+		if (i == options.end())
+		{
+			return "";
+		}
+		else
+		{
+			return i->second;
+		}
 	}
 };
 
