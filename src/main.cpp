@@ -6,6 +6,7 @@
 
 #include "help.hpp"
 #include "config.hpp"
+#include "general.hpp"
 #include "component_manager.hpp"
 
 using namespace std;
@@ -41,15 +42,15 @@ public:
 			}
 			else if (s[0] == '-')
 			{
-				size_t position = s.find('=');
+				vector<string> split_option = split(s, '=');
 				 
-				if (position == s.npos)
+				if (split_option.size() == 1)
 				{
 					options.insert({move(s), ""});
 				}
 				else
 				{
-					string option = s.substr(0, position);
+					options.insert({move(split_option[0]), move(split_option[1])});
 					string value = s.substr(position);
 					options.insert({move(option), move(value)});
 				}
