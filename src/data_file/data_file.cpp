@@ -15,10 +15,16 @@ namespace oul
     // -----------------------------
     //      READ COMPONENT FILE
     // -----------------------------
+    static bool is_valid_node(const Node& n, bool sequence)
+    {
+        return n.IsDefined() && ((sequence) ? n.IsSequence() : n.IsScalar());
+    }
     static bool is_valid_component(const Node& c)
     {
-        return c["name"].IsScalar() && c["documentation"].IsSequence()
-            && c["source_files"].IsSequence() && c["test_files"].IsSequence();
+        return is_valid_node(c["name"], false)
+            && is_valid_node(c["documentation"], true)
+            && is_valid_node(c["source_files"], true)
+            && is_valid_node(c["test_files"], true);
     }
     static optional<ITEM> read_component(const Node& c)
     {
@@ -107,12 +113,15 @@ namespace oul
         ordered_json component;
         component["name"] = i.name;
         component["repository"]["url"] = i.url;
+        component["source_files"] = json::array();
+        component["test_files"] = json::array();
+        component["documentation"] = json::array();
 
         for (const string& s : i.source_files)
         {
             component["source_files"].push_back(s);
         }
-        for (const string& s : i.source_files)
+        for (const string& s : i.test_files)
         {
             component["test_files"].push_back(s);
         }
@@ -143,12 +152,15 @@ namespace oul
         Node component;
         component["name"] = i.name;
         component["repository"]["url"] = i.url;
+        component["source_files"] = YAML::Load("[]");
+        component["test_files"] = YAML::Load("[]");
+        component["documentation"] = YAML::Load("[]");
 
         for (const string& s : i.source_files)
         {
             component["source_files"].push_back(s);
         }
-        for (const string& s : i.source_files)
+        for (const string& s : i.test_files)
         {
             component["test_files"].push_back(s);
         }
