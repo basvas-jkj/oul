@@ -151,14 +151,22 @@ int main(int argc, char* argv[])
 			{
 				add_component(c, name, save_as);
 			}
-			if (component != "")
+		}
+		else if (a.is(ARGS::create))
 			{
-				ZIP_COMPONENT zip(component);
-				vector<string> content(zip.unzip(component, ""));
-				arg = a.next_arg();
+			string name = a.next_arg();
+			string source_files = a.get_option("-s");
+			string test_files = a.get_option("-t");
+			string doc_files = a.get_option("-d");
 
-				c.add_component(arg, url, content);
-				filesystem::remove(component);
+			if (name == "")
+			{
+				cerr << "Missing name of the component." << endl;
+				return 2;
+			}
+			else
+			{
+				create_component(c, name, source_files, test_files, doc_files);
 			}
 		}
 		else if (a.is(ARGS::list))

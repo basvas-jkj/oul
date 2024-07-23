@@ -2,6 +2,7 @@
 #include <filesystem>
 
 #include "zip.hpp"
+#include "general.hpp"
 #include "download.hpp"
 #include "component_manager.hpp"
 
@@ -25,5 +26,15 @@ namespace oul
 		{
 			cerr << "This component can't be downloaded." << endl;
 		}
+	}
+	void create_component(CONFIG& c, const string& name, const string& source_files, const string& test_files, const string& doc_files)
+	{
+		vector<string> source = split(source_files, ',');
+		vector<string> tests = split(test_files, ',');
+		vector<string> docs = split(doc_files, ',');
+
+		ITEM i{name, "", docs, source, tests};
+
+		c.add_component(i);
 	}
 }
