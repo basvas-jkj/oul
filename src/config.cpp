@@ -17,6 +17,10 @@ namespace oul
     // -------------------
     //       CONFIG        
     // -------------------
+    CONFIG::~CONFIG()
+    {
+        write_config(*this);
+    }
     string CONFIG::find()
     {
         path current = current_path();
@@ -60,7 +64,6 @@ namespace oul
             CONFIG cfg(location);
             cfg.name = name;
             cfg.default_url = default_url;
-            write_config(cfg);
         }
         else
         {
@@ -78,7 +81,6 @@ namespace oul
     void CONFIG::add_component(const ITEM& i)
     {
         components.push_back(i);
-        write_config(*this);
     }
     void CONFIG::list_components()
     {

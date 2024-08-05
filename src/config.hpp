@@ -30,6 +30,7 @@ namespace oul
         CONFIG() {}
         CONFIG(const std::string& l): location(l)
         {}
+        ~CONFIG();
 
         static std::string find();
         static optional<CONFIG> read();
