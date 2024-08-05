@@ -1,5 +1,4 @@
-﻿#include <set>
-#include <map>
+﻿#include <map>
 #include <deque>
 #include <iostream>
 #include <filesystem>
@@ -15,7 +14,7 @@ using namespace oul;
 class ARGS
 {
 public:
-	enum COMMAND_TYPE {none, init, add, create, list};
+	enum COMMAND_TYPE {none, init, add, create, list, rename};
 
 private:
 	COMMAND_TYPE command;
@@ -30,7 +29,8 @@ public:
 			{"init", ARGS::init},
 			{"add", ARGS::add},
 			{"create", ARGS::create},
-			{"list", ARGS::list}
+			{"list", ARGS::list},
+			{"rename", ARGS::rename}
 		};
 
 		vector<string> args(argv + 1, argv + argc);
@@ -43,7 +43,7 @@ public:
 			else if (s[0] == '-')
 			{
 				vector<string> split_option = split(s, '=');
-				 
+
 				if (split_option.size() == 1)
 				{
 					options.insert({move(s), ""});
@@ -51,8 +51,6 @@ public:
 				else
 				{
 					options.insert({move(split_option[0]), move(split_option[1])});
-					string value = s.substr(position);
-					options.insert({move(option), move(value)});
 				}
 			}
 			else if (command == none)
@@ -153,7 +151,7 @@ int main(int argc, char* argv[])
 			}
 		}
 		else if (a.is(ARGS::create))
-			{
+		{
 			string name = a.next_arg();
 			string source_files = a.get_option("-s");
 			string test_files = a.get_option("-t");
@@ -168,6 +166,12 @@ int main(int argc, char* argv[])
 			{
 				create_component(c, name, source_files, test_files, doc_files);
 			}
+		}
+		else if (a.is(ARGS::rename))
+		{
+			string old_name = a.next_arg();
+			string new_name = a.next_arg();
+			rename_component(c, old_name, new_name);
 		}
 		else if (a.is(ARGS::list))
 		{

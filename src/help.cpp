@@ -11,4 +11,5 @@ void write_short_help()
 	cout << "    add        downloads component and adds it into configuration" << endl;
 	cout << "    create     creates new component locally" << endl;
 	cout << "    list       writes list of all installed or localy created components" << endl;
+	cout << "    rename     changes the name of the component" << endl;
 }

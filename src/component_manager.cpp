@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <filesystem>
 
 #include "zip.hpp"
@@ -10,7 +11,7 @@ using namespace std;
 
 namespace oul
 {
-	void add_component(CONFIG& c, const string& name, const string& arg)
+	void add_component(CONFIG& c, const string& name, const string& save_as)
 	{
 		string url = c.get_url(name);
 		string component = download(url);
@@ -36,5 +37,14 @@ namespace oul
 		ITEM i{name, "", docs, source, tests};
 
 		c.add_component(i);
+	}
+	void rename_component(CONFIG& c, const string& old_name, const string& new_name)
+	{
+		auto predicate = [old_name](const ITEM& i)
+			{
+				return i.name == old_name;
+			};
+		auto i = ranges::find_if(c.components, predicate);
+		i->name = new_name;
 	}
 }
