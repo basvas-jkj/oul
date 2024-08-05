@@ -35,96 +35,57 @@ bool compare_files(const fs::path& path_1, const fs::path& path_2)
  
 class CONFIG_TEST: public Cppunit
 {
-	void create_json()
+	void create(const string& suffix)
 	{
-		cout << endl << "BEGIN: create_json()" << endl;
-		test_cin("try Json http://127.0.0.1:8080");
+		cout << endl << format("BEGIN: create_{}()", suffix) << endl;
+		test_cin(format("try {} http://127.0.0.1:8080", suffix));
 		CONFIG::initialize();
 
-		fs::path cfg = "oul.config.json";
+		fs::path cfg = "oul.config." + suffix;
 		CHECKT(fs::exists(cfg));
-		CHECKT(compare_files(cfg, test_files / "correct.json"));
+		CHECKT(compare_files(cfg, test_files / ("correct." +  suffix)));
 		fs::remove(cfg);
-		cout << endl << "END: create_json()" << endl;
+		cout << endl << format("END: create_{}()", suffix) << endl;
 	}
-	void create_yaml()
+	void read(const string& suffix)
 	{
-		cout << endl << "BEGIN: create_yaml()" << endl;
-		test_cin("try Yaml http://127.0.0.1:8080");
-		CONFIG::initialize();
-
-		fs::path cfg = "oul.config.yaml";
-		CHECKT(fs::exists(cfg));
-		CHECKT(compare_files(cfg, test_files / "correct.yaml"));
-		fs::remove(cfg);
-		cout << endl << "END: create_yaml()" << endl;
-	}
-	void read_json()
-	{
-		cout << endl << "BEGIN: read_json()" << endl;
-		fs::copy_file(test_files / "oul.config.json", "./oul.config.json");
+		cout << endl << format("BEGIN: read_{}()", suffix) << endl;
+		fs::copy_file(test_files / ("oul.config." + suffix), "./oul.config." + suffix);
 		fs::path cfg = CONFIG::find();
 		
-		auto [valid, c] = CONFIG::read();
-		CHECKT(valid);
-		CHECKS(c.location, cfg.string());
+		{
+			auto [valid, c] = CONFIG::read();
+			CHECKT(valid);
+			CHECKS(c.location, cfg.string());
 
-		CHECKS(c.name, "try");
-		CHECKS(c.default_url, "http://127.0.0.1:8080/");
-		CHECK(c.components.size(), 2);
+			CHECKS(c.name, "try");
+			CHECKS(c.default_url, "http://127.0.0.1:8080/");
+			CHECK(c.components.size(), 2);
 
-		CHECKS(c.components[0].name, "example");
-		CHECKT(c.components[0].documentation == vector<string>{"doc"});
-		CHECKT(c.components[0].source_files == vector<string>{"src"});
-		CHECKT(c.components[0].test_files == vector<string>{"test"});
-		CHECKS(c.components[0].url, "http://127.0.0.1:8080/");
+			CHECKS(c.components[0].name, "example");
+			CHECKT(c.components[0].documentation == vector<string>{"doc"});
+			CHECKT(c.components[0].source_files == vector<string>{"src"});
+			CHECKT(c.components[0].test_files == vector<string>{"test"});
+			CHECKS(c.components[0].url, "http://127.0.0.1:8080/");
 
-		CHECKS(c.components[1].name, "experiment");
-		CHECKT(c.components[1].documentation == vector<string>{"docs"});
-		CHECKT(c.components[1].source_files == vector<string>{"source"});
-		CHECKT(c.components[1].test_files == vector<string>{"tests"});
-		CHECKS(c.components[1].url, "http://127.0.0.1:8080/");
-
-		fs::remove(cfg);
-		cout << endl << "END: read_json()" << endl;
-	}
-	void read_yaml()
-	{
-		cout << endl << "BEGIN: read_yaml()" << endl;
-		fs::copy_file(test_files / "oul.config.yaml", "./oul.config.yaml");
-		fs::path cfg = CONFIG::find();
-
-		auto [valid, c] = CONFIG::read();
-		CHECKT(valid);
-		CHECKS(c.location, cfg.string());
-
-		CHECKS(c.name, "try");
-		CHECKS(c.default_url, "http://127.0.0.1:8080/");
-		CHECK(c.components.size(), 2);
-
-		CHECKS(c.components[0].name, "example");
-		CHECKT(c.components[0].documentation == vector<string>{"doc"});
-		CHECKT(c.components[0].source_files == vector<string>{"src"});
-		CHECKT(c.components[0].test_files == vector<string>{"test"});
-		CHECKS(c.components[0].url, "http://127.0.0.1:8080/");
-
-		CHECKS(c.components[1].name, "experiment");
-		CHECKT(c.components[1].documentation == vector<string>{"docs"});
-		CHECKT(c.components[1].source_files == vector<string>{"source"});
-		CHECKT(c.components[1].test_files == vector<string>{"tests"});
-		CHECKS(c.components[1].url, "http://127.0.0.1:8080/");
+			CHECKS(c.components[1].name, "experiment");
+			CHECKT(c.components[1].documentation == vector<string>{"docs"});
+			CHECKT(c.components[1].source_files == vector<string>{"source"});
+			CHECKT(c.components[1].test_files == vector<string>{"tests"});
+			CHECKS(c.components[1].url, "http://127.0.0.1:8080/");
+		}
 
 		fs::remove(cfg);
-		cout << endl << "END: read_yaml()" << endl;
+		cout << endl << format("END: read_{}()", suffix) << endl;
 	}
 
 public:
 	void test_list() override
 	{
-		create_json();
-		create_yaml();
-		read_json();
-		read_yaml();
+		create("json");
+		create("yaml");
+		read("json");
+		read("yaml");
 	}
 };
 
