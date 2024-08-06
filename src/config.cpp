@@ -91,6 +91,17 @@ namespace oul
             cout << "    " << i.name << '\t' << url << endl;
         }
     }
+    bool CONFIG::contains(const string& name)
+    {
+        for (const string& component: get_components())
+        {
+            if (component == name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     string CONFIG::get_url(const string& component_name) const
     {

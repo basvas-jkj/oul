@@ -13,6 +13,12 @@ namespace oul
 {
 	void add_component(CONFIG& c, const string& name, const string& save_as)
 	{
+		if (c.contains(name))
+		{
+			cerr << "This project already contains a component of the same name." << endl;
+			return;
+		}
+		
 		string url = c.get_url(name);
 		string component = download(url);
 
@@ -30,6 +36,12 @@ namespace oul
 	}
 	void create_component(CONFIG& c, const string& name, const string& source_files, const string& test_files, const string& doc_files)
 	{
+		if (c.contains(name))
+		{
+			cerr << "This project already contains a component of the same name." << endl;
+			return;
+		}
+
 		vector<string> source = split(source_files, ',');
 		vector<string> tests = split(test_files, ',');
 		vector<string> docs = split(doc_files, ',');

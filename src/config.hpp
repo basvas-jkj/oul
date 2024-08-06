@@ -43,6 +43,7 @@ namespace oul
         {
             return components | std::views::transform([](ITEM& i){return i.name; });
         }
+        bool contains(const std::string& name);
 
         std::string get_url(const std::string&) const;
     };
