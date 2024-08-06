@@ -41,9 +41,10 @@ namespace oul
         void list_components();
         auto get_components()
         {
-            return components | std::views::transform([](ITEM& i){return i.name; });
+            return components | std::views::transform([](const ITEM& i){return i.name;});
         }
         bool contains(const std::string& name);
+        std::vector<ITEM>::iterator get_component(const std::string& name);
 
         std::string get_url(const std::string&) const;
     };

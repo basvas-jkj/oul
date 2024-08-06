@@ -102,6 +102,10 @@ namespace oul
         }
         return false;
     }
+    vector<ITEM>::iterator CONFIG::get_component(const string& name)
+    {
+        return ranges::find_if(components, [name](ITEM& i){return i.name == name;});
+    }
 
     string CONFIG::get_url(const string& component_name) const
     {

@@ -11,6 +11,24 @@ using namespace std;
 
 namespace oul
 {
+	void add_files(CONFIG& c, const string& name, const string& source_files, const string& test_files, const string& doc_files)
+	{
+		vector<string> source = split(source_files, ',');
+		vector<string> tests = split(test_files, ',');
+		vector<string> docs = split(doc_files, ',');
+
+		vector<ITEM>::iterator i = c.get_component(name);
+
+		if (i == c.components.end())
+		{
+			cerr << "There is no component of this name." << endl;
+			return;
+		}
+
+		i->source_files.insert(i->source_files.end(), source.begin(), source.end());
+		i->test_files.insert(i->test_files.end(), tests.begin(), tests.end());
+		i->documentation.insert(i->documentation.end(), docs.begin(), docs.end());
+	}
 	void add_component(CONFIG& c, const string& name, const string& save_as)
 	{
 		if (c.contains(name))

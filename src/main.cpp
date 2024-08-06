@@ -145,6 +145,13 @@ int main(int argc, char* argv[])
 				cerr << "Call this command with one additional argument." << endl;
 				return 2;
 			}
+			else if (a.has_options("-s") || a.has_options("-t") || a.has_options("-d"))
+			{
+				string source_files = a.get_option("-s");
+				string test_files = a.get_option("-t");
+				string doc_files = a.get_option("-d");
+				add_files(c, name, source_files, test_files, doc_files);
+			}
 			else
 			{
 				add_component(c, name, save_as);
