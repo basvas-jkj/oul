@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include <libzippp/libzippp.h>
+#include <boost/filesystem.hpp>
 
 #include "config.hpp"
 
@@ -13,7 +13,7 @@ namespace oul
 	{
 		ITEM c;
 		std::string zip_file;
-		libzippp::ZipArchive archiv;
+		boost::filesystem::path extracted_directory;
 
 	public:
 		ZIP_COMPONENT(const std::string& zip);

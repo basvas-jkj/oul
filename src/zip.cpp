@@ -1,70 +1,62 @@
 #include <iostream>
-#include <filesystem>
 
 #include "zip.hpp"
+#include "../lib/helpers/Helpers.h"
 #include "data_file/data_file.hpp"
 
 using namespace std;
-using namespace libzippp;
-namespace fs = std::filesystem;
+using namespace Zip;
 
 namespace oul
 {
-	ZIP_COMPONENT::ZIP_COMPONENT(const string& zip): zip_file(zip), archiv(zip)
+	void move(const fs::path& source_directory, const string& target_directory, const string& entry_name)
 	{
-		archiv.open();
+		fs::path source = fs::path(source_directory) / fs::path(entry_name);
+		fs::path target = fs::path(target_directory) / fs::path(entry_name);
+		if (target.has_parent_path())
+		{
+			create_directories(target.parent_path());
+		}
 
-		if (archiv.hasEntry("oul.component.json"))
+		fs::rename(source, target);
+	}
+
+	ZIP_COMPONENT::ZIP_COMPONENT(const string& zip): zip_file(zip), extracted_directory(fs::path(zip_file).replace_extension())
+	{
+		bool success;
+		fs::create_directory(extracted_directory);
+		string config = ExtractTextFromZip(zip_file, "oul.component.json", success);
+		
+		if (!success)
 		{
-			c = read_component(archiv.getEntry("oul.component.json").readAsText()).second;
+			config = ExtractTextFromZip(zip_file, "oul.component.yaml", success);
 		}
-		else if (archiv.hasEntry("oul.component.yaml"))
-		{
-			c = read_component(archiv.getEntry("oul.component.yaml").readAsText()).second;
-		}
+
+		c = read_component(config).second;
 	}
 	ZIP_COMPONENT::~ZIP_COMPONENT()
 	{
-		archiv.close();
 		fs::remove(zip_file);
+		fs::remove_all(extracted_directory);
 	}
 	ITEM ZIP_COMPONENT::unzip(const string& where)
 	{
-		for (string& entry_name : c.source_files)
+		size_t count;
+		
+		if (ExtractAllFilesFromZip(extracted_directory.string() + "/", zip_file, count))
 		{
-			fs::path p = fs::path(where) / fs::path(entry_name);
-			if (p.has_parent_path())
+			for (string& entry_name : c.source_files)
 			{
-				create_directories(p.parent_path());
+				move(extracted_directory, where, entry_name);
 			}
-
-			ofstream output(p);
-			ZipEntry entry = archiv.getEntry(entry_name);
-			entry.readContent(output);
-		}
-		for (string& entry_name : c.test_files)
-		{
-			fs::path p = fs::path(where) / fs::path(entry_name);
-			if (p.has_parent_path())
+			for (string& entry_name : c.test_files)
 			{
-				create_directories(p.parent_path());
+				move(extracted_directory, where, entry_name);
 			}
-
-			ofstream output(p);
-			ZipEntry entry = archiv.getEntry(entry_name);
-			entry.readContent(output);
-		}
-		for (string& entry_name : c.documentation)
-		{
-			fs::path p = fs::path(where) / fs::path(entry_name);
-			if (p.has_parent_path())
+			for (string& entry_name : c.documentation)
 			{
-				create_directories(p.parent_path());
+				move(extracted_directory, where, entry_name);
 			}
-
-			ofstream output(p);
-			ZipEntry entry = archiv.getEntry(entry_name);
-			entry.readContent(output);
 		}
 
 		return c;

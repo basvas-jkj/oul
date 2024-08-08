@@ -28,7 +28,7 @@ const bool Zip::ExtractAllFilesFromZip(const std::string& strDirectory, const st
    }
 
    ZipArchive zf(strZipFile);
-   if (!zf.open(ZipArchive::READ_ONLY))
+   if (!zf.open(ZipArchive::ReadOnly))
       return false; // Zip file couldn't be opened !
 
    std::vector<ZipEntry> entries = zf.getEntries();
@@ -62,12 +62,17 @@ const bool Zip::ExtractAllFilesFromZip(const std::string& strDirectory, const st
       }
       else if (entry.isFile()) // // Extract Zip entry to a file.
       {
+          fs::path output(strOutputDirectory + strEntryName);
+          if (output.has_parent_path())
+          {
+              create_directories(output.parent_path());
+          }
          // to avoid copying a huge zip entry to main memory and causing a memory allocation failure
          // a buffer will be used instead !
-         std::ofstream ofUnzippedFile(strOutputDirectory + strEntryName, std::ofstream::binary);
+         std::ofstream ofUnzippedFile(strOutputDirectory + strEntryName, std::ofstream::binary | std::ofstream::out);
          if (ofUnzippedFile)
          {
-            if (entry.readContent(ofUnzippedFile, ZipArchive::CURRENT, MAX_FILE_BUFFER) == 0)
+            if (entry.readContent(ofUnzippedFile, ZipArchive::Current, MAX_FILE_BUFFER) == 0)
             {
                uWrittenBytes += uSize;
                ProgressStrategy(uTotSize, uWrittenBytes);
@@ -115,7 +120,7 @@ const bool Zip::ExtractSingleFileFromZip(const std::string& strOutDirectory, con
 
    bool bRes = false;
    ZipArchive zf(strZipFile);
-   zf.open(ZipArchive::READ_ONLY);
+   zf.open(ZipArchive::ReadOnly);
    ZipEntry entry = zf.getEntry(strZipEntry);
 
    if (entry.isFile()) // // Extract Zip entry to a file.
@@ -125,7 +130,7 @@ const bool Zip::ExtractSingleFileFromZip(const std::string& strOutDirectory, con
       std::ofstream ofUnzippedFile(strOutDirectory + strZipEntryParsed, std::ofstream::binary);
       if (ofUnzippedFile)
       {
-         if (entry.readContent(ofUnzippedFile, ZipArchive::CURRENT, MAX_FILE_BUFFER) == 0)
+         if (entry.readContent(ofUnzippedFile, ZipArchive::Current, MAX_FILE_BUFFER) == 0)
          {
             bRes = true;
             ofUnzippedFile.close();
@@ -151,7 +156,7 @@ std::string Zip::ExtractTextFromZip(const std::string& strZipFile, const std::st
       return "";
 
    ZipArchive zf(strZipFile);
-   zf.open(ZipArchive::READ_ONLY);
+   zf.open(ZipArchive::ReadOnly);
    bSuccess = (zf.hasEntry(strZipEntry)) ? true : false;
    ZipEntry entry = zf.getEntry(strZipEntry);
    std::string strRes = entry.readAsText();
@@ -168,7 +173,7 @@ const bool Zip::AddDirectoryEntryToZip(const std::string& strZipFile, const std:
       return bRes;
 
    ZipArchive zf(strZipFile);
-   zf.open(ZipArchive::WRITE);
+   zf.open(ZipArchive::Write);
    bRes = zf.addEntry(strZipEntry + ((strZipEntry[strZipEntry.length() - 1] == '/') ? "" : "/"));
    zf.close();
 
@@ -182,7 +187,7 @@ const bool Zip::AddFileToZip(const std::string& strFile, const std::string& strZ
       return false;
 
    ZipArchive zf(strZipFile);
-   zf.open(ZipArchive::WRITE);
+   zf.open(ZipArchive::Write);
 
    bool bRes = true;
    if (!zf.addFile(strZipEntry, strFile))
@@ -205,7 +210,7 @@ const long Zip::RemoveEntryFromZip(const std::string& strZipFile, const std::str
    long uDelCount = 0;
 
    ZipArchive zf(strZipFile);
-   zf.open(ZipArchive::WRITE);
+   zf.open(ZipArchive::Write);
 
    std::string strZipEntryParsed(strZipEntry);
    // Maybe the user forgot to append a slash at the end of a directory zip entry...

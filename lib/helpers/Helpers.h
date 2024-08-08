@@ -23,8 +23,7 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
-
-#include "libzippp.h"
+#include <libzippp/libzippp.h>
 
 // the same size I use in my MD5 SHA1 Calculator....
 constexpr size_t MAX_FILE_BUFFER = (32 * 20 * 820);
@@ -35,11 +34,11 @@ namespace fs = boost::filesystem;
 // ZIP operations
 namespace Zip
 {
-   typedef std::function<void(double, double)> ProgressCallback;
+   typedef std::function<void(size_t, size_t)> ProgressCallback;
    typedef std::function<void(const std::string&)> ErrorCallback;
 
    // using auto will cause link errors...
-   #define DefaultProgressCallback [](double dA, double dB) { dA; dB; }
+   #define DefaultProgressCallback [](size_t dA, size_t dB) { dA; dB; }
    #define DefaultErrorCallback [](const std::string& strErrorMsg) { strErrorMsg; }
 
    const bool ExtractAllFilesFromZip(const std::string& strOutputDirectory,
@@ -75,7 +74,7 @@ public:
    struct SlashOccurrencesComparison
    {
       // TODO : slashes - back-slashes management has to be optimized...
-      bool operator()(const std::string& strA, const std::string& strB)
+      bool operator()(const std::string& strA, const std::string& strB) const
       {
          if ((strA.find_first_of('\\') != std::string::npos) || (strA.find_first_of('/') != std::string::npos))
          {
