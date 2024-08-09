@@ -5,6 +5,7 @@
 
 #include "help.hpp"
 #include "config.hpp"
+#include "command.hpp"
 #include "general.hpp"
 #include "component_manager.hpp"
 
@@ -13,61 +14,44 @@ using namespace oul;
 
 class ARGS
 {
-public:
-	enum COMMAND_TYPE {none, init, add, create, list, rename};
-
-private:
-	COMMAND_TYPE command;
+	COMMAND *c;
 	map<string, string> options;
 	deque<string> arguments;
 
 public:
-	ARGS(int argc, char* argv[]): command(none)
+	ARGS(int argc, char* argv[]): c(&COMMAND::none())
 	{
-		const map<string, COMMAND_TYPE> command_names =
-		{
-			{"init", ARGS::init},
-			{"add", ARGS::add},
-			{"create", ARGS::create},
-			{"list", ARGS::list},
-			{"rename", ARGS::rename}
-		};
-
 		vector<string> args(argv + 1, argv + argc);
-		for (std::string& s : args)
+		for (std::string& arg : args)
 		{
-			if (s == "")
+			if (arg == "")
 			{
 				cerr << ":-)" << endl;
 			}
-			else if (s[0] == '-')
+			else if (arg[0] == '-')
 			{
-				vector<string> split_option = split(s, '=');
+				vector<string> split_option = split(arg, '=');
 
 				if (split_option.size() == 1)
 				{
-					options.insert({move(s), ""});
+					options.insert({move(arg), ""});
 				}
 				else
 				{
 					options.insert({move(split_option[0]), move(split_option[1])});
 				}
 			}
-			else if (command == none)
+			else if (*c == COMMAND::none())
 			{
-				auto i = command_names.find(s);
-				if (i == command_names.end())
+				c = &COMMAND::find(arg);
+				if (*c == COMMAND::none())
 				{
 					cerr << "First non-option argument should be a valid command." << endl;
-				}
-				else
-				{
-					command = i->second;
 				}
 			}
 			else
 			{
-				arguments.push_back(move(s));
+				arguments.push_back(move(arg));
 			}
 
 		}
@@ -85,9 +69,9 @@ public:
 			return a;
 		}
 	}
-	bool is(COMMAND_TYPE command) const
+	bool is(const string& name) const
 	{
-		return command == this->command;
+		return c->is(name);
 	}
 	bool has_options(const string& option) const
 	{
@@ -109,14 +93,15 @@ public:
 
 int main(int argc, char* argv[])
 {
+	COMMAND::init();
 	ARGS a(argc, argv);
 	string conf = CONFIG::find();
 
-	if (a.is(ARGS::none))
+	if (a.is("none"))
 	{
 		write_short_help();
 	}
-	else if (a.is(ARGS::init))
+	else if (a.is("init"))
 	{
 		CONFIG::initialize();
 	}
@@ -135,7 +120,7 @@ int main(int argc, char* argv[])
 			cerr << "Remove it and initialize again or move into another project.";
 			return 1;
 		}
-		else if (a.is(ARGS::add))
+		else if (a.is("add"))
 		{
 			string name = a.next_arg();
 			string save_as = a.next_arg();
@@ -157,7 +142,7 @@ int main(int argc, char* argv[])
 				add_component(c, name, save_as);
 			}
 		}
-		else if (a.is(ARGS::create))
+		else if (a.is("create"))
 		{
 			string name = a.next_arg();
 			string source_files = a.get_option("-s");
@@ -174,13 +159,13 @@ int main(int argc, char* argv[])
 				create_component(c, name, source_files, test_files, doc_files);
 			}
 		}
-		else if (a.is(ARGS::rename))
+		else if (a.is("rename"))
 		{
 			string old_name = a.next_arg();
 			string new_name = a.next_arg();
 			rename_component(c, old_name, new_name);
 		}
-		else if (a.is(ARGS::list))
+		else if (a.is("list"))
 		{
 			c.list_components();
 		}
