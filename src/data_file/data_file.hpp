@@ -7,11 +7,30 @@
 
 namespace oul
 {
-	template <class T>
-	using optional = std::pair<bool, T>;
+    /**
+     * @brief Typ představující nepovinnou hodnotu libovolného datového typu.
+     * @tparam T datový typ, jehož hodnota je nepovinná
+     **/
+    template <class T>
+    using optional = std::pair<bool, T>;
 
-	optional<ITEM> read_component(const std::string&);
-	optional<CONFIG> load_config(const std::string&);
+    /**
+     * @brief Přečte souboru a jeho obsah převede na komponentu.
+     * @param s soubor, ze kterého se komponenta načte
+     * @return Pokud soubor obsahuje komponentu, vrátí <code>true</code> a přečtenou komponentu. Jinak vrátí <code>false</code>.
+     **/
+    optional<ITEM> read_component(const std::string&);
+    /**
+     * @brief Načte konfiguraci ze souboru.
+     * @param config_file Soubor, ze kterého se načte konfigurace.
+     * @return Je-li konfigurace platná, vrátí <code>true</code> a načtenou komponentu. Jinak vrátí <code>false</code>.
+     **/
+    optional<CONFIG> load_config(const std::string&);
 
-	void write_config(const CONFIG&);
+    /**
+     * @brief Zapíše konfiguraci do souboru podle zvoleného formátu.
+     * @param cfg objekt nesoucí zapisovanou konfiguraci
+     **/
+    void write_config(const CONFIG&);
 }
+

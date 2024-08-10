@@ -12,13 +12,24 @@ using namespace nlohmann;
 
 namespace oul
 {
-    // -----------------------------
-    //      READ COMPONENT FILE
-    // -----------------------------
+    /** @brief Zkontroluje platnost uzlu.
+     *  @param n kontrolovaný uzel
+     *  @param sequence  Má být uzel posloupnost nebo skalární hodnota?
+     *  @return Uzel je definovaný a je to platná posloupnost / skalární hodnota.
+     **/
     static bool is_valid_node(const Node& n, bool sequence)
     {
         return n.IsDefined() && ((sequence) ? n.IsSequence() : n.IsScalar());
     }
+
+    // -----------------------------
+    //      READ COMPONENT FILE
+    // -----------------------------
+
+    /** @brief Zkontroluje, zda uzel představuje platnou komponentu.
+     *  @param c kontrolovaný uzel
+     *  @return Uzel obsahuje skalární atribut „name“ a sekvenční atributy „documantation“, „source_files“ a „test_files“.
+     **/
     static bool is_valid_component(const Node& c)
     {
         return is_valid_node(c["name"], false)
@@ -26,6 +37,11 @@ namespace oul
             && is_valid_node(c["source_files"], true)
             && is_valid_node(c["test_files"], true);
     }
+    /**
+     * @brief Převede uzel na komponentu.
+     * @param c uzel převáděný na komponentu
+     * @return Pokud je uzel komponenta, vrátí <code>true</code> a přečtenou komponentu. Jinak vrátí <code>false</code>.
+     **/
     static optional<ITEM> read_component(const Node& c)
     {
         ITEM component;
@@ -58,10 +74,21 @@ namespace oul
     // -----------------------------
     //       READ CONFIG FILE
     // -----------------------------
+
+    /**
+     * @brief Zkontroluje, zda uzel představuje platnou konfiguraci.
+     * @param root kontrolovaný uzel
+     * @return Uzel obsahuje složený atribut „metadata“ se skalárním atributem „name“.
+     **/
     static bool is_valid_config(const Node& root)
     {
-        return root["metadata"]["name"].IsScalar();
+        return is_valid_node(root["metadata"]["name"], false);
     }
+    /**
+     * @brief Převede uzel na konfiguraci.
+     * @param c uzel převáděný na konfiguraci
+     * @return Je-li konfigurace platná, vrátí <code>true</code> a načtenou konfiguraci. Jinak vrátí <code>false</code>.
+     **/
     static optional<CONFIG> read_config(CONFIG& cfg,  const Node& root)
     {
         if (is_valid_config(root))
@@ -94,20 +121,24 @@ namespace oul
         {
             return {false, cfg};
         }
-
-        
     }
-	optional<CONFIG> load_config(const string& config_file)
-	{
+    optional<CONFIG> load_config(const string& config_file)
+    {
         CONFIG cfg(config_file);
         Node root = LoadFile(config_file);
 
         return read_config(cfg, root);
-	}
+    }
 
     // -----------------------------
     //       WRITE CONFIG FILE
     // -----------------------------
+
+    /**
+     * @brief Převede informace o komponentě na uzel formátu JSON.
+     * @param i objekt nesoucí informace o komponentě
+     * @return převedený uzel formátu JSON
+     **/
     static ordered_json write_component_json(const ITEM& i)
     {
         ordered_json component;
@@ -132,6 +163,10 @@ namespace oul
 
         return component;
     }
+    /**
+     * @brief Zapíše konfiguraci do souboru ve formátu JSON.
+     * @param cfg objekt nesoucí zapisovanou konfiguraci
+     **/
     static void write_config_json(const CONFIG& cfg)
     {
         ordered_json root;
@@ -147,6 +182,11 @@ namespace oul
         ofstream o(cfg.location);
         o << root.dump(4);
     }
+    /**
+     * @brief Převede informace o komponentě na uzel formátu YAML.
+     * @param i objekt nesoucí informace o komponentě
+     * @return převedený uzel formátu YAML
+     **/
     static Node write_component_yaml(const ITEM& i)
     {
         Node component;
@@ -171,6 +211,10 @@ namespace oul
 
         return component;
     }
+    /**
+     * @brief Zapíše konfiguraci do souboru ve formátu YAML.
+     * @param cfg objekt nesoucí zapisovanou konfiguraci
+     **/
     static void write_config_yaml(const CONFIG& cfg)
     {
         Node root;
