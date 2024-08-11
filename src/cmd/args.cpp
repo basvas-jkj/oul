@@ -69,7 +69,7 @@ namespace oul
 	{
 		return options.contains(option);
 	}
-	string ARGS::get_option(const string& option)
+	string ARGS::get_option(const string& option) const
 	{
 		auto i = options.find(option);
 		if (i == options.end())
