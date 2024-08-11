@@ -1,99 +1,14 @@
-﻿#include <map>
-#include <deque>
-#include <iostream>
-#include <filesystem>
+﻿#include <iostream>
 
-#include "help.hpp"
 #include "config.hpp"
-#include "command.hpp"
-#include "general.hpp"
+#include "cmd/args.hpp"
 #include "component_manager.hpp"
 
 using namespace std;
 using namespace oul;
 
-class ARGS
-{
-	COMMAND *c;
-	map<string, string> options;
-	deque<string> arguments;
-
-public:
-	ARGS(int argc, char* argv[]): c(&COMMAND::none())
-	{
-		vector<string> args(argv + 1, argv + argc);
-		for (std::string& arg : args)
-		{
-			if (arg == "")
-			{
-				cerr << ":-)" << endl;
-			}
-			else if (arg[0] == '-')
-			{
-				vector<string> split_option = split(arg, '=');
-
-				if (split_option.size() == 1)
-				{
-					options.insert({move(arg), ""});
-				}
-				else
-				{
-					options.insert({move(split_option[0]), move(split_option[1])});
-				}
-			}
-			else if (*c == COMMAND::none())
-			{
-				c = &COMMAND::find(arg);
-				if (*c == COMMAND::none())
-				{
-					cerr << "First non-option argument should be a valid command." << endl;
-				}
-			}
-			else
-			{
-				arguments.push_back(move(arg));
-			}
-
-		}
-	}
-	string next_arg()
-	{
-		if (arguments.size() == 0)
-		{
-			return "";
-		}
-		else
-		{
-			string a = move(arguments.front());
-			arguments.pop_front();
-			return a;
-		}
-	}
-	bool is(const string& name) const
-	{
-		return c->is(name);
-	}
-	bool has_options(const string& option) const
-	{
-		return options.contains(option);
-	}
-	string get_option(const string& option)
-	{
-		auto i = options.find(option);
-		if (i == options.end())
-		{
-			return "";
-		}
-		else
-		{
-			return i->second;
-		}
-	}
-};
-
 int main(int argc, char* argv[])
 {
-	COMMAND::init();
 	ARGS a(argc, argv);
 	string conf = CONFIG::find();
 
