@@ -7,6 +7,28 @@ using namespace std;
 
 namespace oul
 {
+	string convert_to_short(const string& opt)
+	{
+		map<string, string> short_variants =
+		{
+			{"-new", "-n"},
+			{"-src", "-s"},
+			{"-test", "-t"},
+			{"-doc", "-d"},
+			{"-version", "-v"}
+		};
+
+		auto i = short_variants.find(opt);
+		if (i == short_variants.end())
+		{
+			return opt;
+		}
+		else
+		{
+			return i->second;
+		}
+	}
+
 	ARGS::ARGS(int argc, char* argv[])
 	{
 		COMMAND::init();
@@ -25,11 +47,13 @@ namespace oul
 
 				if (split_option.size() == 1)
 				{
-					options.insert({move(arg), ""});
+					string short_option = convert_to_short(arg);
+					options.insert({move(short_option), ""});
 				}
 				else
 				{
-					options.insert({move(split_option[0]), move(split_option[1])});
+					string short_option = convert_to_short(split_option[0]);
+					options.insert({move(short_option), move(split_option[1])});
 				}
 			}
 			else if (*c == COMMAND::none())
@@ -65,7 +89,7 @@ namespace oul
 	{
 		return c->is(name);
 	}
-	bool ARGS::has_options(const string& option) const
+	bool ARGS::has_option(const string& option) const
 	{
 		return options.contains(option);
 	}

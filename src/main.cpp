@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 
 #include "config.hpp"
 #include "cmd/args.hpp"
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 				cerr << "Call this command with one additional argument." << endl;
 				return 2;
 			}
-			else if (a.has_options("-s") || a.has_options("-t") || a.has_options("-d"))
+			else if (a.has_option("-s") || a.has_option("-t") || a.has_option("-d"))
 			{
 				string source_files = a.get_option("-s");
 				string test_files = a.get_option("-t");

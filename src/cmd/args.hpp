@@ -9,12 +9,18 @@
 namespace oul
 {
 	/**
-	 * @brief Vypíše struènou nápovìdu pro kadı podporovanı pøíkaz.
+	 * @brief VypÃ­Å¡e struÄnou nÃ¡povÄ›du pro kaÅ¾dÃ½ podporovanÃ½ pÅ™Ã­kaz.
 	 **/
 	void write_short_help();
+	/**
+	 * @brief PÅ™evede pÅ™epÃ­naÄ na jeho krÃ¡tkou verzi.
+	 * @param opt dlouhÃ¡ veze pÅ™epÃ­naÄe
+	 * @return KrÃ¡tkÃ¡ verze pÅ™epÃ­naÄe, pokud existuje. Jinak vrÃ¡tÃ­ pÅ¯vodnÃ­ verzi.
+	 **/
+	std::string convert_to_short(const std::string& opt);
 
 	/**
-	 * @brief Tøída ukládající informace o jednotlivıch pøíkazech a spravuje svoje vlastní objekty.
+	 * @brief TÅ™Ã­da uklÃ¡dajÃ­cÃ­ informace o jednotlivÃ½ch pÅ™Ã­kazech a spravuje svoje vlastnÃ­ objekty.
 	 **/
 	class COMMAND
 	{
@@ -27,58 +33,58 @@ namespace oul
 		std::string short_help;
 
 		/**
-		 * @brief Konstruktor vytváøející objekty tøídy <code>COMMAND</code>.
-		 * @param name Jméno pøíkazu.
-		 * @param short_help Nápovìda tohoto pøíkazu.
+		 * @brief Konstruktor vytvÃ¡Å™ejÃ­cÃ­ objekty tÅ™Ã­dy <code>COMMAND</code>.
+		 * @param name JmÃ©no pÅ™Ã­kazu.
+		 * @param short_help NÃ¡povÄ›da tohoto pÅ™Ã­kazu.
 		 **/
 		COMMAND(const std::string& name, const std::string& short_help);
 
 	public:
 		/**
-		 * @brief Pøipraví tøídní èleny k pouívání. (Nahrazuje statickı konstruktor.)
+		 * @brief PÅ™ipravÃ­ tÅ™Ã­dnÃ­ Äleny k pouÅ¾Ã­vÃ¡nÃ­. (Nahrazuje statickÃ½ konstruktor.)
 		 **/
 		static void init();
 		/**
-		 * @brief Vrátí objekt reprezentující prázdnı (nezadanı) pøíkaz.
-		 * @return objekt prázdného pøíkazu
+		 * @brief VrÃ¡tÃ­ objekt reprezentujÃ­cÃ­ prÃ¡zdnÃ½ (nezadanÃ½) pÅ™Ã­kaz.
+		 * @return objekt prÃ¡zdnÃ©ho pÅ™Ã­kazu
 		 **/
 		static COMMAND& none();
 		/**
-		 * @brief Vyhledá pøíkaz podle jména.
-		 * @param name Jméno hledaného pøíkazu.
-		 * @return Vrátí objekt pøíkazu pøíslušného jména. Pokud takovı objekt neexistuje, vrátí <code>none</code>
+		 * @brief VyhledÃ¡ pÅ™Ã­kaz podle jmÃ©na.
+		 * @param name JmÃ©no hledanÃ©ho pÅ™Ã­kazu.
+		 * @return VrÃ¡tÃ­ objekt pÅ™Ã­kazu pÅ™Ã­sluÅ¡nÃ©ho jmÃ©na. Pokud takovÃ½ objekt neexistuje, vrÃ¡tÃ­ <code>none</code>
 		 **/
 		static COMMAND& find(const std::string& name);
 		/**
-		 * @brief Vrátí seznam všech dostupnıch pøíkazù.
-		 * @return seznam všech dostupnıch pøíkazù
+		 * @brief VrÃ¡tÃ­ seznam vÅ¡ech dostupnÃ½ch pÅ™Ã­kazÅ¯.
+		 * @return seznam vÅ¡ech dostupnÃ½ch pÅ™Ã­kazÅ¯
 		 **/
 		static std::span<COMMAND> all();
 		/**
-		 * @brief Vrátí jméno tohoto pøíkazu.
-		 * @return Jméno tohoto pøíkazu.
+		 * @brief VrÃ¡tÃ­ jmÃ©no tohoto pÅ™Ã­kazu.
+		 * @return JmÃ©no tohoto pÅ™Ã­kazu.
 		 **/
 		std::string get_name() const;
 		/**
-		 * @brief Získá text nápovìdy k tomuto pøíkazu
-		 * @return Krátkou nápovìdu k tomuto pøíkazu.
+		 * @brief ZÃ­skÃ¡ text nÃ¡povÄ›dy k tomuto pÅ™Ã­kazu
+		 * @return KrÃ¡tkou nÃ¡povÄ›du k tomuto pÅ™Ã­kazu.
 		 **/
 		std::string get_short_help() const;
 		/**
-		 * @brief Porovná dva objekty typu <code>COMMAND</code>.
-		 * @param o Jinı objekt typu <code>COMMAND</code>.
-		 * @return Reprezentují oba objekty stejnı pøíkaz?
+		 * @brief PorovnÃ¡ dva objekty typu <code>COMMAND</code>.
+		 * @param o JinÃ½ objekt typu <code>COMMAND</code>.
+		 * @return ReprezentujÃ­ oba objekty stejnÃ½ pÅ™Ã­kaz?
 		 **/
 		bool operator==(const COMMAND& o) const;
 		/**
-		 * @brief Zkontoluje, zda se jedná o zadanı pøíkaz.
-		 * @param name Jméno pøíkazu.
-		 * @return Reprezentuje tento objekt pøíkaz se zadanım jménem?
+		 * @brief Zkontoluje, zda se jednÃ¡ o zadanÃ½ pÅ™Ã­kaz.
+		 * @param name JmÃ©no pÅ™Ã­kazu.
+		 * @return Reprezentuje tento objekt pÅ™Ã­kaz se zadanÃ½m jmÃ©nem?
 		 **/
 		bool is(const std::string& name) const;
 	};
 	/**
-	 * @brief Tøída reprezentující argumenty pøíkazové øádky pøedané tomuto programu.
+	 * @brief TÅ™Ã­da reprezentujÃ­cÃ­ argumenty pÅ™Ã­kazovÃ© Å™Ã¡dky pÅ™edanÃ© tomuto programu.
 	 **/
 	class ARGS
 	{
@@ -88,32 +94,32 @@ namespace oul
 
 	public:
 		/**
-		 * @brief Konstruktor vytváøející objekty tøídy <code>ARGS</code>.
-		 * @param argc Poèet argumentù pøíkazové øádky.
-		 * @param argv Seznam argumentù pøíkazoé øádky.
+		 * @brief Konstruktor vytvÃ¡Å™ejÃ­cÃ­ objekty tÅ™Ã­dy <code>ARGS</code>.
+		 * @param argc PoÄet argumentÅ¯ pÅ™Ã­kazovÃ© Å™Ã¡dky.
+		 * @param argv Seznam argumentÅ¯ pÅ™Ã­kazoÃ© Å™Ã¡dky.
 		 **/
 		ARGS(int argc, char* argv[]);
 		/**
-		 * @brief Vrací postupnì všechny argumenty, které byly pøedány tomuto programu.
-		 * @return První nepøeètenı argument, kterı není pøepínaè ani pøíkaz. Pokud ji byly všechny argumenty vráceny, vrátí "".
+		 * @brief VracÃ­ postupnÄ› vÅ¡echny argumenty, kterÃ© byly pÅ™edÃ¡ny tomuto programu.
+		 * @return PrvnÃ­ nepÅ™eÄtenÃ½ argument, kterÃ½ nenÃ­ pÅ™epÃ­naÄ ani pÅ™Ã­kaz. Pokud jiÅ¾ byly vÅ¡echny argumenty vrÃ¡ceny, vrÃ¡tÃ­ "".
 		 **/
 		std::string next_arg();
 		/**
-		 * @brief Zkontoluje, se kterım pøíkazem byl tento program spuštìn.
-		 * @param name Jméno pøíkazu.
-		 * @return Byl program volán s danım pøíkazem?
+		 * @brief Zkontoluje, se kterÃ½m pÅ™Ã­kazem byl tento program spuÅ¡tÄ›n.
+		 * @param name JmÃ©no pÅ™Ã­kazu.
+		 * @return Byl program volÃ¡n s danÃ½m pÅ™Ã­kazem?
 		 **/
 		bool is(const std::string& name) const;
 		/**
-		 * @brief Kontroluje pøítomnost pøíslušného pøepínaèe.
-		 * @param option jméno ádaného pøepínaèe
-		 * @return Byl pøepínaè pøedán tomuto programu jako argument?
+		 * @brief Kontroluje pÅ™Ã­tomnost pÅ™Ã­sluÅ¡nÃ©ho pÅ™epÃ­naÄe.
+		 * @param option jmÃ©no Å¾Ã¡danÃ©ho pÅ™epÃ­naÄe
+		 * @return Byl pÅ™epÃ­naÄ pÅ™edÃ¡n tomuto programu jako argument?
 		 **/
-		bool has_options(const std::string& option) const;
+		bool has_option(const std::string& option) const;
 		/**
-		 * @brief Vrátí hodnotu pøíslušného pøepínaèe.
-		 * @param option jméno ádaného pøepínaèe
-		 * @return Hodnotu daného pøepínaèe, pokud byla zadána. Pokud byl pøepínaè pouit bez hodnoty nebo není pøítomen vùbec, vrátí "". 
+		 * @brief VrÃ¡tÃ­ hodnotu pÅ™Ã­sluÅ¡nÃ©ho pÅ™epÃ­naÄe.
+		 * @param option jmÃ©no Å¾Ã¡danÃ©ho pÅ™epÃ­naÄe
+		 * @return Hodnotu danÃ©ho pÅ™epÃ­naÄe, pokud byla zadÃ¡na. Pokud byl pÅ™epÃ­naÄ pouÅ¾it bez hodnoty nebo nenÃ­ pÅ™Ã­tomen vÅ¯bec, vrÃ¡tÃ­ "". 
 		 **/
 		std::string get_option(const std::string& option) const;
 	};

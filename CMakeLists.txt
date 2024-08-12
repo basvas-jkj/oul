@@ -12,12 +12,12 @@ find_package(nlohmann_json REQUIRED)
 find_package(Boost REQUIRED algorithm filesystem process)
 
 # OUL - main projetct
-add_library(helpers "lib/helpers/Helpers.cpp" "src/commnad.cpp")
+add_library(helpers "lib/helpers/Helpers.cpp")
 target_include_directories(helpers PUBLIC "C:/Users/vasst/dev/vcpkg/installed/x64-windows/include")
 target_link_libraries(helpers PRIVATE libzippp::libzippp)
 
 file(GLOB_RECURSE oul_source RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
-add_executable(oul ${oul_source} "src/commnad.cpp")
+add_executable(oul ${oul_source})
 message(${oul_source})
 
 target_link_libraries(oul PRIVATE helpers)
@@ -31,10 +31,10 @@ target_link_libraries(oul PRIVATE Boost::process)
 enable_testing()
 
 # CONFIG_TEST
-add_library(config "src/config.cpp" "src/data_file/data_file.cpp" "src/commnad.cpp")
+add_library(config "src/config.cpp" "src/data_file/data_file.cpp")
 target_include_directories(config PUBLIC "C:/Users/vasst/dev/vcpkg/installed/x64-windows/include")
 
-add_executable(config_test "test/config_test.cpp" "src/commnad.cpp")
+add_executable(config_test "test/config_test.cpp")
 add_test(config_test config_test)
 
 target_link_libraries(config_test PRIVATE config)
