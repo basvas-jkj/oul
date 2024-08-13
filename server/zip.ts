@@ -1,24 +1,25 @@
 import * as fs from "fs";
 import {join} from "path";
 import * as AdmZip from "adm-zip";
+import type {COMPONENT} from "./server"
 
-function ignore(name: string, files: string[]): boolean
-{
-    return !files.includes(name) && name != "oul.component.json" && name != "oul.component.yaml";
-}
-
-export function create_zip_archive(component_folder: string, output_file: string, files: string[]): void
+export function zip_all(component_folder: string, output_file: string)
 {
     let zip = new AdmZip();
-    let entries = fs.readdirSync(component_folder);
-    for (let entry of entries)
+    zip.addLocalFolder(component_folder);
+    zip.writeZip(output_file);
+}
+export function zip_selected(component_folder: string, output_file: string, component_config: COMPONENT, format: "json" | "yaml"): void
+{
+    let source = component_config.source_files;
+    let tests = component_config.test_files;
+    let docs = component_config.documentation;
+
+    let zip = new AdmZip();
+    for (let entry of source.concat(tests, docs))
     {
         let full_path = join(component_folder, entry);
-        if (ignore(entry, files))
-        {
-            continue;
-        }
-        else if (fs.statSync(full_path).isDirectory())
+        if (fs.statSync(full_path).isDirectory())
         {
             zip.addLocalFolder(full_path, entry);
         }
@@ -28,5 +29,7 @@ export function create_zip_archive(component_folder: string, output_file: string
         }
     }
 
+    let buf = Buffer.from(JSON.stringify(component_config));
+    zip.addFile("oul.component." + format, buf);
     zip.writeZip(output_file);
 }
