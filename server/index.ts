@@ -1,16 +1,16 @@
 import * as http from "http";
-import on_request from "./server"
+import on_request from "./server";
 
-function on_listen()
+function on_listen(): void
 {
     console.log("Server se spustil.");
 }
-function on_server_error(error)
+function on_server_error(error): void
  {
      console.warn(error.message);
  }
 
-function main(args: string[])
+function main(args: string[]): void
 {
     let port = 8080;
     for (let arg of args)

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import {join} from "path";
 import * as AdmZip from "adm-zip";
-import type {COMPONENT} from "./server"
+import type {COMPONENT} from "./server";
 
 export function zip_all(component_folder: string, output_file: string)
 {
@@ -14,7 +14,7 @@ export function zip_selected(component_folder: string, output_file: string, comp
     let source = component_config.source_files;
     let tests = component_config.test_files;
     let docs = component_config.documentation;
-
+    
     let zip = new AdmZip();
     for (let entry of source.concat(tests, docs))
     {

@@ -38,12 +38,12 @@ function log_request(url: string, status: number): void
 
 function get_component_config(name: string): [COMPONENT, "json" | "yaml"]
 {
-    let config = join(name, "oul.config.json");
+    let config = join(name, "oul.component.json");
     let format = "json";
     if (!fs.existsSync(config))
     {
         format = "yaml";
-        config = join(name, "oul.config.yaml");
+        config = join(name, "oul.component.yaml");
         
     }
     return [JSON.parse(fs.readFileSync(config).toString()), format as "json" | "yaml"];
@@ -51,8 +51,6 @@ function get_component_config(name: string): [COMPONENT, "json" | "yaml"]
 
 function on_get_request({path, queries, original}: PARSED_URL, res: http.ServerResponse)
 {
-
-
     if (path.length == 0 || path[0] == "")
     {
         res.writeHead(400);
@@ -62,8 +60,8 @@ function on_get_request({path, queries, original}: PARSED_URL, res: http.ServerR
     else if (path.length == 1)
     {
         let name = path[0];
-        let what = queries.get("what").split(",").sort();
-        let zip_file = name + "." + what.join("_") + ".zip";
+        let what = queries.get("what")?.split(",")?.sort();
+        let zip_file = (what == null) ?  name + ".zip" : name + "." + what.join("_") + ".zip";
 
         if (fs.existsSync(zip_file))
         {
