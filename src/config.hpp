@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <nlohmann/json.hpp>
-#include <yaml-cpp/yaml.h>
 
 namespace oul
 {
@@ -20,6 +18,9 @@ namespace oul
         std::vector<std::string> source_files;
         std::vector<std::string> test_files;
     };
+    
+    /// @struct CONFIG
+    /// @brief Třída pro ukládání konfigurace
     struct CONFIG
     {
         std::string location;

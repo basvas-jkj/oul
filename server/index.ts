@@ -2,16 +2,17 @@ import * as fs from "fs";
 import * as http from "http";
 import on_request from "./server";
 
+export type USER_INFO =
+{
+    name: string;
+    hashed_password: string;
+}
 export type SERVER_CONFIG =
 {
-    port: number,
-    get_requires_authorization: boolean,
-    post_requires_authorization: boolean,
-    users:
-    {
-        name: string
-        hashed_password: string
-    }[]
+    port: number;
+    get_requires_authorization: boolean;
+    post_requires_authorization: boolean;
+    users: USER_INFO[];
 }
 
 function on_listen(port: number): void
@@ -48,7 +49,7 @@ function main(args: string[]): void
         }
     }
 
-    const server = http.createServer(on_request);
+    const server = http.createServer((req, res)=>on_request(req, res, config));
     server.listen(port, '127.0.0.1', ()=>on_listen(port));
     server.on("error", on_server_error);
 }

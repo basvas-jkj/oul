@@ -1,7 +1,10 @@
 import * as fs from "fs";
 import {join} from "path";
 import * as http from "http";
-import {zip_all, zip_selected} from "./zip"
+import {zip_all, zip_selected} from "./zip";
+import {hash} from "crypto"
+
+import type {USER_INFO, SERVER_CONFIG} from "./index"
 
 type PARSED_URL = 
 {
@@ -113,11 +116,40 @@ function on_get_request({path, queries, original}: PARSED_URL, res: http.ServerR
         log_request(original, 400);
     }
 }
-export default function on_request(req: http.IncomingMessage, res: http.ServerResponse): void
+
+function reject_authorization(method: string, authorization: string, config: SERVER_CONFIG): boolean
+{
+    if ((method == "GET" && !config.get_requires_authorization) || (method == "POST" && !config.post_requires_authorization))
+    {
+        return false;
+    }
+    else if (authorization == undefined)
+    {
+        return true;
+    }
+
+    const auth = atob(authorization.split(" ", 2)[1]);
+    const [username, password] = auth.split(":");
+
+    function predicate(user: USER_INFO)
+    {
+        return user.name == username && user.hashed_password == hash("sha256", password);
+    }
+    const authorized_user = config.users.find(predicate);
+
+    return authorized_user == undefined
+}
+export default function on_request(req: http.IncomingMessage, res: http.ServerResponse, config: SERVER_CONFIG): void
 {
     let url = parse_url(req.url);
-    
-    if (req.method == "GET")
+
+    if (reject_authorization(req.method, req.headers.authorization, config))
+    {
+        res.writeHead(401);
+        res.end("Rejected.");
+        log_request(req.url, 401);
+    }
+    else if (req.method == "GET")
     {
         on_get_request(url, res);
     }
