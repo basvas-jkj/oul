@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "config.hpp"
+#include "server.hpp"
 #include "cmd/args.hpp"
 #include "component_manager.hpp"
 
@@ -83,6 +84,10 @@ int main(int argc, char* argv[])
 		else if (a.is("list"))
 		{
 			c.list_components();
+		}
+		else if (a.is("register"))
+		{
+			registration(c);
 		}
 	}
 	

@@ -3,8 +3,8 @@
 #include <filesystem>
 
 #include "zip.hpp"
+#include "server.hpp"
 #include "general.hpp"
-#include "download.hpp"
 #include "component_manager.hpp"
 
 using namespace std;

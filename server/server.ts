@@ -2,7 +2,7 @@ import * as fs from "fs";
 import {join} from "path";
 import * as http from "http";
 import {zip_all, zip_selected} from "./zip";
-import {hash} from "crypto"
+import {hash} from "crypto";
 
 import type {USER_INFO, SERVER_CONFIG} from "./index"
 
@@ -116,6 +116,62 @@ function on_get_request({path, queries, original}: PARSED_URL, res: http.ServerR
         log_request(original, 400);
     }
 }
+function on_put_request({path, queries, original}: PARSED_URL, req: http.IncomingMessage, res: http.ServerResponse, config: SERVER_CONFIG)
+{
+    if (path.length == 1 && path[0] == "register")
+    {
+        let content = "";
+        
+        function on_data(chunk: string)
+        {
+            content += chunk;
+        }
+        function on_end()
+        {
+            const [username, password] = content.split(":", 2);
+            function predicate(user: USER_INFO)
+            {
+                return user.name == username;
+            }
+
+            if (password == undefined || password == "")
+            {
+                res.writeHead(403);
+                res.end("No password specified.");
+                log_request(original, 403);
+            }
+            else
+            {
+                let user: USER_INFO =
+                {
+                    admin: queries.has("admin", "true"),
+                    name: username,
+                    hashed_password: hash("sha256", password)
+                };
+
+                if (config.users.find(predicate) == undefined)
+                {
+                    config.users.push(user);
+                    fs.writeFileSync("oul.server.json", JSON.stringify(config));
+                }
+
+                res.writeHead(204);
+                res.end();
+                log_request(original, 204);
+            }
+        }
+
+        req.on("data", on_data);
+        req.on("end", on_end);
+
+    }
+    else
+    {
+        res.writeHead(400);
+        res.end("Unknown request.");
+        log_request(original, 400);
+    }
+}
 
 function reject_authorization(method: string, authorization: string, config: SERVER_CONFIG): boolean
 {
@@ -137,7 +193,14 @@ function reject_authorization(method: string, authorization: string, config: SER
     }
     const authorized_user = config.users.find(predicate);
 
-    return authorized_user == undefined
+    if (method == "PUT")
+    {
+        return authorized_user == undefined || !authorized_user.admin;
+    }
+    else 
+    {
+        return authorized_user == undefined;
+    }
 }
 export default function on_request(req: http.IncomingMessage, res: http.ServerResponse, config: SERVER_CONFIG): void
 {
@@ -152,6 +215,10 @@ export default function on_request(req: http.IncomingMessage, res: http.ServerRe
     else if (req.method == "GET")
     {
         on_get_request(url, res);
+    }
+    else if (req.method == "PUT")
+    {
+        on_put_request(url, req, res, config);
     }
     else
     {
