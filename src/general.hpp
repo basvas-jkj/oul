@@ -5,5 +5,11 @@
 
 namespace oul
 {
-	std::vector<std::string> split(std::string s, char ch);
+	/**
+	 * @brief Rozdìlí øetìzec na podøetìzce podle zadaného oddìlovaèe.
+	 * @param s rozdìlovaný øetìzec
+	 * @param ch oddìlovaè
+	 * @return seznam podøetìzcù
+	 **/
+	std::vector<std::string> split(const std::string& s, char ch);
 }
