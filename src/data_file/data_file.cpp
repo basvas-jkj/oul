@@ -56,6 +56,7 @@ namespace oul
             if (c["repository"]["url"].IsScalar())
             {
                 component.url = c["repository"]["url"].as<string>();
+                component.original_name = c["repository"]["original_name"].as<string>();
             }
 
             return {true, component};
@@ -144,6 +145,7 @@ namespace oul
         ordered_json component;
         component["name"] = i.name;
         component["repository"]["url"] = i.url;
+        component["repository"]["original_name"] = i.original_name;
         component["source_files"] = json::array();
         component["test_files"] = json::array();
         component["documentation"] = json::array();
@@ -192,6 +194,7 @@ namespace oul
         Node component;
         component["name"] = i.name;
         component["repository"]["url"] = i.url;
+        component["repository"]["original_name"] = i.original_name;
         component["source_files"] = YAML::Load("[]");
         component["test_files"] = YAML::Load("[]");
         component["documentation"] = YAML::Load("[]");

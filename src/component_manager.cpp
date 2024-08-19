@@ -64,7 +64,7 @@ namespace oul
 		vector<string> tests = split(test_files, ',');
 		vector<string> docs = split(doc_files, ',');
 
-		ITEM i{name, "", docs, source, tests};
+		ITEM i{name, "", "", docs, source, tests};
 
 		c.add_component(i);
 	}
