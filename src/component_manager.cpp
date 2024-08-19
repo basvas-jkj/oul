@@ -70,11 +70,14 @@ namespace oul
 	}
 	void rename_component(CONFIG& c, const string& old_name, const string& new_name)
 	{
-		auto predicate = [old_name](const ITEM& i)
+		vector<ITEM>::iterator i = c.get_component(old_name);
+		if (i == c.components.end())
+		{
+			cerr << "There is no component of this name." << endl;
+		}
+		else
 			{
-				return i.name == old_name;
-			};
-		auto i = ranges::find_if(c.components, predicate);
 		i->name = new_name;
 	}
+}
 }
