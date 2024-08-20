@@ -12,6 +12,7 @@ namespace oul
 		map<string, string> short_variants =
 		{
 			{"-new", "-n"},
+			{"-where", "-w"},
 			{"-src", "-s"},
 			{"-test", "-t"},
 			{"-doc", "-d"},

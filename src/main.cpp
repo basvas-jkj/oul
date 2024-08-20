@@ -39,7 +39,6 @@ int main(int argc, char* argv[])
 		else if (a.is("add"))
 		{
 			string name = a.next_arg();
-			string save_as = a.next_arg();
 			if (name == "")
 			{
 				cerr << "No component to download." << endl;
@@ -55,15 +54,15 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				add_component(c, name, save_as);
+				string save_as = a.get_option("-as");
+				string url = a.get_option("-url");
+				string where = a.get_option("-w");
+				add_component(c, name, save_as, url, where);
 			}
 		}
 		else if (a.is("create"))
 		{
 			string name = a.next_arg();
-			string source_files = a.get_option("-s");
-			string test_files = a.get_option("-t");
-			string doc_files = a.get_option("-d");
 
 			if (name == "")
 			{
@@ -72,7 +71,12 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				create_component(c, name, source_files, test_files, doc_files);
+				string source_files = a.get_option("-s");
+				string test_files = a.get_option("-t");
+				string doc_files = a.get_option("-d");
+				string where = a.get_option("-w");
+
+				create_component(c, name, where, source_files, test_files, doc_files);
 			}
 		}
 		else if (a.is("rename"))

@@ -33,6 +33,7 @@ namespace oul
     static bool is_valid_component(const Node& c)
     {
         return is_valid_node(c["name"], false)
+            && is_valid_node(c["location"], false)
             && is_valid_node(c["documentation"], true)
             && is_valid_node(c["source_files"], true)
             && is_valid_node(c["test_files"], true);
@@ -49,6 +50,7 @@ namespace oul
         if (is_valid_component(c))
         {
             component.name = c["name"].as<string>();
+            component.location = c["location"].as<string>();
             component.documentation = c["documentation"].as<vector<string>>();
             component.source_files = c["source_files"].as<vector<string>>();
             component.test_files = c["test_files"].as<vector<string>>();
@@ -144,6 +146,7 @@ namespace oul
     {
         ordered_json component;
         component["name"] = i.name;
+        component["location"] = i.location;
         component["repository"]["url"] = i.url;
         component["repository"]["original_name"] = i.original_name;
         component["source_files"] = json::array();
@@ -193,6 +196,7 @@ namespace oul
     {
         Node component;
         component["name"] = i.name;
+        component["location"] = i.location;
         component["repository"]["url"] = i.url;
         component["repository"]["original_name"] = i.original_name;
         component["source_files"] = YAML::Load("[]");

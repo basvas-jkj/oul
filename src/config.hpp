@@ -13,6 +13,7 @@ namespace oul
     struct ITEM
     {
         std::string name;
+        std::string location;
         std::string original_name;
         std::string url;
         std::vector<std::string> documentation;
