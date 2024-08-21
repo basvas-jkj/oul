@@ -13,7 +13,31 @@ namespace fs = std::filesystem;
 
 namespace oul
 {
-	void add_files(CONFIG& c, const string& name, const string& source_files, const string& test_files, const string& doc_files)
+	COMPONENT_MANAGER::COMPONENT_MANAGER(CONFIG&& c): c(c) 
+	{};
+	optional<COMPONENT_MANAGER> COMPONENT_MANAGER::init()
+	{
+		string conf = CONFIG::find();
+		auto [valid, c] = CONFIG::read(conf);
+		if (conf == "")
+		{
+			cerr << "Configuration file not found." << endl;
+			cerr << "Call oul init or move into an initialized project." << endl;
+			return {false, COMPONENT_MANAGER(std::move(c))};
+		}
+		else if (!valid)
+		{
+			cerr << "Configuration file is corrupted." << endl;
+			cerr << "Remove it and initialize again or move into another project." << endl;
+			return {false, COMPONENT_MANAGER(std::move(c))};
+		}
+		else
+		{
+			return {true, COMPONENT_MANAGER(std::move(c))};
+		}
+	}
+
+	void COMPONENT_MANAGER::add_files(const string& name, const string& source_files, const string& test_files, const string& doc_files)
 	{
 		vector<string> source = split(source_files, ',');
 		vector<string> tests = split(test_files, ',');
@@ -31,7 +55,7 @@ namespace oul
 		i->test_files.insert(i->test_files.end(), tests.begin(), tests.end());
 		i->documentation.insert(i->documentation.end(), docs.begin(), docs.end());
 	}
-	void remove_files(CONFIG& c, const string& name, const string& source_files, const string& test_files, const string& doc_files)
+	void COMPONENT_MANAGER::remove_files(const string& name, const string& source_files, const string& test_files, const string& doc_files)
 	{
 		vector<string> source = split(source_files, ',');
 		vector<string> tests = split(test_files, ',');
@@ -62,7 +86,7 @@ namespace oul
 		}
 	}
 
-	void add_component(CONFIG& c, const string& name, const string& save_as, const string& url, const string& where)
+	void COMPONENT_MANAGER::add(const string& name, const string& save_as, const string& url, const string& where)
 	{
 		if (c.contains(name))
 		{
@@ -106,7 +130,7 @@ namespace oul
 			cerr << "This component can't be downloaded." << endl;
 		}
 	}
-	void create_component(CONFIG& c, const string& name, const string& where, const string& source_files, const string& test_files, const string& doc_files)
+	void COMPONENT_MANAGER::create(const string& name, const string& where, const string& source_files, const string& test_files, const string& doc_files)
 	{
 		if (c.contains(name))
 		{
@@ -122,7 +146,7 @@ namespace oul
 
 		c.add_component(i);
 	}
-	void rename_component(CONFIG& c, const string& old_name, const string& new_name)
+	void COMPONENT_MANAGER::rename(const string& old_name, const string& new_name)
 	{
 		vector<ITEM>::iterator i = c.get_component(old_name);
 		if (i == c.components.end())
@@ -134,7 +158,7 @@ namespace oul
 			i->name = new_name;
 		}
 	}
-	void move_component(CONFIG& c, const string& name, const string& new_location)
+	void COMPONENT_MANAGER::move(const string& name, const string& new_location)
 	{
 		vector<ITEM>::iterator i = c.get_component(name);
 		if (i == c.components.end())
@@ -152,7 +176,7 @@ namespace oul
 			i->location = new_location;
 		}
 	}
-	void remove_component(CONFIG& c, const string& name)
+	void COMPONENT_MANAGER::remove(const string& name)
 	{
 		vector<ITEM>::iterator i = c.get_component(name);
 		if (i == c.components.end())
