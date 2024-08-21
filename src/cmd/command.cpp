@@ -20,9 +20,11 @@ namespace oul
 		{
 			{"init", "     creates configuration file"},
 			{"add", "      downloads component and adds it into configuration"},
+			{"remove", "   deletes the component"},
 			{"create", "   creates new component locally"},
 			{"list", "     writes list of all installed or localy created components"},
 			{"rename", "   changes the name of the component"},
+			{"move", "     changes the location of the component"},
 			{"register", " creates an account on the server"}
 		};
 		list.reserve(list.size() + 1);

@@ -1,3 +1,4 @@
+#include <ranges>
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
@@ -8,6 +9,7 @@
 #include "component_manager.hpp"
 
 using namespace std;
+namespace fs = std::filesystem;
 
 namespace oul
 {
@@ -29,6 +31,37 @@ namespace oul
 		i->test_files.insert(i->test_files.end(), tests.begin(), tests.end());
 		i->documentation.insert(i->documentation.end(), docs.begin(), docs.end());
 	}
+	void remove_files(CONFIG& c, const string& name, const string& source_files, const string& test_files, const string& doc_files)
+	{
+		vector<string> source = split(source_files, ',');
+		vector<string> tests = split(test_files, ',');
+		vector<string> docs = split(doc_files, ',');
+
+		vector<ITEM>::iterator i = c.get_component(name);
+
+		if (i == c.components.end())
+		{
+			cerr << "There is no component of this name." << endl;
+			return;
+		}
+
+		for (string& entry : source)
+		{
+			vector<string>::iterator it = ranges::find(i->source_files, entry);
+			i->source_files.erase(it);
+		}
+		for (string& entry : tests)
+		{
+			vector<string>::iterator it = ranges::find(i->test_files, entry);
+			i->test_files.erase(it);
+		}
+		for (string& entry : source)
+		{
+			vector<string>::iterator it = ranges::find(i->documentation, entry);
+			i->documentation.erase(it);
+		}
+	}
+
 	void add_component(CONFIG& c, const string& name, const string& save_as, const string& url, const string& where)
 	{
 		if (c.contains(name))
@@ -99,6 +132,40 @@ namespace oul
 		else
 		{
 			i->name = new_name;
+		}
+	}
+	void move_component(CONFIG& c, const string& name, const string& new_location)
+	{
+		vector<ITEM>::iterator i = c.get_component(name);
+		if (i == c.components.end())
+		{
+			cerr << "There is no component of this name." << endl;
+		}
+		else
+		{
+			vector content{i->source_files, i->test_files, i->documentation};
+			for (fs::path entry : content | views::join)
+			{
+				fs::rename(i->location / entry, new_location / entry);
+			}
+
+			i->location = new_location;
+		}
+	}
+	void remove_component(CONFIG& c, const string& name)
+	{
+		vector<ITEM>::iterator i = c.get_component(name);
+		if (i == c.components.end())
+		{
+			cerr << "There is no component of this name." << endl;
+		}
+		else
+		{
+			vector content{i->source_files, i->test_files, i->documentation};
+			for (fs::path entry : content | views::join)
+			{
+				fs::remove_all(i->location / entry);
+			}
 		}
 	}
 }

@@ -60,6 +60,48 @@ int main(int argc, char* argv[])
 				add_component(c, name, save_as, url, where);
 			}
 		}
+		else if (a.is("remove"))
+		{
+			string name = a.next_arg();
+			if (name == "")
+			{
+				cerr << "No component to remove." << endl;
+				cerr << "Call this command with one additional argument." << endl;
+				return 2;
+			}
+			else if (a.has_option("-s") || a.has_option("-t") || a.has_option("-d"))
+			{
+				string source_files = a.get_option("-s");
+				string test_files = a.get_option("-t");
+				string doc_files = a.get_option("-d");
+				remove_files(c, name, source_files, test_files, doc_files);
+			}
+			else
+			{
+				remove_component(c, name);
+			}
+		}
+		else if (a.is("move"))
+		{
+			string name = a.next_arg();
+			string location = a.next_arg();
+			if (name == "")
+			{
+				cerr << "No component to move." << endl;
+				cerr << "Call this command with two additional arguments." << endl;
+				return 2;
+			}
+			else if (location == "")
+			{
+				cerr << "No location where move to." << endl;
+				cerr << "Call this command with one additional argument." << endl;
+				return 2;
+			}
+			else
+			{
+				move_component(c, name, location);
+			}
+		}
 		else if (a.is("create"))
 		{
 			string name = a.next_arg();

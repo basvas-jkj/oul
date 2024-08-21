@@ -17,6 +17,15 @@ namespace oul
 	 **/
 	void add_files(CONFIG& c, const std::string& name, const std::string& source_files, const std::string& test_files, const std::string& doc_files);
 	/**
+	 * @brief Odebere z konfigurace zadané soubory dané komponenty (neodstraní je).
+	 * @param c konfigurace projektu
+	 * @param name místní jméno komponenty
+	 * @param source_files seznam odebíraných souborů zdrojového kódu
+	 * @param test_files seznam odebíraných souborů testů
+	 * @param doc_files seznam odebíraných souborů dokumentace
+	 **/
+	void remove_files(CONFIG& c, const std::string& name, const std::string& source_files, const std::string& test_files, const std::string& doc_files);
+	/**
 	 * @brief Stáhne novou komponentu ze serveru a přidá ji do projektu.
 	 * @param c konfigurace projektu
 	 * @param name jméno komponenty na serveru
@@ -24,6 +33,12 @@ namespace oul
 	 * @param url adresa serveru, ze které bude komponenta stažena
 	 **/
 	void add_component(CONFIG& c, const std::string& name, const std::string& save_as, const std::string& url, const std::string& where);
+	/**
+	 * @brief Odtraní zadanou komponentu a všechny její soubory.
+	 * @param c c konfigurace projektu
+	 * @param name místní jméno komponenty
+	 **/
+	void remove_component(CONFIG& c, const std::string& name);
 	/**
 	 * @brief Vytvoří novou komponentu v projektu.
 	 * @param c konfigurace projektu
@@ -41,4 +56,11 @@ namespace oul
 	 * @param new_name nové jméno komponenty
 	 **/
 	void rename_component(CONFIG& c, const std::string& old_name, const std::string& new_name);
+	/**
+	 * @brief Změní umístění komponenty.
+	 * @param c konfigurace projektu
+	 * @param name místní jméno komponenty
+	 * @param new_location nové umístění komponenty
+	 **/
+	void move_component(CONFIG& c, const std::string& name, const std::string& new_location);
 }
