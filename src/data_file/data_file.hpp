@@ -23,7 +23,7 @@ namespace oul
     /**
      * @brief Načte konfiguraci ze souboru.
      * @param config_file Soubor, ze kterého se načte konfigurace.
-     * @return Je-li konfigurace platná, vrátí <code>true</code> a načtenou komponentu. Jinak vrátí <code>false</code>.
+     * @return Je-li konfigurace platná, vrátí <code>true</code> a načtenou konfiguraci. Jinak vrátí <code>false</code>.
      **/
     optional<CONFIG> load_config(const std::string&);
 
