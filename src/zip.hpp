@@ -9,6 +9,9 @@
 
 namespace oul
 {
+	/**
+	 * @brief Třída usnadňující práci se zazipovanými komponentami.
+	 **/
 	class ZIP_MANAGER
 	{
 		ITEM c;
@@ -16,9 +19,21 @@ namespace oul
 		boost::filesystem::path extracted_directory;
 
 	public:
+		/**
+		 * @brief Konstruktor vytvářející objekty třídy <code>ZIP_MANAGER</code>. Ze zazipované komponenty načte její konfiguraci.
+		 * @param zip Umístění zazipované komponenty.
+		 **/
 		ZIP_MANAGER(const std::string& zip);
+		/**
+		 * @brief Odstraní zazipovanou komponentu a všechny dočasné soubory.
+		 **/
 		~ZIP_MANAGER();
 
-		ITEM unzip(const std::string&);
+		/**
+		 * @brief Rozbalí obsah komponenty.
+		 * @param where Složka, do které je komponenta rozbalena.
+		 * @return konfigurace rozbalené komponenty
+		 **/
+		ITEM unzip(const std::string& where);
 	};
 }

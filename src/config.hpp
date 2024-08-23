@@ -21,8 +21,9 @@ namespace oul
         std::vector<std::string> test_files;
     };
     
-    /// @struct CONFIG
-    /// @brief Třída pro ukládání konfigurace projektu.
+    /**
+     * @brief Třída pro ukládání konfigurace projektu.
+     **/
     struct CONFIG
     {
         std::string location;
