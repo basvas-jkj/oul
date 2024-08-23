@@ -9,15 +9,15 @@
 
 namespace oul
 {
-	class ZIP_COMPONENT
+	class ZIP_MANAGER
 	{
 		ITEM c;
 		std::string zip_file;
 		boost::filesystem::path extracted_directory;
 
 	public:
-		ZIP_COMPONENT(const std::string& zip);
-		~ZIP_COMPONENT();
+		ZIP_MANAGER(const std::string& zip);
+		~ZIP_MANAGER();
 
 		ITEM unzip(const std::string&);
 	};

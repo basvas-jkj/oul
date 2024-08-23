@@ -21,7 +21,7 @@ namespace oul
 		fs::rename(source, target);
 	}
 
-	ZIP_COMPONENT::ZIP_COMPONENT(const string& zip): zip_file(zip), extracted_directory(fs::path(zip_file).replace_extension())
+	ZIP_MANAGER::ZIP_MANAGER(const string& zip): zip_file(zip), extracted_directory(fs::path(zip_file).replace_extension())
 	{
 		bool success;
 		fs::create_directory(extracted_directory);
@@ -34,26 +34,19 @@ namespace oul
 
 		c = read_component(config).second;
 	}
-	ZIP_COMPONENT::~ZIP_COMPONENT()
+	ZIP_MANAGER::~ZIP_MANAGER()
 	{
 		fs::remove(zip_file);
 		fs::remove_all(extracted_directory);
 	}
-	ITEM ZIP_COMPONENT::unzip(const string& where)
+	ITEM ZIP_MANAGER::unzip(const string& where)
 	{
 		size_t count;
 		
 		if (ExtractAllFilesFromZip(extracted_directory.string() + "/", zip_file, count))
 		{
-			for (string& entry_name : c.source_files)
-			{
-				move(extracted_directory, where, entry_name);
-			}
-			for (string& entry_name : c.test_files)
-			{
-				move(extracted_directory, where, entry_name);
-			}
-			for (string& entry_name : c.documentation)
+			vector content{c.source_files, c.test_files, c.documentation};
+			for (string& entry_name : content | views::join)
 			{
 				move(extracted_directory, where, entry_name);
 			}

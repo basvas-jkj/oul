@@ -108,7 +108,7 @@ namespace oul
 
 		if (component != "")
 		{
-			ZIP_COMPONENT zip(component);
+			ZIP_MANAGER zip(component);
 			ITEM i(zip.unzip(where));
 			i.url = url;
 			i.original_name = name;
