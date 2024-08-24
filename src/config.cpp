@@ -26,21 +26,21 @@ namespace oul
         path current = current_path();
         do
         {
-            path parent = current.parent_path();
-            current.append("oul.config.json");
-
-            if (exists(current))
+            path config = current / "oul.config.json";
+            if (exists(config))
             {
-                return current.string();
+                current_path(current);
+                return config.string();
             }
             
-            current.replace_filename("oul.config.yaml");
-            if (exists(current))
+            config = current / "oul.config.yaml";
+            if (exists(config))
             {
-                return current.string();
+                current_path(current);
+                return config.string();
             }
 
-            current = parent;
+            current = current.parent_path();
         }
         while (!equivalent(current, current.root_path()));
         return "";

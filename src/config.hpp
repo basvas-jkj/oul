@@ -47,7 +47,7 @@ namespace oul
         ~CONFIG();
 
         /**
-         * @brief Najde cestu ke konfiguračnímu souboru.
+         * @brief Najde cestu ke konfiguračnímu souboru.Pokud je soubor nalezen, nastaví pracovní složku na jeho umístění.
          * @return Pokud byla konfigurace nalezena, vrátí cestu. Jinak vrátí "".
          **/
         static std::string find();
