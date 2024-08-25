@@ -5,6 +5,7 @@
 #include <boost/filesystem.hpp>
 
 #include "server.hpp"
+#include "support.hpp"
 
 using namespace std;
 using namespace boost::process;
@@ -56,7 +57,7 @@ namespace oul
 	}
 	string download(const string& url)
 	{
-		path temp = unique_path("%%%%-%%%%-%%%%-%%%%.zip");
+		path temp = unique_path(get_temporary_folder() / "%%%%-%%%%-%%%%-%%%%.zip");
 		path curl = search_path("curl");
 		child ch(curl, url, "-o", temp, std_err > null);
 		ch.wait();
