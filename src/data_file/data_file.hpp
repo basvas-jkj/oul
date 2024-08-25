@@ -28,7 +28,13 @@ namespace oul
     optional<CONFIG> load_config(const std::string&);
 
     /**
-     * @brief Zapíše konfiguraci do souboru podle zvoleného formátu.
+     * @brief Zapíše konfiguraci komponenty do souboru podle zvoleného formátu.
+     * @param i objekt nesoucí konfiguraci komponenty
+     * @param format výstupní formát souboru
+     **/
+    void write_component(const ITEM& i, const std::string& format);
+    /**
+     * @brief Zapíše konfiguraci projektu do souboru podle zvoleného formátu.
      * @param cfg objekt nesoucí zapisovanou konfiguraci
      **/
     void write_config(const CONFIG&);

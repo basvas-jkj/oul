@@ -15,7 +15,8 @@ namespace oul
     void move(const fs::path& source_directory, const std::string& target_directory, const std::string& entry_name);
     /**
      * @brief Vytvoří složku pro dočasné soubory (podsložka oul v systémové složce).
+     * @param use_subfolder Vytvoří se podsložka zajišťující unikátnost mezi různými voláními programu oul?
      * @return umístění složky pro dočasné soubory
      **/
-    fs::path get_temporary_folder();
+    fs::path get_temporary_folder(bool use_subfolder = false);
 }

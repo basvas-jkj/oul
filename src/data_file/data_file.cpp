@@ -4,11 +4,13 @@
 #include <yaml-cpp/yaml.h>
 #include <nlohmann/json.hpp>
 
+#include "../support.hpp"
 #include "data_file.hpp"
 
 using namespace std;
 using namespace YAML;
 using namespace nlohmann;
+using namespace boost::filesystem;
 
 namespace oul
 {
@@ -236,6 +238,24 @@ namespace oul
 
         ofstream o(cfg.location);
         o << root;
+    }
+    void write_component(const ITEM& i, const string& format)
+    {
+        path component_config_location = get_temporary_folder(true);
+        if (format == "json")
+        {
+            component_config_location /= "oul.component.json";
+            ordered_json component = write_component_json(i);
+            ofstream o(component_config_location.string(), ios::noreplace);
+            o << component.dump(4);
+        }
+        else
+        {
+            component_config_location /= "oul.component.yaml";
+            Node component = write_component_yaml(i);
+            ofstream o(component_config_location.string(), ios::noreplace);
+            o << component;
+        }
     }
     void write_config(const CONFIG& cfg)
     {
