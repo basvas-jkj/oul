@@ -4,16 +4,10 @@
 #include <string>
 
 #include "../config.hpp"
+#include "../support.hpp"
 
 namespace oul
 {
-    /**
-     * @brief Typ představující nepovinnou hodnotu libovolného datového typu.
-     * @tparam T datový typ, jehož hodnota je nepovinná
-     **/
-    template <class T>
-    using optional = std::pair<bool, T>;
-
     /**
      * @brief Přečte souboru a jeho obsah převede na komponentu.
      * @param s soubor, ze kterého se komponenta načte

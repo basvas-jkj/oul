@@ -4,12 +4,13 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include "support.hpp"
 
 namespace oul
 {
-    template <class T>
-    using optional = std::pair<bool, T>;
-
+    /**
+     * @brief Třída pro ukládání konfigurace komponenty.
+     **/
     struct ITEM
     {
         std::string name;
