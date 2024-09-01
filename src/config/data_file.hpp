@@ -3,7 +3,7 @@
 #include <tuple>
 #include <string>
 
-#include "../config.hpp"
+#include "config.hpp"
 #include "../support.hpp"
 
 namespace oul

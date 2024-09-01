@@ -18,7 +18,6 @@ target_link_libraries(helpers PRIVATE libzippp::libzippp)
 
 file(GLOB_RECURSE oul_source RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 add_executable(oul ${oul_source})
-message(${oul_source})
 
 target_link_libraries(oul PRIVATE helpers)
 target_link_libraries(oul PRIVATE yaml-cpp::yaml-cpp)
@@ -31,7 +30,7 @@ target_link_libraries(oul PRIVATE Boost::process)
 enable_testing()
 
 # CONFIG_TEST
-add_library(config "src/config.cpp" "src/data_file/data_file.cpp")
+add_library(config "src/config/config.cpp" "src/config/data_file.cpp")
 target_include_directories(config PUBLIC "C:/Users/vasst/dev/vcpkg/installed/x64-windows/include")
 
 add_executable(config_test "test/config_test.cpp")
@@ -42,7 +41,7 @@ target_link_libraries(config_test PRIVATE yaml-cpp::yaml-cpp)
 target_link_libraries(config_test PRIVATE nlohmann_json::nlohmann_json)
 
 if (MSVC)
-    target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/W2>)
+    target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/W3>)
 else()
     target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wall -Wextra -pedantic>)
 endif()

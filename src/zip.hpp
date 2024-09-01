@@ -5,7 +5,7 @@
 #include <fstream>
 #include <boost/filesystem.hpp>
 
-#include "config.hpp"
+#include "config/config.hpp"
 
 namespace oul
 {

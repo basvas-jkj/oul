@@ -7,7 +7,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include "config.hpp"
-#include "data_file/data_file.hpp"
+#include "data_file.hpp"
 
 using namespace std;
 using namespace boost::filesystem;

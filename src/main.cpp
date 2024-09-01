@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "config.hpp"
 #include "server.hpp"
 #include "cmd/args.hpp"
+#include "config/config.hpp"
 #include "component_manager.hpp"
 
 using namespace std;

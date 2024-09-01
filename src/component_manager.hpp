@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "config.hpp"
+#include "config/config.hpp"
 
 namespace oul
 {
