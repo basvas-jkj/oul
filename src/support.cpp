@@ -15,16 +15,4 @@ namespace oul
 
 		rename(source, target);
 	}
-	fs::path get_temporary_folder(bool use_subfolder)
-	{
-		fs::path temp = fs::temp_directory_path() / "oul";
-
-		if (use_subfolder)
-		{
-			temp /= fs::unique_path();
-		}
-
-		fs::create_directory(temp);
-		return temp;
-	}
 }

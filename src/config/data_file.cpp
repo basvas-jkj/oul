@@ -4,7 +4,7 @@
 #include <yaml-cpp/yaml.h>
 #include <nlohmann/json.hpp>
 
-#include "../support.hpp"
+#include "../tmp.hpp"
 #include "data_file.hpp"
 
 using namespace std;
@@ -241,7 +241,7 @@ namespace oul
     }
     void write_component(const ITEM& i, const string& format)
     {
-        path component_config_location = get_temporary_folder(true);
+        path component_config_location = TMP_FILE::get_temporary_folder(true);
         if (format == "json")
         {
             component_config_location /= "oul.component.json";
