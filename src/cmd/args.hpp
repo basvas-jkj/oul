@@ -121,6 +121,6 @@ namespace oul
 		 * @param option jméno žádaného přepínače
 		 * @return Hodnotu daného přepínače, pokud byla zadána. Pokud byl přepínač použit bez hodnoty nebo není přítomen vůbec, vrátí "". 
 		 **/
-		std::string get_option(const std::string& option) const;
+		std::string get_option(const std::string& option, const std::string& default_value = "") const;
 	};
 }

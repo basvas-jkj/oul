@@ -94,12 +94,12 @@ namespace oul
 	{
 		return options.contains(option);
 	}
-	string ARGS::get_option(const string& option) const
+	string ARGS::get_option(const string& option, const string& default_value) const
 	{
 		auto i = options.find(option);
 		if (i == options.end())
 		{
-			return "";
+			return default_value;
 		}
 		else
 		{
