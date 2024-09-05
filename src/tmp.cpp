@@ -5,7 +5,7 @@ using namespace boost::filesystem;
 
 namespace oul
 {
-	path TMP_FILE::get_temporary_folder(bool use_subfolder)
+	path get_temporary_folder(bool use_subfolder)
 	{
 		path temp = temp_directory_path() / "oul";
 
@@ -18,6 +18,10 @@ namespace oul
 		return temp;
 	}
 	
+	// --------------------
+	//       TMP_FILE        
+	// --------------------
+
 	TMP_FILE::TMP_FILE(const string& name, bool use_subfolder): name(unique_path(get_temporary_folder(use_subfolder) / name)) {}
 	TMP_FILE::TMP_FILE(const path& name): name(name) {}
 	TMP_FILE::~TMP_FILE()
@@ -36,5 +40,27 @@ namespace oul
 	ifstream TMP_FILE::read() const
 	{
 		return ifstream(name.c_str());
+	}
+
+	// --------------------
+	//      TMP_FOLDER        
+	// --------------------
+
+	TMP_FOLDER::TMP_FOLDER(const string& name, bool use_subfolder): name(unique_path(get_temporary_folder(use_subfolder) / name)) 
+	{
+		create_directory(name);
+	}
+	TMP_FOLDER::TMP_FOLDER(const path& name): name(name)
+	{
+		create_directory(name);
+	}
+	TMP_FOLDER::~TMP_FOLDER()
+	{
+		remove_all(name);
+	}
+
+	path TMP_FOLDER::get_name() const
+	{
+		return name;
 	}
 }
