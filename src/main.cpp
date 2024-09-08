@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 			{
 				string save_as = a.get_option("-as");
 				string url = a.get_option("-url");
-				string where = a.get_option("-w");
+				string where = a.get_option("-w", ".");
 				components.add(name, save_as, url, where);
 			}
 		}
@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
 				string source_files = a.get_option("-s");
 				string test_files = a.get_option("-t");
 				string doc_files = a.get_option("-d");
-				string where = a.get_option("-w");
+				string where = a.get_option("-w", ".");
 
 				components.create(name, where, source_files, test_files, doc_files);
 			}
