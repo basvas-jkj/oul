@@ -1,19 +1,20 @@
 #pragma once
 
 #include <string>
+#include "support.hpp"
 #include "config/config.hpp"
 
 namespace oul
 {
 	/**
-	 * @brief Zaregistruje nového uivatele na serveru.
+	 * @brief Zaregistruje novÃ©ho uÅ¾ivatele na serveru.
 	 * @param c Konfigurace projektu.
 	 **/
 	void registration(const CONFIG&);
 	/**
-	 * @brief Stáhne zazipovanou komponentu ze serveru.
-	 * @param url Adresa, ze které bude komponenta staena
-	 * @return Cesta ke staenému archivu. Pokud staení nebylo úspìšné, vrátí "".
+	 * @brief StÃ¡hne zazipovanou komponentu ze serveru.
+	 * @param url Adresa, ze kterÃ© bude komponenta staÅ¾ena
+	 * @return Je-li naÄtenÃ¡ konfigurace platnÃ¡, vrÃ¡tÃ­ <code>true</code> a staÅ¾enou komponentu. Jinak vrÃ¡tÃ­ <code>false</code>.
 	 */
-	std::string download(const std::string&);
+	optional<ITEM> download(const std::string& url, const std::string& where);
 }

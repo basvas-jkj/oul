@@ -3,9 +3,12 @@
 #include <iostream>
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
+#include "../lib/helpers/Helpers.h"
 
+#include "tmp.hpp"
 #include "server.hpp"
 #include "support.hpp"
+#include "config/data_file.hpp"
 
 using namespace std;
 using namespace boost::process;
@@ -13,6 +16,43 @@ using namespace boost::filesystem;
 
 namespace oul
 {
+	static optional<ITEM> unzip(const TMP_FILE& zip_file, const string& where)
+	{
+		bool success;
+		ITEM component;
+		string zip_name = zip_file.get_name().string();
+
+		string config = Zip::ExtractTextFromZip(zip_name, "oul.component.json", success);
+		if (!success)
+		{
+			config = Zip::ExtractTextFromZip(zip_name, "oul.component.yaml", success);
+			if (!success)
+			{
+				return {false, component};
+			}
+		}
+
+		component = read_component(config).second;
+
+		size_t count;
+		TMP_FOLDER extracted_zip(zip_file.get_name().replace_extension());
+		if (Zip::ExtractAllFilesFromZip(extracted_zip.get_name().string(), zip_name, count))
+		{
+			if (count < component.source_files.size() + component.test_files.size() + component.documentation.size())
+			{
+				return {false, component};
+			}
+
+			vector content{component.source_files, component.test_files, component.documentation};
+			for (string& entry_name : content | views::join)
+			{
+				move(extracted_zip.get_name(), where, entry_name);
+			}
+		}
+
+		return {true, component};
+	}
+
 	void registration(const CONFIG& c)
 	{
 		string admin_name;
@@ -55,21 +95,23 @@ namespace oul
 			cerr << endl << "Registration was not successful." << endl;
 		}
 	}
-	string download(const string& url)
+	optional<ITEM> download(const string& url, const string& where)
 	{
-		path temp = unique_path(get_temporary_folder() / "%%%%-%%%%-%%%%-%%%%.zip");
+		TMP_FILE file("%%%%-%%%%-%%%%-%%%%.zip", false);
 		path curl = search_path("curl");
-		child ch(curl, url, "-o", temp, std_err > null);
+		child ch(curl, url, "-o", file.get_name(), std_err > null);
 		ch.wait();
 		
 		if (ch.exit_code() == 0)
 		{
-			return temp.string();
+			return unzip(file, where);
 		}
 		else
 		{
 			cerr << "Component could not be downloaded." << endl;
-			return "";
+			return {false, ITEM()};
 		}
 	}
+
+
 }

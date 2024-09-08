@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <boost/filesystem.hpp>
 
-#include "zip.hpp"
 #include "server.hpp"
 #include "general.hpp"
 #include "component_manager.hpp"
@@ -104,12 +103,10 @@ namespace oul
 			component_url = url + "/" + name;
 		}
 
-		string component = download(component_url);
+		auto [success, i] = download(component_url, where);
 
-		if (component != "")
+		if (success)
 		{
-			ZIP_MANAGER zip(component);
-			ITEM i(zip.unzip(where));
 			i.url = url;
 			i.original_name = name;
 
