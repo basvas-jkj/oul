@@ -1,5 +1,6 @@
 #include <string>
 #include <fstream>
+#include <iostream>
 
 #include <yaml-cpp/yaml.h>
 #include <nlohmann/json.hpp>
@@ -35,7 +36,6 @@ namespace oul
     static bool is_valid_component(const Node& c)
     {
         return is_valid_node(c["name"], false)
-            && is_valid_node(c["location"], false)
             && is_valid_node(c["documentation"], true)
             && is_valid_node(c["source_files"], true)
             && is_valid_node(c["test_files"], true);
@@ -52,7 +52,6 @@ namespace oul
         if (is_valid_component(c))
         {
             component.name = c["name"].as<string>();
-            component.location = c["location"].as<string>();
             component.documentation = c["documentation"].as<vector<string>>();
             component.source_files = c["source_files"].as<vector<string>>();
             component.test_files = c["test_files"].as<vector<string>>();
@@ -241,7 +240,7 @@ namespace oul
     }
     void write_component(const ITEM& i, const string& format)
     {
-        path component_config_location = TMP_FILE::get_temporary_folder(true);
+        path component_config_location = get_temporary_folder(true);
         if (format == "json")
         {
             component_config_location /= "oul.component.json";
