@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 		{
 			return 1;
 		}
-		else if (a.is("add"))
+		else if (a.is("install"))
 		{
 			string name = a.next_arg();
 			if (name == "")
@@ -62,19 +62,43 @@ int main(int argc, char* argv[])
 				cerr << "Call this command with one additional argument." << endl;
 				return 2;
 			}
-			else if (a.has_option("-s") || a.has_option("-t") || a.has_option("-d"))
-			{
-				string source_files = a.get_option("-s");
-				string test_files = a.get_option("-t");
-				string doc_files = a.get_option("-d");
-				components.add_files(name, source_files, test_files, doc_files);
-			}
 			else
 			{
 				string save_as = a.get_option("-as");
 				string url = a.get_option("-url");
 				string where = a.get_option("-w", ".");
-				components.add(name, save_as, url, where);
+				components.install(name, save_as, url, where);
+			}
+		}
+		else if (a.is("delete"))
+		{
+			string name = a.next_arg();
+			if (name == "")
+			{
+				cerr << "No component to delete." << endl;
+				cerr << "Call this command with one additional argument." << endl;
+				return 2;
+			}
+			else
+			{
+				components.remove(name);
+			}
+		}
+		else if (a.is("add"))
+		{
+			string name = a.next_arg();
+			if (name == "")
+			{
+				cerr << "Missing component name." << endl;
+				cerr << "Call this command with one additional argument." << endl;
+				return 2;
+			}
+			else
+			{
+				string source_files = a.get_option("-s");
+				string test_files = a.get_option("-t");
+				string doc_files = a.get_option("-d");
+				components.add_files(name, source_files, test_files, doc_files);
 			}
 		}
 		else if (a.is("remove"))
@@ -82,20 +106,16 @@ int main(int argc, char* argv[])
 			string name = a.next_arg();
 			if (name == "")
 			{
-				cerr << "No component to remove." << endl;
+				cerr << "Missing component name." << endl;
 				cerr << "Call this command with one additional argument." << endl;
 				return 2;
 			}
-			else if (a.has_option("-s") || a.has_option("-t") || a.has_option("-d"))
+			else
 			{
 				string source_files = a.get_option("-s");
 				string test_files = a.get_option("-t");
 				string doc_files = a.get_option("-d");
 				components.remove_files(name, source_files, test_files, doc_files);
-			}
-			else
-			{
-				components.remove(name);
 			}
 		}
 		else if (a.is("create"))

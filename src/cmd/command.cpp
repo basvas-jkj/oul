@@ -19,8 +19,10 @@ namespace oul
 		list =
 		{
 			{"init", "     creates configuration file"},
-			{"add", "      downloads component and adds it into configuration"},
-			{"remove", "   deletes the component"},
+			{"install", "  downloads component and adds it into configuration"},
+			{"delete", "   deletes the component"},
+			{"add", "      adds files to the component"},
+			{"remove", "   removes files from the component"},
 			{"create", "   creates new component locally"},
 			{"list", "     writes list of all installed or localy created components"},
 			{"rename", "   changes the name of the component"},

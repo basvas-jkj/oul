@@ -49,7 +49,7 @@ namespace oul
 		 * @param save_as jméno, pod kterým bude komponenta zaznamenaná v konfiguraci
 		 * @param url adresa serveru, ze které bude komponenta stažena
 		 **/
-		void add(const std::string& name, const std::string& save_as, const std::string& url, const std::string& where);
+		void install(const std::string& name, const std::string& save_as, const std::string& url, const std::string& where);
 		/**
 		 * @brief Odtraní zadanou komponentu a všechny její soubory.
 		 * @param c c konfigurace projektu

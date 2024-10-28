@@ -85,7 +85,7 @@ namespace oul
 		}
 	}
 
-	void COMPONENT_MANAGER::add(const string& name, const string& save_as, const string& url, const string& where)
+	void COMPONENT_MANAGER::install(const string& name, const string& save_as, const string& url, const string& where)
 	{
 		if (c.contains(name))
 		{
