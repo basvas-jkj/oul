@@ -3,52 +3,68 @@ export module args;
 import <map>;
 import <memory>;
 import <string>;
+import <tuple>;
 import <vector>;
-import <optional>;
-using namespace std;
 
 import usings;
+import command;
+import init;
 
-const map<string, string> short_variants = {
-	{"-version", "-v"},
-	{"-where", "-w"}
-};
+using namespace std;
+using namespace oul;
+
+static tuple<string, string> parse_option(cr<string> arg)
+{
+	size_t index = arg.find('=');
+	
+	if (index == string::npos)
+	{
+		return tuple(arg, "");
+	}
+	else
+	{
+		string name = arg.substr(0, index);
+		string value = arg.substr(index + 1);
+		return tuple(move(name), move(value));
+	}
+}
 
 export namespace oul
 {
-	class OPTIONS
+	unique_ptr<COMMAND> read_args(int argc, char* argv[])
 	{
-		map<string, string> options;
+		vector<string> args(argv + 1, argv + argc);
 
-		void add(cr<string> name, cr<string> value = "")
+		int start = 1;
+		unique_ptr<COMMAND> command;
+		if (args[0] == "init")
 		{
-			auto it = short_variants.find(name);
+			command = make_unique<INIT>();
+		}
+		else
+		{
+			return nullptr;
+		}
 
-			if (it == short_variants.end())
+		OPTIONS opt;
+		vector<string> arguments;
+
+		for (int f = start; f < args.size(); f += 1)
+		{
+			string& arg = args[f];
+
+			if (arg[0] == '-')
 			{
-				options[name] = value;
+				auto [name, value] = parse_option(arg);
+				opt.add(name, value);
 			}
 			else
 			{
-				cr<string> short_name = it->second;
-				options[short_name] = value;
+				arguments.push_back(move(arg));
 			}
 		}
-		bool includes(cr<string> name) const
-		{
-			return options.find(name) != short_variants.end();
-		}
-		cr<string> get(cr<string> name) const
-		{
-			auto it = options.find(name);
-			if (it == options.end())
-			{
-				return "";
-			}
-			else
-			{
-				return it->second;
-			}
-		}
-	};
+
+		command->init(move(opt), move(arguments));
+		return command;
+	}
 }
