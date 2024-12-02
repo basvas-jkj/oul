@@ -1,4 +1,4 @@
-export module args_init;
+export module args_delete;
 
 import args_command;
 
@@ -6,7 +6,7 @@ using namespace std;
 
 export namespace oul::args
 {
-	class INIT: public COMMAND
+	class DELETE: public COMMAND
 	{
 	public:
 		void run() const override
