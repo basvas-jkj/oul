@@ -2,7 +2,6 @@ export module args;
 
 import <map>;
 import <memory>;
-import <print>;
 import <string>;
 import <tuple>;
 import <vector>;
@@ -52,7 +51,7 @@ export namespace oul
 		unique_ptr<COMMAND> command;
 		if (args.size() == 0)
 		{
-			println(message::missing_command);
+			report_error(message::missing_command);
 			return nullptr;
 		}
 		if (args[0] == "init")
@@ -88,7 +87,7 @@ export namespace oul
 			start += 1;
 			if (args.size() == 1)
 			{
-				println(message::missing_group_subcommand);
+				report_error(message::missing_group_subcommand);
 				return nullptr;
 			}
 			else if (args[1] == "add")
@@ -101,13 +100,13 @@ export namespace oul
 			}
 			else
 			{
-				println(message::missing_group_subcommand);
+				report_error(message::missing_group_subcommand);
 				return nullptr;
 			}
 		}
 		else
 		{
-			println(message::unknown_command);
+			report_error(message::unknown_command);
 			return nullptr;
 		}
 
