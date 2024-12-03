@@ -1,11 +1,13 @@
-export module command;
+export module args_command;
 
 import <map>;
 import <memory>;
+import <optional>;
 import <string>;
 import <vector>;
 
 import usings;
+import message;
 
 using namespace std;
 using namespace oul;
@@ -55,8 +57,31 @@ export namespace oul
 	};
 	class COMMAND
 	{
+	protected:
 		OPTIONS opt;
 		vector<string> arguments;
+
+		optional<string> find_configuration()
+		{
+			optional<string> path = CONFIG::find();
+			if (path == nullopt)
+			{
+				report_error(message::config_not_found);
+				return nullopt;
+			}
+		}
+		optional<CONFIG> read_configuration()
+		{
+			optional<string> path = find_configuration();
+			if (path == nullopt)
+			{
+				return nullopt;
+			}
+			else
+			{
+				return CONFIG::read(*path);
+			}
+		}
 
 	public:
 		void init(OPTIONS&& opt, vector<string>&& arguments)
@@ -64,6 +89,6 @@ export namespace oul
 			this->opt = move(opt);
 			this->arguments = move(arguments);
 		}
-		virtual void run() const = 0;
+		virtual int run() const = 0;
 	};
 }
