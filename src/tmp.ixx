@@ -1,10 +1,14 @@
-#pragma once
+export module tmp;
 
-#include <string>
-#include <fstream>
-#include <boost/filesystem.hpp>
+import <string>;
+import <fstream>;
+import <boost/filesystem.hpp>;
 
-namespace fs = boost::filesystem;
+import usings;
+
+using namespace std;
+using namespace boost::filesystem;
+
 namespace oul
 {
 	/**
@@ -12,44 +16,71 @@ namespace oul
 	 * @param use_subfolder Vytvoří se také podsložka zajišťující unikátnost mezi různými voláními programu oul?
 	 * @return umístění složky pro dočasné soubory
 	 **/
-	fs::path get_temporary_folder(bool use_subfolder);
+	path get_temporary_folder(bool use_subfolder)
+	{
+		path temp = temp_directory_path() / "oul";
+
+		if (use_subfolder)
+		{
+			temp /= unique_path();
+		}
+
+		create_directory(temp);
+		return temp;
+	}
 
 	/**
 	 * @brief Třída reprezentující dočasný soubor.
 	 **/
 	class TMP_FILE
 	{
-		fs::path name;
+		/**
+		 * @brief Jméno dočasného souboru.
+		 **/
+		path name;
 	public:
 		/**
 		 * @brief Konstruktor vytvářející objekty třídy <code>TMP_FILE</code>.
 		 * @param name jméno dočasného souboru (ekvivalent argumentu funkce <code>boost::filesystem::unique_path</code>)
 		 **/
-		TMP_FILE(const std::string& name, bool use_subfolder);
+		TMP_FILE(cr<string> name, bool use_subfolder): name(unique_path(get_temporary_folder(use_subfolder) / name)) {
+		}
 		/**
 		 * @brief Konstruktor vytvářející objekty třídy <code>TMP_FILE</code>.
 		 * @param name přesné umístění souboru
 		 **/
-		TMP_FILE(const fs::path& name);
+		TMP_FILE(cr<path> name): name(name) {}
 		/**
 		 * @brief Odstraní dočasný soubor ze souborového systému.
 		 **/
-		~TMP_FILE();
+		~TMP_FILE()
+		{
+			remove(name);
+		}
 
 		/**
 		 * @return jméno dočasného souboru
 		 **/
-		fs::path get_name() const;
+		path get_name() const
+		{
+			return name;
+		}
 		/**
 		 * @brief Otevře dočasný soubor pro čtení.
 		 * @return Objekt typu <code>ifstream</code> reprezentující dočasný soubor.
 		 **/
-		std::ifstream read() const;
+		ifstream read() const
+		{
+			return ifstream(name.c_str());
+		}
 		/**
 		 * @brief Otevře dočasný soubor pro zápis.
 		 * @return Objekt typu <code>ofstream</code> reprezentující dočasný soubor.
 		 **/
-		std::ofstream write() const;
+		ofstream write() const
+		{
+			return ofstream(name.c_str());
+		}
 	};
 
 	/**
@@ -57,26 +88,38 @@ namespace oul
 	 **/
 	class TMP_FOLDER
 	{
-		fs::path name;
+		path name;
 	public:
 		/**
 		 * @brief Konstruktor vytvářející objekty třídy <code>TMP_FOLDER</code>.
 		 * @param name jméno dočasné složky (ekvivalent argumentu funkce <code>boost::filesystem::unique_path</code>)
 		 **/
-		TMP_FOLDER(const std::string& name, bool use_subfolder);
+		TMP_FOLDER(cr<string> name, bool use_subfolder): name(unique_path(get_temporary_folder(use_subfolder) / name))
+		{
+			create_directory(name);
+		}
 		/**
 		 * @brief Konstruktor vytvářející objekty třídy <code>TMP_FOLDER</code>.
 		 * @param name přesné umístění dočasné složky
 		 **/
-		TMP_FOLDER(const fs::path& name);
+		TMP_FOLDER(cr<path> name): name(name)
+		{
+			create_directory(name);
+		}
 		/**
 		 * @brief Odstraní dočasnou složku ze souborového systému.
 		 **/
-		~TMP_FOLDER();
+		~TMP_FOLDER()
+		{
+			remove_all(name);
+		}
 
 		/**
 		 * @return jméno dočasné složky
 		 **/
-		fs::path get_name() const;
+		path get_name() const
+		{
+			return name;
+		}
 	};
 }
