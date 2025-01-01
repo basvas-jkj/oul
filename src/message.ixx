@@ -17,6 +17,7 @@ export namespace oul::message
 	const string missing_command = "Missing command. Run 'oul help' to get a list of supported commands.";
 	const string unknown_command = "Unknown command. Run 'oul help' to get a list of supported commands.";
 	const string missing_group_subcommand = "'oul group' requires subcommand ('add' or 'remove').";
+	const string config_found = "Configuration file has been created.";
 	const string config_not_found = "Configuration file not found.\nCall 'oul init' or move to an initialized project.";
 	const string missing_component_name = "Missing component name.\nCall this command with one additional argument.";
 	
