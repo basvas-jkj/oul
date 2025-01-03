@@ -25,13 +25,21 @@ export namespace oul::message
 
 export enum class CONFIG_ERR
 {
-	root_not_object, missing_project_name, components_not_array, url_not_string
+	root_not_object, missing_project_name, components_not_array, url_not_string,
+	invalid_component, missing_component_name, invalid_original_name, missing_location, 
+	missing_include, invalid_exclude
 };
 using enum CONFIG_ERR;
 export const map<CONFIG_ERR, string> configuration_errors
 {
 	{root_not_object, "Root of the configuration shall be an object."}, 
 	{missing_project_name, "Name of the project is missing in the configuration."},
-	{components_not_array, "List of components is mandatory has to be an array."},
-	{url_not_string, "Url has to be a string."}
+	{components_not_array, "List of components is mandatory and has to be an array."},
+	{url_not_string, "Url has to be a string."},
+	{invalid_component, "All items in component list have to be a map."},
+	{missing_component_name, "Name of some components is missing or is not a string."},
+	{invalid_original_name, "Original name of component has to be a string."},
+	{missing_location, "Component location is missing or is not a string."},
+	{missing_include, "Component include list is missing or is not a map of file lists."},
+	{invalid_exclude, "Component exclude list is not a map of file lists."}
 };
