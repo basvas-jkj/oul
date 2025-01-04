@@ -112,6 +112,8 @@ static bool check_components_list(cr<Node> list)
 	{
 		return false;
 	}
+	
+	bool ok = true;
 	for (cr<Node> component : list)
 	{
 		if (!check_map(component, invalid_component))
@@ -119,14 +121,13 @@ static bool check_components_list(cr<Node> list)
 			continue;
 		}
 
-		bool ok = true;
 		ok &= check_scalar(component["name"], missing_component_name);
 		ok &= check_optional_scalar(component["original_name"], invalid_original_name);
 		ok &= check_scalar(component["location"], missing_location);
 		ok &= check_file_map(component["include"], true, missing_include);
 		ok &= check_file_map(component["exclude"], false, invalid_exclude);
-
 	}
+	return ok;
 }
 
 export namespace oul

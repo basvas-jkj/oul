@@ -16,6 +16,58 @@ using namespace YAML;
 namespace fs = boost::filesystem;
 export namespace oul
 {
+    using file_map = map<string, vector<string>>;
+
+    /**
+     * @brief Třída pro ukládání konfigurace komponenty.
+     **/
+    struct ITEM
+    {
+        string name;
+        string original_name;
+        string location;
+        string url;
+
+        file_map include;
+        file_map exclude;
+
+        ITEM(cr<Node> component)
+        {
+            name = component["name"].as<string>();
+            original_name = component["original_name"].as<string>();
+            url = component["url"].as<string>();
+            location = component["location"].as<string>();
+            include = component["include"].as<file_map>();
+            exclude = component["exclude"].as<file_map>();
+        }
+        ordered_json json() const
+        {
+            ordered_json component;
+
+            component["name"] = name;
+            component["original_name"] = original_name;
+            component["url"] = url;
+            component["location"] = location;
+            component["include"] = include;
+            component["exclude"] = exclude;
+
+            return component;
+        }
+        Node yaml() const
+        {
+            Node component;
+
+            component["name"] = name;
+            component["original_name"] = original_name;
+            component["url"] = url;
+            component["location"] = location;;
+            component["include"] = include;
+            component["exclude"] = exclude;
+
+            return component;
+        }
+    };
+
     /**
      * @brief Třída pro ukládání konfigurace projektu.
      **/
@@ -29,6 +81,11 @@ export namespace oul
             root["project_name"] = project_name;
             root["default_url"] = default_url;
 
+            for (cr<ITEM> i : components)
+            {
+                root["components"].push_back(i.json());
+            }
+            
             save(location, root);
         }
         void save_yaml() const
@@ -38,6 +95,11 @@ export namespace oul
             root["project_name"] = project_name;
             root["default_url"] = default_url;
 
+            for (cr<ITEM> i : components)
+            {
+                root["components"].push_back(i.yaml());
+            }
+
             save(location, root);
         }
 
@@ -45,6 +107,7 @@ export namespace oul
         string location;
         string project_name;
         string default_url;
+        vector<ITEM> components;
 
         /**
          * @brief Konstruktor vytvářející prázdný objekt structury <code>CONFIG</code>.
@@ -63,6 +126,15 @@ export namespace oul
             {
                 project_name = root["project_name"].as<string>();
                 default_url = root["default_url"].as<string>();
+
+                for (cr<Node> component : root["components"])
+                {
+                    components.emplace_back(component);
+                }
+            }
+            else
+            {
+                location = "";
             }
         }
         /**
@@ -74,7 +146,7 @@ export namespace oul
             {
                 save_json();
             }
-            else
+            else if (location.ends_with(".yaml"))
             {
                 save_yaml();
             }
