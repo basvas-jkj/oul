@@ -1,6 +1,7 @@
 export module config;
 
 import <iostream>;
+import <ranges>;
 import <boost/filesystem.hpp>;
 
 import <yaml-cpp/yaml.h>;
@@ -19,7 +20,7 @@ export namespace oul
     using file_map = map<string, vector<string>>;
 
     /**
-     * @brief Třída pro ukládání konfigurace komponenty.
+     * @brief Struktura pro ukládání konfigurace komponenty.
      **/
     struct ITEM
     {
@@ -31,6 +32,10 @@ export namespace oul
         file_map include;
         file_map exclude;
 
+        /**
+         * @brief Konstruktor vytvářející objekt structury <code>ITEM</code>.
+         * @param component Konfigurace komponenty.
+         **/
         ITEM(cr<Node> component)
         {
             name = component["name"].as<string>();
@@ -40,6 +45,10 @@ export namespace oul
             include = component["include"].as<file_map>();
             exclude = component["exclude"].as<file_map>();
         }
+        /**
+         * @brief Převede konfiguraci komponenty do formátu JSON.
+         * @return konfigurace komponenty ve formátu JSON
+         **/
         ordered_json json() const
         {
             ordered_json component;
@@ -53,6 +62,10 @@ export namespace oul
 
             return component;
         }
+        /**
+         * @brief Převede konfiguraci komponenty do formátu YAML.
+         * @return konfigurace komponenty ve formátu YAML
+         **/
         Node yaml() const
         {
             Node component;
@@ -69,11 +82,14 @@ export namespace oul
     };
 
     /**
-     * @brief Třída pro ukládání konfigurace projektu.
+     * @brief Struktura pro ukládání konfigurace projektu.
      **/
     struct CONFIG
     {
     private:
+        /**
+         * @brief Uloží konfiguraci ve formátu JSON.
+         **/
         void save_json() const
         {
             ordered_json root;
@@ -88,6 +104,9 @@ export namespace oul
             
             save(location, root);
         }
+        /**
+         * @brief Uloží konfiguraci ve formátu YAML.
+         **/
         void save_yaml() const
         {
             Node root;
@@ -115,7 +134,7 @@ export namespace oul
         CONFIG() {}
         /**
          * @brief Konstruktor vytvářející objekt structury <code>CONFIG</code>.
-         * Současně také přeč
+         * Současně také načte konfiguraci ze souboru a zvaliduje.
          * @param l umístění konfigurace v souborovém systému
          **/
         CONFIG(cr<string> l): location(l)
@@ -204,6 +223,59 @@ export namespace oul
             }
             while (!equivalent(current, current.root_path()));
             return nullopt;
+        }
+
+        /**
+         * @brief Převede seznam všech komponent v konfiguraci na seznam názvů.
+         * @return iterovatelný seznam (<code>view</code>) názvů všech komponent
+         **/
+        auto get_component_names()
+        {
+            auto item_to_name = [](cr<ITEM> i) { return i.name; };
+            return components | views::transform(item_to_name);
+        }
+        /**
+         * @brief Přidá komponentu do konfigurace. 
+         * @param i konfigurace komponenty
+         **/
+        void add_component(cr<ITEM> i)
+        {
+            components.push_back(i);
+        }
+        /**
+         * @brief Zjistí, zda konfigurace projektu obsahuje komponentu daného jména.
+         * @param name jméno komponenty
+         * @return Je v konfiguraci přítomná komponenta?
+         **/
+        bool contains(cr<string> name)
+        {
+            for (cr<string> component : get_component_names())
+            {
+                if (component == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        /**
+         * @brief Najde v konfiguraci projektu komponentu a vrátí iterátor.
+         * @param name jméno komponenty
+         * @return Platný iterátor ukazující na komponentu, pokud je v konfiguraci přítomná. Jinak vrátí <code>end()</code>
+         **/
+        vector<ITEM>::iterator get_component(cr<string> name)
+        {
+            return ranges::find_if(components, [name](cr<ITEM> i) { return i.name == name; });
+        }
+
+        /**
+         * @brief Získá výchozí URL pro stažení komponenty.
+         * @param component_name jméno komponenty
+         * @return spojení výchozí URL projektu a jména komponenty
+         **/
+        string get_url(cr<string> component_name) const
+        {
+            return default_url + "/" + component_name;
         }
     };
 }
