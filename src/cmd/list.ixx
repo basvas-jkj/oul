@@ -19,10 +19,11 @@ export namespace oul::args
 				return 2;
 			}
 
-			println("Components included in this project:");
-			for (cr<string> name : c->get_components())
+			println("List of components used in this project:");
+			for (cr<ITEM> i : c->components)
 			{
-				println("\t{}", name);
+				cr<string> url = (i.url.empty()) ? "local only" : i.url;
+				println("\t{}\t({})", i.name, url);
 			}
 
 			return 0;
