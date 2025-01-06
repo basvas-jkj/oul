@@ -20,7 +20,7 @@ export namespace oul::message
 	const string config_found = "Configuration file has been created.";
 	const string config_not_found = "Configuration file not found.\nCall 'oul init' or move to an initialized project.";
 	const string missing_component_name = "Missing component name.\nCall this command with one additional argument.";
-	
+	const string component_already_exists = "Component of this name already exists.\nCall this command with different name or rename original component.";
 }
 
 export enum class CONFIG_ERR

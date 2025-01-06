@@ -3,6 +3,7 @@ export module component_manager;
 import <string>;
 import <optional>;
 import config;
+import usings;
 
 using namespace std;
 
@@ -19,22 +20,16 @@ export namespace oul
 		/**
 		 * @brief Konstruktor vytvářející objekty třídy <code>COMPONENT_MANAGER</code>.
 		 **/
-		COMPONENT_MANAGER(CONFIG&& c): c(c)
+		COMPONENT_MANAGER(CONFIG&& c): c(move(c))
 		{};
 		/**
 		 * @brief Vytvoří novou komponentu v projektu.
 		 * @param c konfigurace projektu
 		 * @param name jméno komponenty
-		 * @param where umístění komponenty
+		 * @param location umístění komponenty
 		 **/
-		void create(cr<string> name, cr<string> where)
+		void create(cr<string> name, cr<string> location)
 		{
-			if (c.contains(name))
-			{
-				cerr << "This project already contains a component of the same name." << endl;
-				return;
-			}
-
 			ITEM i(name, location);
 			c.add_component(i);
 		}

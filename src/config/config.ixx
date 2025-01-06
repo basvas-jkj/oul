@@ -33,7 +33,14 @@ export namespace oul
         file_map exclude;
 
         /**
-         * @brief Konstruktor vytvářející objekt structury <code>ITEM</code>.
+         * @brief Konstruktor vytvářející objekt struktury <code>ITEM</code>.
+         * @param name jméno komponenty
+         * @param location umístění komponenty
+         **/
+        ITEM(cr<string> name, cr<string> location): name(name), location(location)
+        {}
+         /**
+         * @brief Konstruktor vytvářející objekt struktury <code>ITEM</code>.
          * @param component Konfigurace komponenty.
          **/
         ITEM(cr<Node> component)
