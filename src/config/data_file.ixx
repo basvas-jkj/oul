@@ -6,8 +6,8 @@ import <string>;
 import <tuple>;
 import <vector>;
 
-import <yaml-cpp/yaml.h>;
-import <nlohmann/json.hpp>;
+export import <yaml-cpp/yaml.h>;
+export import <nlohmann/json.hpp>;
 
 import usings;
 import message;

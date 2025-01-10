@@ -1,5 +1,6 @@
 export module args_command;
 
+import <iostream>;
 import <map>;
 import <memory>;
 import <optional>;
@@ -8,9 +9,9 @@ import <vector>;
 
 import usings;
 import message;
+import config;
 
 using namespace std;
-using namespace oul;
 
 const map<string, string> short_variants = {
 	{"-version", "-v"},
@@ -47,7 +48,8 @@ export namespace oul
 			auto it = options.find(name);
 			if (it == options.end())
 			{
-				return "";
+				static string empty = "";
+				return empty;
 			}
 			else
 			{
@@ -61,7 +63,7 @@ export namespace oul
 		OPTIONS opt;
 		vector<string> arguments;
 
-		optional<string> find_configuration()
+		optional<string> find_configuration() const
 		{
 			optional<string> path = CONFIG::find();
 			if (path == nullopt)
@@ -69,8 +71,12 @@ export namespace oul
 				report_error(message::config_not_found);
 				return nullopt;
 			}
+			else
+			{
+				return path;
+			}
 		}
-		optional<CONFIG> read_configuration()
+		optional<CONFIG> read_configuration() const
 		{
 			optional<string> path = find_configuration();
 			if (path == nullopt)
@@ -79,11 +85,13 @@ export namespace oul
 			}
 			else
 			{
-				return CONFIG::read(*path);
+				return CONFIG(*path);
 			}
 		}
 
 	public:
+		virtual ~COMMAND() = default;
+
 		void init(OPTIONS&& opt, vector<string>&& arguments)
 		{
 			this->opt = move(opt);
