@@ -1,23 +1,25 @@
 cmake_minimum_required (VERSION 3.8)
 
 project(oul LANGUAGES CXX)
-include(CTest)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_MODULE_STD 1) 
 
+# find packages
 find_package(libzippp REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(Boost REQUIRED algorithm filesystem process)
 
-# OUL - main projetct
+# helpers library
 add_library(helpers "lib/helpers/Helpers.cpp")
-target_include_directories(helpers PUBLIC "C:/Users/vasst/dev/vcpkg/installed/x64-windows/include")
+target_include_directories(helpers PUBLIC "${VCPKG_INSTALLED_DIR}/x64-windows/include")
 target_link_libraries(helpers PRIVATE libzippp::libzippp)
 
-file(GLOB_RECURSE oul_source RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
-add_executable(oul ${oul_source})
+# OUL - main projetct
+file(GLOB_RECURSE oul_modules RELATIVE ${CMAKE_SOURCE_DIR} "src/*.ixx")
+add_executable(oul "src/main.cpp" ${oul_modules})
 
 target_link_libraries(oul PRIVATE helpers)
 target_link_libraries(oul PRIVATE yaml-cpp::yaml-cpp)
@@ -26,22 +28,8 @@ target_link_libraries(oul PRIVATE Boost::algorithm)
 target_link_libraries(oul PRIVATE Boost::filesystem)
 target_link_libraries(oul PRIVATE Boost::process)
 
-# test libraries
-enable_testing()
-
-# CONFIG_TEST
-add_library(config "src/config/config.cpp" "src/config/data_file.cpp")
-target_include_directories(config PUBLIC "C:/Users/vasst/dev/vcpkg/installed/x64-windows/include")
-
-add_executable(config_test "test/config_test.cpp")
-add_test(config_test config_test)
-
-target_link_libraries(config_test PRIVATE config)
-target_link_libraries(config_test PRIVATE yaml-cpp::yaml-cpp)
-target_link_libraries(config_test PRIVATE nlohmann_json::nlohmann_json)
-
 if (MSVC)
-    target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/W3>)
+    target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/W1>)
 else()
     target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wall -Wextra -pedantic>)
 endif()
