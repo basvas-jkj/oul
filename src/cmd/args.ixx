@@ -8,7 +8,6 @@ import <vector>;
 
 import usings;
 import message;
-import args_command;
 
 import args_init;
 import args_create;
@@ -20,6 +19,7 @@ import args_remove;
 import args_exclude;
 
 import args_list;
+export import args_command;
 
 using namespace std;
 using namespace oul;
@@ -74,7 +74,7 @@ export namespace oul
 		{
 			command = make_unique<REMOVE>();
 		}
-		else if (args[0] == "exlude")
+		else if (args[0] == "exclude")
 		{
 			command = make_unique<EXCLUDE>();
 		}

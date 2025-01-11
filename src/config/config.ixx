@@ -100,6 +100,7 @@ export namespace oul
 
             root["project_name"] = project_name;
             root["default_url"] = default_url;
+            root["components"] = json::array();
 
             for (cr<ITEM> i : components)
             {
@@ -121,6 +122,11 @@ export namespace oul
             for (cr<ITEM> i : components)
             {
                 root["components"].push_back(i.yaml());
+            }
+
+            if (!root["components"].IsSequence())
+            {
+                root["components"] = Load("[]");
             }
 
             save(location, root);
@@ -160,6 +166,8 @@ export namespace oul
                 location = "";
             }
         }
+        CONFIG(cr<CONFIG>) = delete;
+        CONFIG(CONFIG&&) = default;
         /**
          * @brief Zajišťuje zápsání změněné konfigurace do souboru.
          **/
