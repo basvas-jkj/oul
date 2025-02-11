@@ -1,7 +1,6 @@
 export module config;
 
-import <iostream>;
-import <ranges>;
+import std;
 import <boost/filesystem.hpp>;
 
 import usings;
@@ -57,12 +56,12 @@ export namespace oul
         {
             ordered_json component;
 
-            component["name"] = name;
-            component["original_name"] = original_name;
-            component["url"] = url;
-            component["location"] = location;
-            component["include"] = include;
-            component["exclude"] = exclude;
+            component.emplace("name", name);
+            component.emplace("original_name", original_name);
+            component.emplace("url", url);
+            component.emplace("location", location);
+            component.emplace("include", include);
+            component.emplace("exclude", exclude);
 
             return component;
         }
@@ -98,9 +97,8 @@ export namespace oul
         {
             ordered_json root;
 
-            root["project_name"] = project_name;
-            root["default_url"] = default_url;
-            root["components"] = json::array();
+            root.emplace("project_name", project_name);
+            root.emplace("default_url", default_url);
 
             for (cr<ITEM> i : components)
             {
@@ -149,22 +147,16 @@ export namespace oul
          **/
         CONFIG(cr<string> l): location(l)
         {
-            Node root = load(location);
+			Node root = load(location);
+			assert(!root.IsNull());
 
-            if (!root.IsNull())
-            {
-                project_name = root["project_name"].as<string>();
-                default_url = root["default_url"].as<string>();
+			project_name = root["project_name"].as<string>();
+			default_url = root["default_url"].as<string>();
 
-                for (cr<Node> component : root["components"])
-                {
-                    components.emplace_back(component);
-                }
-            }
-            else
-            {
-                location = "";
-            }
+			for (cr<Node> component : root["components"])
+			{
+				components.emplace_back(component);
+			}
         }
         CONFIG(cr<CONFIG>) = delete;
         CONFIG(CONFIG&&) = default;
@@ -241,7 +233,7 @@ export namespace oul
          * @brief Převede seznam všech komponent v konfiguraci na seznam názvů.
          * @return iterovatelný seznam (<code>view</code>) názvů všech komponent
          **/
-        auto get_component_names()
+        auto get_component_names() const
         {
             auto item_to_name = [](cr<ITEM> i) { return i.name; };
             return components | views::transform(item_to_name);
@@ -259,7 +251,7 @@ export namespace oul
          * @param name jméno komponenty
          * @return Je v konfiguraci přítomná komponenta?
          **/
-        bool contains(cr<string> name)
+        bool contains(cr<string> name) const
         {
             for (cr<string> component : get_component_names())
             {
