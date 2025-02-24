@@ -1,9 +1,12 @@
+module;
+
+#include <boost/filesystem.hpp>
+
 export module common;
 
-import <string>;
-import <vector>;
-import <boost/filesystem.hpp>;
-import usings;
+export import usings;
+import std;
+import message;
 
 using namespace std;
 using namespace boost::filesystem;
@@ -55,4 +58,19 @@ namespace oul
 
 		return v;
 	}
+
+	export class CommonException: exception
+	{
+		string message;
+
+	public:
+		CommonException(cr<string> m): message(m)
+		{}
+		CommonException(string&& m): message(m)
+		{}
+		void report() const
+		{
+			report_error(message);
+		}
+	};
 }

@@ -6,6 +6,7 @@ export module config;
 
 import std;
 import usings;
+import common;
 import message;
 import :data_file;
 
@@ -21,19 +22,13 @@ namespace oul
     /**
      * @brief Chyba v konfiguraci.
      **/
-    export class InvalidConfiguration: public exception
+    export class InvalidConfiguration: public CommonException
     {
-        string message;
-
     public:
-        InvalidConfiguration(cr<string> m): message(m)
+        InvalidConfiguration(cr<string> m): CommonException(m)
         {}
-        InvalidConfiguration(string&& m): message(m)
+        InvalidConfiguration(string&& m): CommonException(m)
         {}
-        void report() const
-        {
-            report_error(message);
-        }
     };
     /**
      * @brief Struktura pro ukládání konfigurace komponenty.

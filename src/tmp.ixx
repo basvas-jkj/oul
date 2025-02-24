@@ -1,9 +1,10 @@
+module;
+
+#include <boost/filesystem.hpp>
+
 export module tmp;
 
-import <string>;
-import <fstream>;
-import <boost/filesystem.hpp>;
-
+import std;
 import usings;
 
 using namespace std;

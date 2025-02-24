@@ -1,9 +1,6 @@
 export module message;
 
-import <iostream>;
-import <string>;
-import <map>;
-
+import std;
 import usings;
 
 using namespace std;
@@ -21,6 +18,12 @@ export namespace oul::message
 	const string config_not_found = "Configuration file not found.\nCall 'oul init' or move to an initialized project.";
 	const string missing_component_name = "Missing component name.\nCall this command with one additional argument.";
 	const string component_already_exists = "Component of this name already exists.\nCall this command with different name or rename original component.";
+
+	const string component_not_found = "Component of this name doesn't exist.";
+	const string file_not_exist = "File included into component has to exist.";
+	const string empty_file_list = "Missing file list.";
+	const string group_not_found = "Group of this name doesn't exist in selected komponent.";
+	const string missing_group_name = "Missing group name.";
 }
 
 export enum class CONFIG_ERR
