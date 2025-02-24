@@ -1,17 +1,21 @@
+module;
+
+#include <boost/filesystem.hpp>
+
 export module component_manager;
 
-import <boost/filesystem.hpp>;
 import std;
-import config;
 import usings;
+import common;
 import message;
+export import config;
 
 using namespace std;
 namespace fs = boost::filesystem;
 
 /**
  * @brief Zkontroluje, zda je řetězec vzor nebo konkrétní cesta.
- * @param name kontrolovaný řetězec
+ * @param name - kontrolovaný řetězec
  * @return <code>true</code>, pokud je řetězec vzor cesty, <code>false</code>, pokud jde o konkréní cestu
  **/
 static bool is_pattern(auto&& name)
@@ -28,14 +32,18 @@ static bool is_pattern(auto&& name)
 }
 /**
  * @brief Zkontroluje existenci zadaných souborů, jdeli o konkrétní cestu.
- * @param entries seznam cest a vzorů
+ * @param entries - seznam cest a vzorů
  * @return <code>true</code>, pokud všehny cesty odkazují na existující soubor, <code>false</code> v opačném případě
  **/
 static bool check_files_existence(auto&& entries)
 {
 	for (cr<string> entry : entries)
 	{
-		if (!fs::exists(entry) && !is_pattern(entry))
+		bool is_valid = is_pattern(entry) || fs::exists(entry);
+
+		println("{} {}", entry, is_valid);
+
+		if (!is_valid)
 		{
 			return false;
 		}
@@ -48,36 +56,24 @@ namespace oul
 	/**
 	 * @brief Konfigurace neobsahuje hledanou komponentu.
 	 **/
-	export class MissingComponent: public exception
+	export class MissingComponent: public CommonException
 	{
-		string message;
-
 	public:
-		MissingComponent(cr<string> m): message(m)
+		MissingComponent(cr<string> m): CommonException(m)
 		{}
-		MissingComponent(string&& m): message(m)
+		MissingComponent(string&& m): CommonException(m)
 		{}
-		void report() const
-		{
-			report_error(message);
-		}
 	};
 	/**
 	 * @brief Konfigurace komponenty neobsahuje hledanou skupinu.
 	 **/
-	export class MissingGroup: public exception
+	export class MissingGroup: public CommonException
 	{
-		string message;
-
 	public:
-		MissingGroup(cr<string> m): message(m)
+		MissingGroup(cr<string> m): CommonException(m)
 		{}
-		MissingGroup(string&& m): message(m)
+		MissingGroup(string&& m): CommonException(m)
 		{}
-		void report() const
-		{
-			report_error(message);
-		}
 	};
 
 	/**
@@ -104,7 +100,7 @@ namespace oul
 			file_map::iterator group_it = files.find(group);
 			if (group_it == files.end())
 			{
-				throw MissingComponent(message::group_not_found);
+				throw MissingGroup(message::group_not_found);
 			}
 			else
 			{
@@ -118,11 +114,11 @@ namespace oul
 		 **/
 		COMPONENT_MANAGER(CONFIG&& c): cfg(move(c))
 		{};
+
 		/**
 		 * @brief Vytvoří novou komponentu v projektu.
-		 * @param c konfigurace projektu
-		 * @param name jméno komponenty
-		 * @param location umístění komponenty
+		 * @param name - jméno komponenty
+		 * @param location - umístění komponenty
 		 **/
 		void create(cr<string> name, cr<string> location)
 		{
@@ -130,10 +126,42 @@ namespace oul
 			cfg.add_component(i);
 		}
 		/**
+		 * @brief Odebere komponentu z projektu.
+		 * @param name - jméno komponenty
+		 **/
+		void remove(cr<string> name)
+		{
+			cfg.remove_component(name);
+		}
+
+		/**
+		 * @brief Přidá skuspinu souborů do zadané komponenty.
+		 * @param name - jméno komponenty
+		 * @param group - jméno skupiny
+		 **/
+		void add_group(cr<string> name, cr<string> group)
+		{
+			ITEM& component = find_component(name);
+			component.include.insert({group, vector<string>()});
+			component.exclude.insert({group, vector<string>()});
+		}
+		/**
+		 * @brief 
+		 * @param name - jméno komponenty
+		 * @param group - jméno skupiny
+		 **/
+		void remove_group(cr<string> name, cr<string> group)
+		{
+			ITEM& component = find_component(name);
+			component.include.erase(group);
+			component.exclude.erase(group);
+		}
+
+		/**
 		 * @brief Přidá do konfigurace zadané komponenty nové soubory (musí existovat) nebo vzory cest.
-		 * @param component jméno komponenty
-		 * @param group jméno skupiny
-		 * @param entries seznam souborů, složek a vzorů
+		 * @param component - jméno komponenty
+		 * @param group - jméno skupiny
+		 * @param entries - seznam souborů, složek a vzorů
 		 **/
 		void add_files(cr<string> name, cr<string> group, span<const string> entries)
 		{
@@ -152,9 +180,9 @@ namespace oul
 		}
 		/**
 		 * @brief Vyčlení z komponenty zadané soubory/cesty.
-		 * @param component jméno komponenty
-		 * @param group jméno skupiny
-		 * @param entries seznam souborů, složek a vzorů
+		 * @param component - jméno komponenty
+		 * @param group - jméno skupiny
+		 * @param entries - seznam souborů, složek a vzorů
 		 **/
 		void exclude_files(cr<string> name, cr<string> group, span<const string> entries)
 		{
@@ -164,9 +192,9 @@ namespace oul
 		}
 		/**
 		 * @brief Odebere soubory ze seznamu začleněných/vyčleněných souborů.
-		 * @param component jméno komponenty
-		 * @param group jméno skupiny
-		 * @param entries seznam souborů, složek a vzorů
+		 * @param component - jméno komponenty
+		 * @param group - jméno skupiny
+		 * @param entries - seznam souborů, složek a vzorů
 		 **/
 		void remove_files(cr<string> name, cr<string> group, span<const string> entries)
 		{
