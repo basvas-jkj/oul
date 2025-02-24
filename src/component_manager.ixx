@@ -61,7 +61,7 @@ namespace oul
 	public:
 		MissingComponent(cr<string> m): CommonException(m)
 		{}
-		MissingComponent(string&& m): CommonException(m)
+		MissingComponent(string&& m): CommonException(move(m))
 		{}
 	};
 	/**
@@ -72,7 +72,7 @@ namespace oul
 	public:
 		MissingGroup(cr<string> m): CommonException(m)
 		{}
-		MissingGroup(string&& m): CommonException(m)
+		MissingGroup(string&& m): CommonException(move(m))
 		{}
 	};
 

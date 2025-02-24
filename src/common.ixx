@@ -66,7 +66,7 @@ namespace oul
 	public:
 		CommonException(cr<string> m): message(m)
 		{}
-		CommonException(string&& m): message(m)
+		CommonException(string&& m): message(move(m))
 		{}
 		void report() const
 		{

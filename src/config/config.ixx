@@ -27,7 +27,7 @@ namespace oul
     public:
         InvalidConfiguration(cr<string> m): CommonException(m)
         {}
-        InvalidConfiguration(string&& m): CommonException(m)
+        InvalidConfiguration(string&& m): CommonException(move(m))
         {}
     };
     /**
