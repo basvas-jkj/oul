@@ -1,17 +1,15 @@
-export module args_add;
+export module args:add;
 
 import message;
-import args_command;
 import component_manager;
-
-using namespace std;
+import :command;
 
 export namespace oul::args
 {
 	class ADD: public COMMAND
 	{
 	public:
-		int run() const override
+		bool check() const override
 		{
 			if (arguments.size() < 1)
 			{
@@ -24,21 +22,18 @@ export namespace oul::args
 			if (arguments.size() < 3)
 			{
 				report_error(message::empty_file_list);
-				return 3;
+				return false;
 			}
-			
-			optional<CONFIG> c = read_configuration();
-			if (c == nullopt)
+			else
 			{
-				return 2;
+				return true;
 			}
-
-			COMPONENT_MANAGER manager(move(*c));
-			
-			span<const string> files(arguments.begin(), arguments.end());
+		}
+		void run() const override
+		{
+			COMPONENT_MANAGER manager = open_manager();
+			span<const string> files(arguments.begin() + 2, arguments.end());
 			manager.add_files(arguments[0], arguments[1], files);
-
-			return 0;
 		}
 	};
 }

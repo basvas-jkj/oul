@@ -1,23 +1,28 @@
-export module args_create;
+export module args:create;
 
 import message;
-import args_command;
 import component_manager;
-
-using namespace std;
+import :command;
 
 export namespace oul::args
 {
 	class CREATE: public COMMAND
 	{
 	public:
-		int run() const override
+		bool check() const override
 		{
 			if (arguments.size() < 1)
 			{
 				report_error(message::missing_component_name);
-				return 3;
+				return false;
 			}
+			else
+			{
+				return true;
+			}
+		}
+		void run() const override
+		{
 			cr<string> name = arguments[0];
 			string location = opt.get("-w");
 			if (location == "")
@@ -29,17 +34,16 @@ export namespace oul::args
 			
 			if (!c.has_value())
 			{
-				return 2;
+				return;
 			}
 			else if (c->contains(name))
 			{
 				report_error(message::component_already_exists);
-				return 1;
+				return;
 			}
 			
 			COMPONENT_MANAGER manager(move(*c));
 			manager.create(name, location);
-			return 0;
 		}
 	};
 }

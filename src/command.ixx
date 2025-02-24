@@ -1,26 +1,28 @@
-export module args_command;
+export module args:command;
 
-import <iostream>;
-import <map>;
-import <memory>;
-import <optional>;
-import <string>;
-import <vector>;
-
+import std;
 import usings;
+import common;
 import message;
-import config;
+import component_manager;
 
 using namespace std;
 
-const map<string, string> short_variants = {
-	{"-version", "-v"},
-	{"-where", "-w"}
-};
-
-export namespace oul
+namespace oul
 {
-	class OPTIONS
+	static const map<string, string> short_variants = {
+		{"-version", "-v"},
+		{"-where", "-w"}
+	};
+	export class ConfigurationNotFound: public CommonException
+	{
+	public:
+		ConfigurationNotFound(cr<string> m): CommonException(m)
+		{}
+		ConfigurationNotFound(string&& m): CommonException(move(m))
+		{}
+	};
+	export class OPTIONS
 	{
 		map<string, string> options;
 
@@ -57,36 +59,34 @@ export namespace oul
 			}
 		}
 	};
-	class COMMAND
+	export class COMMAND
 	{
 	protected:
 		OPTIONS opt;
 		vector<string> arguments;
 
-		optional<string> find_configuration() const
+		static string find_configuration()
 		{
 			optional<string> path = CONFIG::find();
 			if (path == nullopt)
 			{
-				report_error(message::config_not_found);
-				return nullopt;
+				throw ConfigurationNotFound(message::config_not_found);
 			}
 			else
 			{
-				return path;
+				return *path;
 			}
 		}
-		optional<CONFIG> read_configuration() const
+		static CONFIG read_configuration()
 		{
-			optional<string> path = find_configuration();
-			if (path == nullopt)
-			{
-				return nullopt;
-			}
-			else
-			{
-				return CONFIG(*path);
-			}
+			string path = find_configuration();
+			return CONFIG(path);
+		}
+		static COMPONENT_MANAGER open_manager()
+		{
+			CONFIG c = read_configuration();
+			COMPONENT_MANAGER manager(move(c));
+			return manager;
 		}
 
 	public:
@@ -97,6 +97,10 @@ export namespace oul
 			this->opt = move(opt);
 			this->arguments = move(arguments);
 		}
-		virtual int run() const = 0;
+		virtual bool check() const
+		{
+			return true;
+		}
+		virtual void run() const = 0;
 	};
 }

@@ -1,49 +1,43 @@
 export module args;
 
-import <map>;
-import <memory>;
-import <string>;
-import <tuple>;
-import <vector>;
-
+import std;
 import usings;
 import message;
 
-import args_init;
-import args_create;
-import args_delete;
-import args_group_add;
-import args_group_remove;
-import args_add;
-import args_remove;
-import args_exclude;
+import :init;
+import :create;
+import :_delete;
+import :group_add;
+import :group_remove;
+import :add;
+import :remove;
+import :exclude;
 
-import args_list;
-export import args_command;
+import :list;
+export import :command;
 
 using namespace std;
 using namespace oul;
 using namespace oul::args;
 
-static tuple<string, string> parse_option(cr<string> arg)
+namespace oul
 {
-	size_t index = arg.find('=');
-	
-	if (index == string::npos)
+	static tuple<string, string> parse_option(cr<string> arg)
 	{
-		return tuple(arg, "");
-	}
-	else
-	{
-		string name = arg.substr(0, index);
-		string value = arg.substr(index + 1);
-		return tuple(move(name), move(value));
-	}
-}
+		size_t index = arg.find('=');
 
-export namespace oul
-{
-	unique_ptr<COMMAND> read_args(int argc, char* argv[])
+		if (index == string::npos)
+		{
+			return tuple(arg, "");
+		}
+		else
+		{
+			string name = arg.substr(0, index);
+			string value = arg.substr(index + 1);
+			return tuple(move(name), move(value));
+		}
+	}
+	export unique_ptr<COMMAND> read_args(int argc, char* argv[])
 	{
 		vector<string> args(argv + 1, argv + argc);
 

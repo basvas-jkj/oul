@@ -1,6 +1,6 @@
-export module args_help;
+export module args:help;
 
-import args_command;
+import :command;
 
 using namespace std;
 

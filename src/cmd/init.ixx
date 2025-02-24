@@ -1,10 +1,9 @@
-export module args_init;
+export module args:init;
 
-import <iostream>;
-
-import args_command;
+import std;
 import config;
 import message;
+import :command;
 
 using namespace std;
 
@@ -13,18 +12,16 @@ export namespace oul::args
 	class INIT: public COMMAND
 	{
 	public:
-		int run() const override
+		void run() const override
 		{
 			optional<string> path = CONFIG::find();
 			if (path.has_value())
 			{
 				report_error(message::config_found);
-				return 2;
 			}
 			else
 			{
 				CONFIG::initialize();
-				return 0;
 			}
 		}
 	};
