@@ -1,10 +1,14 @@
-cmake_minimum_required (VERSION 3.8)
-
-project(oul LANGUAGES CXX)
+cmake_minimum_required (VERSION 3.30)
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_MODULE_STD 1)
+set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_MODULE_STD 1) 
+set(CMAKE_GENERATOR "Ninja")
+
+set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "0e5b6991-d74f-4b3d-a41c-cf096e0b2508")
+
+project(oul)
 
 # find packages
 find_package(libzippp REQUIRED)
@@ -14,12 +18,16 @@ find_package(Boost REQUIRED algorithm filesystem process)
 
 # helpers library
 add_library(helpers "lib/helpers/Helpers.cpp")
+set_property(TARGET helpers PROPERTY CXX_STANDARD 23)
 target_include_directories(helpers PUBLIC "${VCPKG_INSTALLED_DIR}/x64-windows/include")
 target_link_libraries(helpers PRIVATE libzippp::libzippp)
 
 # OUL - main projetct
+file(GLOB_RECURSE oul_source RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 file(GLOB_RECURSE oul_modules RELATIVE ${CMAKE_SOURCE_DIR} "src/*.ixx")
-add_executable(oul "src/main.cpp" ${oul_modules})
+add_executable(oul ${oul_source})
+target_sources(oul PUBLIC FILE_SET CXX_MODULES FILES ${oul_modules})
+set_property(TARGET oul PROPERTY CXX_STANDARD 23)
 
 target_link_libraries(oul PRIVATE helpers)
 target_link_libraries(oul PRIVATE yaml-cpp::yaml-cpp)

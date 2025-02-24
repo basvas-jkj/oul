@@ -1,20 +1,31 @@
-import <iostream>;
-
+import std;
 import args;
-import config;
+import common;
 import component_manager;
-import data_file;
 
 using namespace std;
 using namespace oul;
 
 int main(int argc, char* argv[])
 {
-	unique_ptr<COMMAND> c = read_args(argc, argv);
-	if (c != nullptr)
+	try
 	{
-		return c->run();
+		unique_ptr<COMMAND> c = read_args(argc, argv);
+
+		if (c != nullptr && c->check())
+		{
+			c->run();
+			return 0;
+		}
+	}
+	catch (CommonException& e)
+	{
+		e.report();
+	}
+	catch (...)
+	{
+		println("Unknown internal error.");
 	}
 
-	return 4;
+	return 1;
 }
