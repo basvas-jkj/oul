@@ -45,7 +45,7 @@ namespace oul
 		unique_ptr<COMMAND> command;
 		if (args.size() == 0)
 		{
-			report_error(message::missing_command);
+			report_error(missing_command);
 			return nullptr;
 		}
 		if (args[0] == "init")
@@ -81,7 +81,7 @@ namespace oul
 			start += 1;
 			if (args.size() == 1)
 			{
-				report_error(message::missing_group_subcommand);
+				report_error(missing_group_subcommand);
 				return nullptr;
 			}
 			else if (args[1] == "add")
@@ -94,13 +94,13 @@ namespace oul
 			}
 			else
 			{
-				report_error(message::missing_group_subcommand);
+				report_error(missing_group_subcommand);
 				return nullptr;
 			}
 		}
 		else
 		{
-			report_error(message::unknown_command);
+			report_error(unknown_command);
 			return nullptr;
 		}
 

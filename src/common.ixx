@@ -61,16 +61,14 @@ namespace oul
 
 	export class CommonException: exception
 	{
-		string message;
+		ERROR name;
 
 	public:
-		CommonException(cr<string> m): message(m)
-		{}
-		CommonException(string&& m): message(move(m))
+		CommonException(ERROR n): name(n)
 		{}
 		void report() const
 		{
-			report_error(message);
+			report_error(name);
 		}
 	};
 }

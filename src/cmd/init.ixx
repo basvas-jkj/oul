@@ -17,7 +17,7 @@ export namespace oul::args
 			optional<string> path = CONFIG::find();
 			if (path.has_value())
 			{
-				report_error(message::config_found);
+				report_error(config_found);
 			}
 			else
 			{

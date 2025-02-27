@@ -13,11 +13,11 @@ export namespace oul::args
 		{
 			if (arguments.size() < 1)
 			{
-				report_error(message::missing_component_name);
+				report_error(missing_component_name);
 			}
 			if (arguments.size() < 2)
 			{
-				report_error(message::missing_group_name);
+				report_error(missing_group_name);
 				return false;
 			}
 			else

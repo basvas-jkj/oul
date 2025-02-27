@@ -59,9 +59,7 @@ namespace oul
 	export class MissingComponent: public CommonException
 	{
 	public:
-		MissingComponent(cr<string> m): CommonException(m)
-		{}
-		MissingComponent(string&& m): CommonException(move(m))
+		MissingComponent(ERROR name): CommonException(name)
 		{}
 	};
 	/**
@@ -70,9 +68,7 @@ namespace oul
 	export class MissingGroup: public CommonException
 	{
 	public:
-		MissingGroup(cr<string> m): CommonException(m)
-		{}
-		MissingGroup(string&& m): CommonException(move(m))
+		MissingGroup(ERROR name): CommonException(name)
 		{}
 	};
 
@@ -88,7 +84,7 @@ namespace oul
 			vector<ITEM>::iterator component_it = cfg.get_component(component);
 			if (component_it == cfg.components.end())
 			{
-				throw MissingComponent(message::component_not_found);
+				throw MissingComponent(component_not_found);
 			}
 			else
 			{
@@ -100,7 +96,7 @@ namespace oul
 			file_map::iterator group_it = files.find(group);
 			if (group_it == files.end())
 			{
-				throw MissingGroup(message::group_not_found);
+				throw MissingGroup(group_not_found);
 			}
 			else
 			{
@@ -174,7 +170,7 @@ namespace oul
 			}
 			else
 			{
-				report_error(message::file_not_exist);
+				report_error(file_not_exist);
 				return;
 			}
 		}

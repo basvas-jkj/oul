@@ -7,63 +7,62 @@ module config;
 
 using namespace YAML;
 using namespace nlohmann;
-using enum CONFIG_ERR;
 
 namespace oul
 {
-	static void check_scalar(cr<Node> node, CONFIG_ERR error)
+	static void check_scalar(cr<Node> node, ERROR name)
 	{
 		if (!node.IsDefined() || !node.IsScalar())
 		{
-			throw InvalidConfiguration(configuration_errors.at(error));
+			throw InvalidConfiguration(name);
 		}
 	}
-	static void check_sequence(cr<Node> node, CONFIG_ERR error)
+	static void check_sequence(cr<Node> node, ERROR name)
 	{
 		if (!node.IsDefined() || !node.IsSequence())
 		{
-			throw InvalidConfiguration(configuration_errors.at(error));
+			throw InvalidConfiguration(name);
 		}
 	}
-	static void check_map(cr<Node> node, CONFIG_ERR error)
+	static void check_map(cr<Node> node, ERROR name)
 	{
 		if (!node.IsDefined() || !node.IsMap())
 		{
-			throw InvalidConfiguration(configuration_errors.at(error));
+			throw InvalidConfiguration(name);
 		}
 	}
 
-	static void check_optional_scalar(cr<Node> node, CONFIG_ERR error)
+	static void check_optional_scalar(cr<Node> node, ERROR name)
 	{
 		if (node.IsDefined())
 		{
-			check_scalar(node, error);
+			check_scalar(node, name);
 		}
 	}
-	static void check_optional_sequence(cr<Node> node, CONFIG_ERR error)
+	static void check_optional_sequence(cr<Node> node, ERROR name)
 	{
 		if (node.IsDefined())
 		{
-			check_sequence(node, error);
+			check_sequence(node, name);
 		}
 	}
-	static void check_optional_map(cr<Node> node, CONFIG_ERR error)
+	static void check_optional_map(cr<Node> node, ERROR name)
 	{
 		if (node.IsDefined())
 		{
-			check_map(node, error);
+			check_map(node, name);
 		}
 	}
 
-	static void check_file_map(cr<Node> file_map, bool required, CONFIG_ERR error)
+	static void check_file_map(cr<Node> file_map, bool required, ERROR name)
 	{
 		if (required)
 		{
-			check_map(file_map, error);
+			check_map(file_map, name);
 		}
 		else if (file_map.IsDefined())
 		{
-			check_optional_map(file_map, error);
+			check_optional_map(file_map, name);
 		}
 		else
 		{
@@ -73,11 +72,11 @@ namespace oul
 		for (cr<pair<Node, Node>> p : file_map)
 		{
 			cr<Node> file_list = p.second;
-			check_sequence(file_list, error);
+			check_sequence(file_list, name);
 
 			for (cr<Node> file : file_list)
 			{
-				check_scalar(file, error);
+				check_scalar(file, name);
 			}
 		}
 	}

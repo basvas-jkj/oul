@@ -15,7 +15,7 @@ export namespace oul::args
 		{
 			if (arguments.size() < 1)
 			{
-				report_error(message::missing_component_name);
+				report_error(missing_component_name);
 				return false;
 			}
 			else

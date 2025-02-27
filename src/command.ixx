@@ -17,9 +17,7 @@ namespace oul
 	export class ConfigurationNotFound: public CommonException
 	{
 	public:
-		ConfigurationNotFound(cr<string> m): CommonException(m)
-		{}
-		ConfigurationNotFound(string&& m): CommonException(move(m))
+		ConfigurationNotFound(ERROR name): CommonException(name)
 		{}
 	};
 	export class OPTIONS
@@ -70,7 +68,7 @@ namespace oul
 			optional<string> path = CONFIG::find();
 			if (path == nullopt)
 			{
-				throw ConfigurationNotFound(message::config_not_found);
+				throw ConfigurationNotFound(config_not_found);
 			}
 			else
 			{

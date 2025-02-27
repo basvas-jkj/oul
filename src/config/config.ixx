@@ -25,9 +25,7 @@ namespace oul
     export class InvalidConfiguration: public CommonException
     {
     public:
-        InvalidConfiguration(cr<string> m): CommonException(m)
-        {}
-        InvalidConfiguration(string&& m): CommonException(move(m))
+        InvalidConfiguration(ERROR name): CommonException(name)
         {}
     };
     /**
