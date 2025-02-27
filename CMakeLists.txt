@@ -36,6 +36,8 @@ target_link_libraries(oul PRIVATE Boost::algorithm)
 target_link_libraries(oul PRIVATE Boost::filesystem)
 target_link_libraries(oul PRIVATE Boost::process)
 
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/msg/english.json" "${CMAKE_CURRENT_BINARY_DIR}/english.json" COPYONLY)
+
 if (MSVC)
     target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/W1>)
 else()
