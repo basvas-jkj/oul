@@ -148,14 +148,12 @@ namespace oul
                 fs::path config = current / "oul.config.json";
                 if (fs::exists(config))
                 {
-                    current_path(current);
                     return config.string();
                 }
 
                 config = current / "oul.config.yaml";
                 if (fs::exists(config))
                 {
-                    current_path(current);
                     return config.string();
                 }
 

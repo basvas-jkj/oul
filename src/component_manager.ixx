@@ -18,7 +18,7 @@ namespace fs = boost::filesystem;
  * @param name - kontrolovaný řetězec
  * @return <code>true</code>, pokud je řetězec vzor cesty, <code>false</code>, pokud jde o konkréní cestu
  **/
-static bool is_pattern(auto&& name)
+bool is_pattern(cr<string> name)
 {
 	vector<char> special_chars{'*', '?', '\\', '[', ']', '(', ')', '|' , '!'};
 	for (char ch : special_chars)
@@ -31,24 +31,13 @@ static bool is_pattern(auto&& name)
 	return false;
 }
 /**
- * @brief Zkontroluje existenci zadaných souborů, jdeli o konkrétní cestu.
- * @param entries - seznam cest a vzorů
- * @return <code>true</code>, pokud všehny cesty odkazují na existující soubor, <code>false</code> v opačném případě
+ * @brief Zkontroluje, zda je zadaná položka platná.
+ * @param entry - cesta nebo vzor
+ * @return <code>true</code>, pokud cesta odkazuje na existující soubor nebo jde-li o vzor, <code>false</code> v opačném případě
  **/
-static bool check_files_existence(auto&& entries)
+bool check_entry_validity(cr<string> entry)
 {
-	for (cr<string> entry : entries)
-	{
-		bool is_valid = is_pattern(entry) || fs::exists(entry);
-
-		println("{} {}", entry, is_valid);
-
-		if (!is_valid)
-		{
-			return false;
-		}
-	}
-	return true;
+	return is_pattern(entry) || fs::exists(entry);
 }
 
 namespace oul
@@ -79,6 +68,11 @@ namespace oul
 	{
 		CONFIG cfg;
 
+		fs::path shift(cr<fs::path> file) const
+		{
+			fs::path cfg_path = fs::path(cfg.location).parent_path();
+			return fs::relative(file, cfg_path);
+		}
 		ITEM& find_component(cr<string> component)
 		{
 			vector<ITEM>::iterator component_it = cfg.get_component(component);
@@ -164,14 +158,16 @@ namespace oul
 			ITEM& component = find_component(name);
 			vector<string>& include_list = find_file_list(component.include, group);
 
-			if (check_files_existence(entries))
+			for (cr<string> entry : entries)
 			{
-				include_list.append_range(entries);
-			}
-			else
-			{
-				report_error(file_not_exist);
-				return;
+				if (check_entry_validity(entry))
+				{
+					include_list.push_back(shift(entry).string());
+				}
+				else
+				{
+					report_error(file_not_exist);
+				}
 			}
 		}
 		/**
@@ -184,7 +180,11 @@ namespace oul
 		{
 			ITEM& component = find_component(name);
 			vector<string>& exclude_list = find_file_list(component.exclude, group);
-			exclude_list.append_range(entries);
+
+			for (cr<string> entry : entries)
+			{
+				exclude_list.push_back(shift(entry).string());
+			}
 		}
 		/**
 		 * @brief Odebere soubory ze seznamu začleněných/vyčleněných souborů.
@@ -200,11 +200,12 @@ namespace oul
 
 			for (cr<string> entry : entries)
 			{
-				int count = erase(exclude_list, entry);
+				string shifted = shift(entry).string();
+				int count = erase(exclude_list, shifted);
 
 				if (count == 0)
 				{
-					erase(include_list, entry);
+					erase(include_list, shifted);
 				}
 			}
 		}
