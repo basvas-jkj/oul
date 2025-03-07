@@ -35,7 +35,7 @@ namespace oul
 		missing_command, unknown_command, missing_group_subcommand, 
 		missing_component_name, component_already_exists, component_not_found,
 		missing_group_name, group_already_exists, group_not_found,
-		file_not_exist, empty_file_list,
+		file_not_exist, empty_file_list, file_outside_component,
 
 		// configuration errors
 		config_found, config_not_found,
@@ -62,6 +62,7 @@ namespace oul
 
 		{file_not_exist, "file_not_exist"},
 		{empty_file_list, "empty_file_list"},
+		{file_outside_component, "file_outside_component"},
 
 		{config_found, "config_found"},
 		{config_not_found, "config_not_found"},

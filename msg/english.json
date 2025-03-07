@@ -13,6 +13,7 @@
 
     "file_not_exist": "File included into component has to exist.",
     "empty_file_list": "Missing file list.",
+    "file_outside_component": "File has to be in the directory of this component.",
 
     "config_found": "Configuration file had been created.",
     "config_not_found": "Configuration file not found.\nCall 'oul init' or move to an initialized project.",

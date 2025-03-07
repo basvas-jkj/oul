@@ -39,6 +39,25 @@ bool check_entry_validity(cr<string> entry)
 {
 	return is_pattern(entry) || fs::exists(entry);
 }
+/**
+ * @brief 
+ * @param entry 
+ * @return 
+ **/
+bool is_outside_component(cr<fs::path> entry)
+{
+	return entry.string().starts_with("..");
+}
+/**
+ * @brief 
+ **/
+void add_if_not_presented(vector<string>& v, cr<string> s)
+{
+	if (ranges::find(v, s) == v.end())
+	{
+		v.push_back(s);
+	}
+}
 
 namespace oul
 {
@@ -68,10 +87,10 @@ namespace oul
 	{
 		CONFIG cfg;
 
-		fs::path shift(cr<fs::path> file) const
+		fs::path shift(cr<fs::path> file, cr<fs::path> component_path) const
 		{
 			fs::path cfg_path = fs::path(cfg.location).parent_path();
-			return fs::relative(file, cfg_path);
+			return fs::relative(file, cfg_path / component_path);
 		}
 		ITEM& find_component(cr<string> component)
 		{
@@ -160,9 +179,14 @@ namespace oul
 
 			for (cr<string> entry : entries)
 			{
-				if (check_entry_validity(entry))
+				fs::path shifted = shift(entry, component.location);
+				if (is_outside_component(shifted))
 				{
-					include_list.push_back(shift(entry).string());
+					report_error(file_outside_component);
+				}
+				else if (check_entry_validity(entry))
+				{
+					add_if_not_presented(include_list, shifted.generic_string());
 				}
 				else
 				{
@@ -183,7 +207,15 @@ namespace oul
 
 			for (cr<string> entry : entries)
 			{
-				exclude_list.push_back(shift(entry).string());
+				fs::path shifted = shift(entry, component.location);
+				if (is_outside_component(shifted))
+				{
+					report_error(file_outside_component);
+				}
+				else
+				{
+					add_if_not_presented(exclude_list, shifted.generic_string());
+				}
 			}
 		}
 		/**
@@ -200,12 +232,18 @@ namespace oul
 
 			for (cr<string> entry : entries)
 			{
-				string shifted = shift(entry).string();
-				int count = erase(exclude_list, shifted);
+				fs::path shifted = shift(entry, component.location);
+				if (is_outside_component(shifted))
+				{
+					report_error(file_outside_component);
+					continue;
+				}
+
+				int count = erase(exclude_list, shifted.generic_string());
 
 				if (count == 0)
 				{
-					erase(include_list, shifted);
+					erase(include_list, shifted.generic_string());
 				}
 			}
 		}
