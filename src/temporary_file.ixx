@@ -44,8 +44,8 @@ namespace oul
 		 * @brief Konstruktor vytvářející objekty třídy <code>TMP_FILE</code>.
 		 * @param name jméno dočasného souboru (ekvivalent argumentu funkce <code>boost::filesystem::unique_path</code>)
 		 **/
-		TMP_FILE(cr<string> name, bool use_subfolder): name(unique_path(get_temporary_folder(use_subfolder) / name)) {
-		}
+		TMP_FILE(cr<string> name, bool use_subfolder): name(unique_path(get_temporary_folder(use_subfolder) / name))
+		{}
 		/**
 		 * @brief Konstruktor vytvářející objekty třídy <code>TMP_FILE</code>.
 		 * @param name přesné umístění souboru
@@ -54,9 +54,16 @@ namespace oul
 		/**
 		 * @brief Odstraní dočasný soubor ze souborového systému.
 		 **/
-		~TMP_FILE()
+		~TMP_FILE() noexcept
+		{
+			try
 		{
 			remove(name);
+		}
+			catch (...)
+			{
+				println("Unexpected destructror failure.");
+			}
 		}
 
 		/**
@@ -110,9 +117,16 @@ namespace oul
 		/**
 		 * @brief Odstraní dočasnou složku ze souborového systému.
 		 **/
-		~TMP_FOLDER()
+		~TMP_FOLDER() noexcept
+		{
+			try
 		{
 			remove_all(name);
+		}
+			catch (...)
+			{
+				println("Unexpected destructror failure.");
+			}
 		}
 
 		/**

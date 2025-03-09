@@ -99,7 +99,9 @@ namespace oul
         /**
          * @brief Zajišťuje zápsání změněné konfigurace do souboru.
          **/
-        ~CONFIG()
+        ~CONFIG() noexcept
+        {
+            try
         {
             if (location.ends_with(".json"))
             {
@@ -108,6 +110,11 @@ namespace oul
             else if (location.ends_with(".yaml"))
             {
                 save_yaml(*this);
+            }
+        }
+            catch (...)
+            {
+                println("Unexpected destructror failure.");
             }
         }
 
