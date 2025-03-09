@@ -96,7 +96,7 @@ namespace oul
 			set<string> joined_exclude = join_filemap(exclude);
 			FILE_ITERATOR dir_it(base, move(joined_include), move(joined_exclude));
 
-			if ( || match_any(base, *dir_it.it, dir_it.exclude) || !match_any(base, *dir_it.it, dir_it.include))
+			if (dir_it.it->is_directory() || match_any(base, *dir_it.it, dir_it.exclude) || !match_any(base, *dir_it.it, dir_it.include))
 			{
 				++dir_it;
 			}
@@ -158,6 +158,12 @@ namespace oul
 
 			return *this;
 		}
+		FILE_ITERATOR operator++(int)
+		{
+			FILE_ITERATOR fi = *this;
+			++*this;
+			return fi;
+		}
 		bool operator==(cr<FILE_ITERATOR> o)
 		{
 			return it == o.it;
@@ -170,5 +176,14 @@ namespace oul
 		{
 			return it->path().generic_path();
 		}
+		path operator->()
+		{
+			return it->path().generic_path();
+		}
+
+		using value_type = path;
+		using difference_type = ptrdiff_t;
+		using pointer = FILE_ITERATOR;
+		using reference = path;
 	};
 }
