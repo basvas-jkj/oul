@@ -118,7 +118,7 @@ namespace oul
 	 * @brief Převede konfiguraci komponenty do formátu JSON.
 	 * @return konfigurace komponenty ve formátu JSON
 	 **/
-	static ordered_json genererate_json(cr<ITEM> i)
+	ordered_json genererate_json(cr<ITEM> i)
 	{
 		ordered_json component;
 
@@ -155,7 +155,7 @@ namespace oul
 	 * @brief Převede konfiguraci komponenty do formátu YAML.
 	 * @return konfigurace komponenty ve formátu YAML
 	 **/
-	static Node genererate_yaml(cr<ITEM> i)
+	Node genererate_yaml(cr<ITEM> i)
 	{
 		Node component;
 

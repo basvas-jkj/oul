@@ -98,16 +98,16 @@ namespace oul
         ~CONFIG() noexcept
         {
             try
-        {
-            if (location.ends_with(".json"))
             {
-                save_json(*this);
+                if (location.ends_with(".json"))
+                {
+                    save_json(*this);
+                }
+                else if (location.ends_with(".yaml"))
+                {
+                    save_yaml(*this);
+                }
             }
-            else if (location.ends_with(".yaml"))
-            {
-                save_yaml(*this);
-            }
-        }
             catch (...)
             {
                 println("Unexpected destructror failure.");
@@ -230,6 +230,10 @@ namespace oul
         string get_url(cr<string> component_name) const
         {
             return default_url + "/" + component_name;
+        }
+        fs::path get_directory() const
+        {
+            return fs::path(location).parent_path();
         }
     };
 }
