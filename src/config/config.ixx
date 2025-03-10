@@ -8,17 +8,13 @@ import std;
 import usings;
 import common;
 import message;
-import :data_file;
+export import :data_file;
 
 using namespace std;
 namespace fs = boost::filesystem;
 
 namespace oul
 {
-    /**
-     * @brief Seznam souborů členěný podle kategorií.
-     **/
-    export using file_map = map<string, vector<string>>;
     /**
      * @brief Chyba v konfiguraci.
      **/
