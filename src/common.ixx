@@ -4,9 +4,9 @@ module;
 
 export module common;
 
-export import usings;
 import std;
-import message;
+export import usings;
+export import message;
 
 using namespace std;
 using namespace boost::filesystem;

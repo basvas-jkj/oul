@@ -42,7 +42,10 @@ namespace oul
 
 		root_not_object, missing_project_name, components_not_array, url_not_string,
 		invalid_component, invalid_component_name, invalid_original_name, missing_location,
-		missing_include, invalid_exclude
+		missing_include, invalid_exclude,
+
+		// zipping errors
+		missing_zip_tool
 	};
 	using enum ERROR;
 	
@@ -76,7 +79,9 @@ namespace oul
 		{invalid_original_name, "invalid_original_name"},
 		{missing_location, "missing_location"},
 		{missing_include, "missing_include"},
-		{invalid_exclude, "invalid_exclude"}
+		{invalid_exclude, "invalid_exclude"},
+
+		{missing_zip_tool, "missing_zip_tool"}
 	};
 	export void report_error(ERROR name)
 	{
