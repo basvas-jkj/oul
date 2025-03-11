@@ -17,7 +17,7 @@ namespace oul
 	 * @param use_subfolder Vytvoří se také podsložka zajišťující unikátnost mezi různými voláními programu oul?
 	 * @return umístění složky pro dočasné soubory
 	 **/
-	path get_temporary_folder(bool use_subfolder)
+	export path get_temporary_folder(bool use_subfolder)
 	{
 		path temp = temp_directory_path() / "oul";
 
@@ -26,14 +26,14 @@ namespace oul
 			temp /= unique_path();
 		}
 
-		create_directory(temp);
+		create_directories(temp);
 		return temp;
 	}
 
 	/**
 	 * @brief Třída reprezentující dočasný soubor.
 	 **/
-	class TMP_FILE
+	export class TMP_FILE
 	{
 		/**
 		 * @brief Jméno dočasného souboru.
@@ -69,10 +69,25 @@ namespace oul
 		/**
 		 * @return jméno dočasného souboru
 		 **/
-		path get_name() const
+		string get_name() const
+		{
+			return name.string();
+		}
+		/**
+		 * @return jméno dočasného souboru
+		 **/
+		cr<path> get_path() const
 		{
 			return name;
 		}
+		/**
+		 * @return složka dočasného souboru
+		 **/
+		path get_directory() const
+		{
+			return name.parent_path();
+		}
+
 		/**
 		 * @brief Otevře dočasný soubor pro čtení.
 		 * @return Objekt typu <code>ifstream</code> reprezentující dočasný soubor.
@@ -94,7 +109,7 @@ namespace oul
 	/**
 	 * @brief Třída reprezentující dočasnou složku.
 	 **/
-	class TMP_FOLDER
+	export class TMP_FOLDER
 	{
 		path name;
 	public:
