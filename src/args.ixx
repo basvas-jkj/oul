@@ -14,6 +14,8 @@ import :remove;
 import :exclude;
 
 import :list;
+import :upload;
+import :install;
 export import :command;
 
 using namespace std;
@@ -75,6 +77,14 @@ namespace oul
 		else if (args[0] == "list")
 		{
 			command = make_unique<LIST>();
+		}
+		else if (args[0] == "upload")
+		{
+			command = make_unique<UPLOAD>();
+		}
+		else if (args[0] == "install")
+		{
+			command = make_unique<INSTALL>();
 		}
 		else if (args[0] == "group")
 		{
