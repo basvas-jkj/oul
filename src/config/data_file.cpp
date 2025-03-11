@@ -118,7 +118,7 @@ namespace oul
 	 * @brief Převede konfiguraci komponenty do formátu JSON.
 	 * @return konfigurace komponenty ve formátu JSON
 	 **/
-	ordered_json genererate_json(cr<ITEM> i)
+	static ordered_json genererate_json(cr<ITEM> i)
 	{
 		ordered_json component;
 
@@ -155,7 +155,7 @@ namespace oul
 	 * @brief Převede konfiguraci komponenty do formátu YAML.
 	 * @return konfigurace komponenty ve formátu YAML
 	 **/
-	Node genererate_yaml(cr<ITEM> i)
+	static Node genererate_yaml(cr<ITEM> i)
 	{
 		Node component;
 
@@ -201,7 +201,6 @@ namespace oul
 	void save_json(cr<CONFIG> c)
 	{
 		ordered_json root = genererate_json(c);
-
 		ofstream o(c.location);
 		o << root.dump(4);
 	}
@@ -213,8 +212,26 @@ namespace oul
 	void save_yaml(cr<CONFIG> c)
 	{
 		Node root = genererate_yaml(c);
-
 		ofstream o(c.location);
 		o << root;
+	}
+
+	/**
+	 * @brief Uloží konfiguraci komponenty ve formátu JSON.
+	 * @param c - konfigurace komponenty
+	 * @param output - stream, do kterého bude konfigurace zapsána
+	 **/
+	void save_json(cr<ITEM> c, ofstream& output)
+	{
+		output << genererate_json(c).dump(4);
+	}
+	/**
+	 * @brief Uloží konfiguraci komponenty ve formátu YAML.
+	 * @param c - konfigurace komponenty
+	 * @param output - stream, do kterého bude konfigurace zapsána
+	 **/
+	void save_yaml(cr<ITEM> c, ofstream& output)
+	{
+		output << genererate_yaml(c);
 	}
 }

@@ -21,6 +21,6 @@ namespace oul
 	export void save_json(cr<CONFIG> c);
 	export void save_yaml(cr<CONFIG> c);
 
-	export ordered_json genererate_json(cr<ITEM> i);
-	export Node genererate_yaml(cr<ITEM> i);
+	export void save_json(cr<ITEM> c, ofstream& output);
+	export void save_yaml(cr<ITEM> c, ofstream& output);
 }
