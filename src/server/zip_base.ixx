@@ -17,12 +17,14 @@ using namespace boost::filesystem;
 
 namespace oul
 {
+	/// @brief Chyba: nenalezen žádný zipovací nástroj.
 	export class MissingZipTool: public CommonException
 	{
 	public:
 		MissingZipTool(ERROR name): CommonException(name)
 		{}
 	};
+	/// @brief Chyba: vytváření nebo rozbalování archovu selhalo
 	export class ZippingError: public CommonException
 	{
 	public:
@@ -33,8 +35,12 @@ namespace oul
 	template <class ...T>
 	concept CmdArgs = ((same_as<string, T> || same_as<path, T>) && ...);
 
+	/// @brief Základní typ zipovacích nástrojů.
 	export class ABSTRACT_ZIP_TOOL
 	{
+		/// @brief Vytvoří zip archiv pro danou komponentu, zapíše do ní konfiguraci.
+		/// @param component - konfigurace komponenty 
+		/// @return dočasný soubor reprezentující vytvořený zip archiv
 		TMP_FILE create_zip(cr<ITEM> component)
 		{
 			path json_path = "oul.component.json";
@@ -58,6 +64,11 @@ namespace oul
 			zip_path(zip_path), unzip_path(unzip_path)
 		{}
 
+		/// @brief Spustí zipovací nástroj.
+		/// @tparam ...T - std::string nebo boost::filesystem::path
+		/// @param tool_path - cesta nástroje
+		/// @param working_directory - složka, ve které se nástroj spustí
+		/// @param ...args - argumenty předané nástroji
 		template <CmdArgs ...T>
 		void call_tool(cr<path> tool_path, cr<path> working_directory, T... args)
 		{
@@ -68,15 +79,29 @@ namespace oul
 				throw ZippingError(zipping_error);
 			}
 		}
+		/// @brief Spustí zipovací nástroj v aktuálním pracovním adresáři.
+		/// @tparam ...T - std::string nebo boost::filesystem::path 
+		/// @param tool_path - cesta nástroje 
+		/// @param ...args - argumenty předané nástroji 
 		template <CmdArgs ...T>
-		void call_tool_here(cr<path> tool_path, cr<path> working_directory, T... args)
+		void call_tool_here(cr<path> tool_path, T... args)
 		{
 			call_tool(tool_path, current_path(), args...);
 		}
 
+		/// @brief Přidá daný soubor do zadaného arhivu.
+		/// @param working_dir - pracovní složka, vůči které je soubor do archivu vložen (ovlivňuje cestu souboru uvnitř archivu)
+		/// @param zip_file - cesta k archivu
+		/// @param entry - soubor přidávaný do archivu
 		virtual void zip(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) = 0;
+		/// @brief Rozbalí daný archiv do zadané složky.
+		/// @param working_dir - pracovní složka, do které je archiv rozbalen
+		/// @param zip_file - cesta k archivu
 		virtual void unzip(cr<path> working_dir, cr<TMP_FILE> zip_file) = 0;
 	public:
+		/// @brief Vytvoří zip archiv a přidá do něj všechny soubory dané komponenty (včetně konfigurace).
+		/// @param base - kořen projektu
+		/// @param component - konfigurace komponenty
 		void zip(cr<path> base, cr<ITEM> component)
 		{
 			path component_dir = base / component.location;
@@ -88,7 +113,6 @@ namespace oul
 				zip(component_dir, zip_file, entry);
 			}
 		}
-		//virtual optional<ITEM> unzip(const TMP_FILE& zip_file, const string& where) = 0;
 		virtual ~ABSTRACT_ZIP_TOOL() = default;
 	};
 }

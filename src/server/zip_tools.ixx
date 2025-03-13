@@ -3,6 +3,8 @@ import :base;
 
 namespace oul
 {
+	/// @brief Reprezentuje nástroje zip a unzip.
+	/// (https://infozip.sourceforge.net/)
 	class TOOL_ZIP: public ABSTRACT_ZIP_TOOL
 	{
 	public:
@@ -17,6 +19,8 @@ namespace oul
 			call_tool(unzip_path, working_dir, zip_file.get_path());
 		}
 	};
+	/// @brief Reprezentuje nástroje 7z
+	/// (https://www.7-zip.org/)
 	class TOOL_7Z: public ABSTRACT_ZIP_TOOL
 	{
 	public:
