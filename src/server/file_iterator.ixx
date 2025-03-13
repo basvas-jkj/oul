@@ -6,7 +6,7 @@ module;
 #include <wildcards/wildcards.hpp>
 #undef __clang__
 
-export module dir_iterator;
+export module file_iterator;
 
 import std;
 import usings;
@@ -19,9 +19,7 @@ using recursive_it = boost::filesystem::recursive_directory_iterator;
 
 namespace oul
 {
-	/**
-	 * @return Shoduje se položka s alespoň jedním vzorem?
-	 **/
+	/// @return Shoduje se položka s alespoň jedním vzorem?
 	bool match_any(cr<string> entry, cr<set<string>> patterns)
 	{
 		for (cr<string> pattern : patterns)
@@ -33,18 +31,14 @@ namespace oul
 		}
 		return false;
 	}
-	/**
-	 * @return Shoduje se položka s alespoň jedním vzorem?
-	 **/
+	/// @return Shoduje se položka s alespoň jedním vzorem?
 	bool match_any(cr<path> base, cr<directory_entry> entry, cr<set<string>> patterns)
 	{
 		cr<string> entry_string = relative(entry.path(), base).generic_string();
 		return match_any(entry_string, patterns);
 	}
-	/**
-	 * @brief Spojí seznam souborů do jedné množiny.
-	 * @param list - Seznam souborů strukturovaný podle kategorií.
-	 **/
+	/// @brief Spojí seznam souborů do jedné množiny.
+	/// @param list - Seznam souborů strukturovaný podle kategorií.
 	set<string> join_filemap(cr<file_map> list)
 	{
 		set<string> files;
@@ -55,10 +49,8 @@ namespace oul
 		return files;
 	}
 
-	/**
-	 * @brief Rekurzivní iterátor souborového systému, který umožňuje specifikovat, které soubory
-	 * budou nebo nebudou zahrnuty. Vrací pouze soubory.
-	 **/
+	/// @brief Rekurzivní iterátor souborového systému, který umožňuje specifikovat, které soubory
+	/// budou nebo nebudou zahrnuty. Vrací pouze soubory.
 	export class FILE_ITERATOR
 	{
 		path base;
@@ -68,28 +60,22 @@ namespace oul
 		set<string> include;
 		set<string> exclude;
 
-		/**
-		 * @brief Vytvoří <code>FILE_ITERATOR</code> z rekurzivního iterátoru.
-		 */
+		/// @brief Vytvoří <code>FILE_ITERATOR</code> z rekurzivního iterátoru.
 		FILE_ITERATOR(cr<recursive_it> it): it(it), end_it(it)
 		{}
-		/**
-		 * @brief Vytvoří <code>FILE_ITERATOR</code> pro zadanou cestu.
-		 * @param base - kořenová složky iterátoru
-		 * @param inc - množina zahrnutých souborů/složek
-		 * @param exc - množina nezahrnutých souborů/složek
-		 **/
+		/// @brief Vytvoří <code>FILE_ITERATOR</code> pro zadanou cestu.
+		/// @param base - kořenová složky iterátoru
+		/// @param inc - množina zahrnutých souborů/složek
+		/// @param exc - množina nezahrnutých souborů/složek
 		FILE_ITERATOR(cr<path> base, set<string>&& inc, set<string>&& exc): 
 			base(base), it(base), end_it(fs::end(it)), include(move(inc)), exclude(move(exc))
 		{}
 
 	public:
-		/**
-		 * @param base - Kořen iterátoru.
-		 * @param include - soubory/složky/vzory cest, které iterátor vrací (předané jako file_map)
-		 * @param exclude - soubory/složky/vzory cest, které iterátor nevrací (předané jako file_map) 
-		 * @return připravený iterátor
-		 **/
+		/// @param base - Kořen iterátoru.
+		/// @param include - soubory/složky/vzory cest, které iterátor vrací (předané jako file_map)
+		/// @param exclude - soubory/složky/vzory cest, které iterátor nevrací (předané jako file_map) 
+		/// @return připravený iterátor
 		static FILE_ITERATOR init(cr<path> base, cr<file_map> include, cr<file_map> exclude)
 		{
 			set<string> joined_include = join_filemap(include);
@@ -108,6 +94,12 @@ namespace oul
 		bool include_all = false;
 		int base_depth;
 	public:
+		// -------------------------------------
+		//     funkce, operátory a aliasy,
+		//     díky kterým lze FILE_ITERATOR
+		//     považovat za platný iterátor
+		// -------------------------------------
+
 		FILE_ITERATOR& begin()
 		{
 			return *this;

@@ -9,7 +9,7 @@ export module zip:base;
 import tmp;
 import config;
 import common;
-import dir_iterator;
+import file_iterator;
 
 using namespace std;
 using namespace boost::process;
