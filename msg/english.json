@@ -29,5 +29,6 @@
     "missing_include": "Component include list is missing or is not a map of file lists.",
     "invalid_exclude": "Component exclude list is not a map of file lists.",
 
-    "missing_zip_tool": "No supported zipping tool was found."
+    "missing_zip_tool": "No supported zipping tool was found.",
+    "zipping_error": "Creating or extracting a zip archive was not successful."
 } 

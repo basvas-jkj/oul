@@ -45,7 +45,7 @@ namespace oul
 		missing_include, invalid_exclude,
 
 		// zipping errors
-		missing_zip_tool
+		missing_zip_tool, zipping_error
 	};
 	using enum ERROR;
 	
@@ -81,7 +81,8 @@ namespace oul
 		{missing_include, "missing_include"},
 		{invalid_exclude, "invalid_exclude"},
 
-		{missing_zip_tool, "missing_zip_tool"}
+		{missing_zip_tool, "missing_zip_tool"},
+		{zipping_error, "zipping_error"}
 	};
 	export void report_error(ERROR name)
 	{
