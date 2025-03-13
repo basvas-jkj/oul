@@ -14,10 +14,10 @@ using namespace boost::filesystem;
 namespace oul
 {
     /**
-     * @brief Pøesune soubor. Pokud cílová cesta neexistuje, bude vytvoøena.
-     * @param source_directory pùvodní umístìní
-     * @param target_directory nové umístìní
-     * @param entry_name jméno souboru èi sloky
+     * @brief PÅ™esune soubor. Pokud cÃ­lovÃ¡ cesta neexistuje, bude vytvoÅ™ena.
+     * @param source_directory - pÅ¯vodnÃ­ umÃ­stÄ›nÃ­
+     * @param target_directory - novÃ© umÃ­stÄ›nÃ­
+     * @param entry_name - jmÃ©no souboru Äi sloÅ¾ky
      **/
     export void move_file(cr<path> source_directory, cr<path> target_directory, cr<path> entry_name)
 	{
@@ -31,10 +31,10 @@ namespace oul
 		rename(source, target);
 	}
 	/**
-	 * @brief Rozdìlí øetìzec na podøetìzce podle zadaného oddìlovaèe.
-	 * @param s rozdìlovanı øetìzec
-	 * @param ch oddìlovaè
-	 * @return seznam podøetìzcù
+	 * @brief RozdÄ›lÃ­ Å™etÄ›zec na podÅ™etÄ›zce podle zadanÃ©ho oddÄ›lovaÄe.
+	 * @param s - rozdÄ›lovanÃ½ Å™etÄ›zec
+	 * @param ch - oddÄ›lovaÄ
+	 * @return seznam podÅ™etÄ›zcÅ¯
 	 **/
 	vector<string> split(cr<string> s, char ch)
 	{
