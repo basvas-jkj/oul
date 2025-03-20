@@ -44,7 +44,8 @@ namespace oul
 		invalid_component, invalid_component_name, invalid_original_name, missing_location,
 		missing_include, invalid_exclude,
 
-		// zipping errors
+		// external tools
+		missing_client, client_error,
 		missing_zip_tool, zipping_error
 	};
 	using enum ERROR;
@@ -81,6 +82,8 @@ namespace oul
 		{missing_include, "missing_include"},
 		{invalid_exclude, "invalid_exclude"},
 
+		{missing_client, "missing_client"},
+		{client_error, "client_error"},
 		{missing_zip_tool, "missing_zip_tool"},
 		{zipping_error, "zipping_error"}
 	};

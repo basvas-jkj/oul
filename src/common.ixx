@@ -13,12 +13,10 @@ using namespace boost::filesystem;
 
 namespace oul
 {
-    /**
-     * @brief Přesune soubor. Pokud cílová cesta neexistuje, bude vytvořena.
-     * @param source_directory - původní umístění
-     * @param target_directory - nové umístění
-     * @param entry_name - jméno souboru či složky
-     **/
+    /// @brief Přesune soubor. Pokud cílová cesta neexistuje, bude vytvořena.
+    /// @param source_directory - původní umístění
+    /// @param target_directory - nové umístění
+    /// @param entry_name - jméno souboru či složky
     export void move_file(cr<path> source_directory, cr<path> target_directory, cr<path> entry_name)
 	{
 		path source = source_directory / entry_name;
@@ -30,12 +28,10 @@ namespace oul
 
 		rename(source, target);
 	}
-	/**
-	 * @brief Rozdělí řetězec na podřetězce podle zadaného oddělovače.
-	 * @param s - rozdělovaný řetězec
-	 * @param ch - oddělovač
-	 * @return seznam podřetězců
-	 **/
+	/// @brief Rozdělí řetězec na podřetězce podle zadaného oddělovače.
+	/// @param s - rozdělovaný řetězec
+	/// @param ch - oddělovač
+	/// @return seznam podřetězců
 	vector<string> split(cr<string> s, char ch)
 	{
 		vector<string> v;
@@ -59,6 +55,7 @@ namespace oul
 		return v;
 	}
 
+	/// @brief Základní třída pro výjimky použité v tomto projektu.
 	export class CommonException: exception
 	{
 		ERROR name;
