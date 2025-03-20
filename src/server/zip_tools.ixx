@@ -12,11 +12,19 @@ namespace oul
 		{}
 		void zip(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) override
 		{
-			call_tool(zip_path, working_dir, zip_file.get_path(), entry);
+			bool success = call_tool(zip_path, working_dir, zip_file.get_path(), entry);
+			if (!success)
+			{
+				throw new ZippingError(zipping_error);
+			}
 		}
 		void unzip(cr<path> working_dir, cr<TMP_FILE> zip_file) override
 		{
-			call_tool(unzip_path, working_dir, zip_file.get_path());
+			bool success = call_tool(unzip_path, working_dir, zip_file.get_path());
+			if (!success)
+			{
+				throw new ZippingError(zipping_error);
+			}
 		}
 	};
 	/// @brief Reprezentuje nástroje 7z
@@ -29,11 +37,19 @@ namespace oul
 
 		void zip(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) override
 		{
-			call_tool("a", zip_path, working_dir, zip_file.get_path(), entry);
+			bool success = call_tool("a", zip_path, working_dir, zip_file.get_path(), entry);
+			if (!success)
+			{
+				throw new ZippingError(zipping_error);
+			}
 		}
 		void unzip(cr<path> working_dir, cr<TMP_FILE> zip_file) override
 		{
-			call_tool("x", zip_path, working_dir, zip_file.get_path());
+			bool success = call_tool("x", zip_path, working_dir, zip_file.get_path());
+			if (!success)
+			{
+				throw new ZippingError(zipping_error);
+			}
 		}
 	};
 }
