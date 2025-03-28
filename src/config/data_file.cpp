@@ -80,19 +80,23 @@ namespace oul
 			}
 		}
 	}
+	static void check_component(cr<Node> component)
+	{
+		check_map(component, invalid_component);
+
+		check_scalar(component["name"], missing_component_name);
+		check_optional_scalar(component["original_name"], invalid_original_name);
+		check_scalar(component["location"], missing_location);
+		check_file_map(component["include"], true, missing_include);
+		check_file_map(component["exclude"], false, invalid_exclude);
+	}
 	static void check_components_list(cr<Node> list)
 	{
 		check_sequence(list, components_not_array);
 
 		for (cr<Node> component : list)
 		{
-			check_map(component, invalid_component);
-
-			check_scalar(component["name"], missing_component_name);
-			check_optional_scalar(component["original_name"], invalid_original_name);
-			check_scalar(component["location"], missing_location);
-			check_file_map(component["include"], true, missing_include);
-			check_file_map(component["exclude"], false, invalid_exclude);
+			check_component(component);
 		}
 	}
 	
@@ -111,6 +115,18 @@ namespace oul
 		check_scalar(root["default_url"], url_not_string);
 		check_components_list(root["components"]);
 
+		return root;
+	}
+	/**
+	 * @brief Načte a zkontroluje konfiguraci komponenty ze souboru
+	 * @param component_file - cesta ke konfiguračnímu souboru komponenty
+	 * @return platná konfigurace komponenty
+	 * @throw InvalidConfiguration
+	 **/
+	Node load_component(cr<string> component_file)
+	{
+		Node root = LoadFile(component_file);
+		check_component(root);
 		return root;
 	}
 
