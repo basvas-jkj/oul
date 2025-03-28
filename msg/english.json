@@ -3,7 +3,7 @@
     "unknown_command": "Unknown command. Run 'oul help' to get a list of supported commands.",
     "missing_group_subcommand": "'oul group' requires subcommand ('add' or 'remove').",
 
-    "missing_component_name": "Component of this name doesn't exist.",
+    "missing_component_name": "Name of the cimponent is missing.\nCall this command with one more argument.",
     "component_already_exists": "Component of this name already exists.\nCall this command with different name or rename original component.",
     "component_not_found": "Component of this name doesn't exist.",
 
@@ -31,6 +31,9 @@
 
     "missing_client": "Required external client was not found.",
     "client_error": "External client call was not successful.",
+    "unknown_client": "Unknown or unsupported external client.",
     "missing_zip_tool": "No supported zipping tool was found.",
-    "zipping_error": "Creating or extracting a zip archive was not successful."
+    "zipping_error": "Creating or extracting a zip archive was not successful.",
+
+    "missing_url": "No url was specified."
 } 

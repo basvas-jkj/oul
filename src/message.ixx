@@ -45,8 +45,11 @@ namespace oul
 		missing_include, invalid_exclude,
 
 		// external tools
-		missing_client, client_error,
-		missing_zip_tool, zipping_error
+		missing_client, client_error, unknown_client,
+		missing_zip_tool, zipping_error,
+
+		// server errors
+		missing_url
 	};
 	using enum ERROR;
 	
@@ -84,8 +87,11 @@ namespace oul
 
 		{missing_client, "missing_client"},
 		{client_error, "client_error"},
+		{unknown_client, "unknown_client"},
 		{missing_zip_tool, "missing_zip_tool"},
-		{zipping_error, "zipping_error"}
+		{zipping_error, "zipping_error"},
+
+		{missing_url, "missing_url"}
 	};
 	export void report_error(ERROR name)
 	{
