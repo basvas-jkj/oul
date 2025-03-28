@@ -10,7 +10,7 @@ using namespace std;
 
 namespace oul
 {
-	static const map<string, string> short_variants = {
+	const map<string, string> short_variants = {
 		{"-version", "-v"},
 		{"-where", "-w"}
 	};
