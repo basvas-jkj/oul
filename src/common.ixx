@@ -40,6 +40,21 @@ namespace oul
 
 		rename(source, target);
 	}
+	/// @brief Zkopíruje soubor. Pokud cílová cesta neexistuje, bude vytvořena.
+	/// @param source_directory - původní umístění
+	/// @param target_directory - nové umístění
+	/// @param entry_name - jméno souboru či složky
+	export void copy_file(cr<path> source_directory, cr<path> target_directory, cr<path> entry_name)
+	{
+		path source = source_directory / entry_name;
+		path target = target_directory / entry_name;
+		if (target.has_parent_path())
+		{
+			create_directories(target.parent_path());
+		}
+
+		copy_file(source, target, copy_options::update_existing);
+	}
 	/// @brief Rozdělí řetězec na podřetězce podle zadaného oddělovače.
 	/// @param s - rozdělovaný řetězec
 	/// @param ch - oddělovač

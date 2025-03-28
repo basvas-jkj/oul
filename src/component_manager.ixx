@@ -5,8 +5,8 @@ module;
 export module component_manager;
 
 import std;
-import usings;
 import common;
+import server;
 import message;
 export import config;
 
@@ -67,7 +67,7 @@ namespace oul
 	export class MissingComponent: public CommonException
 	{
 	public:
-		MissingComponent(ERROR name): CommonException(name)
+		MissingComponent(ERROR name = component_not_found): CommonException(name)
 		{}
 	};
 	/**
@@ -246,6 +246,24 @@ namespace oul
 					erase(include_list, shifted.generic_string());
 				}
 			}
+		}
+
+		void install(cr<string> server_name, cr<string> local_name, cr<string> url, cr<string> where)
+		{
+			if (cfg.contains(local_name))
+			{
+				report_error(component_already_exists);
+				return;
+			}
+
+			client_ptr client = select_client(url, where);
+			ITEM component = client->download();
+			component.name = local_name;
+			component.original_name = server_name;
+			component.location = where;
+			component.url = url;
+
+			cfg.add_component(component);
 		}
 	};
 }
