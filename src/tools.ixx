@@ -16,7 +16,7 @@ using namespace boost::filesystem;
 namespace oul
 {
 	export template <class ...T>
-	concept CmdArgs = ((same_as<string, T> || same_as<path, T>) && ...);
+	concept CmdArgs = ((convertible_to<T, string> || convertible_to<T, path>) && ...);
 
 	/// @brief Spustí externí nástroj.
 	/// @tparam ...T - std::string nebo boost::filesystem::path
@@ -25,9 +25,9 @@ namespace oul
 	/// @param ...args - argumenty předané nástroji
 	/// @return True, pokud nástroj úspěšně doběhl. False v opačném případě.
 	export template <CmdArgs ...T>
-	bool call_tool(cr<path> tool_path, cr<path> working_directory, T... args)
+	bool call_tool(cr<path> tool_path, cr<path> working_directory, T&&... args)
 	{
-		child ch(tool_path, args..., start_dir(working_directory), std_out > null, std_err > null);
+		child ch(tool_path, forward<T>(args)..., start_dir(working_directory), std_out > null, std_err > null);
 		ch.wait();
 		return ch.exit_code() == 0;
 	}
@@ -37,7 +37,7 @@ namespace oul
 	/// @param ...args - argumenty předané nástroji 
 	/// @return True, pokud nástroj úspěšně doběhl. False v opačném případě.
 	export template <CmdArgs ...T>
-	bool call_tool_here(cr<path> tool_path, T... args)
+	bool call_tool_here(cr<path> tool_path, T&&... args)
 	{
 		return call_tool(tool_path, current_path(), args...);
 	}
