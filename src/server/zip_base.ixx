@@ -29,12 +29,8 @@ namespace oul
 	export class ZippingError: public CommonException
 	{
 	public:
-		ZippingError(ERROR name): CommonException(name)
+		ZippingError(ERROR name = zipping_error): CommonException(name)
 		{}
-		static ZippingError init()
-		{
-			return ZippingError(zipping_error);
-		}
 	};
 
 	/// @brief Základní typ zipovacích nástrojů.
@@ -77,18 +73,34 @@ namespace oul
 		virtual void unzip(cr<path> working_dir, cr<TMP_FILE> zip_file) = 0;
 	public:
 		/// @brief Vytvoří zip archiv a přidá do něj všechny soubory dané komponenty (včetně konfigurace).
-		/// @param base - kořen projektu
 		/// @param component - konfigurace komponenty
-		void zip(cr<path> base, cr<ITEM> component)
+		/// @param component_location - umístění komponenty
+		TMP_FILE zip(cr<ITEM> component, cr<string> component_location)
 		{
-			path component_dir = base / component.location;
 			TMP_FILE zip_file = create_zip(component);
-			FILE_ITERATOR it = FILE_ITERATOR::init(component_dir, component.include, component.exclude);
+			FILE_ITERATOR it = FILE_ITERATOR::init(component_location, component.include, component.exclude);
 
 			for (cr<path> entry : it)
 			{
-				zip(component_dir, zip_file, entry);
+				zip(component_location, zip_file, entry);
 			}
+
+			return zip_file;
+		}
+		ITEM unzip(cr<TMP_FILE> zip_file, cr<string> component_location)
+		{
+			unzip(component_location, zip_file);
+
+			path name;
+			if (name = component_location / "oul.component.json"; exists(name));
+			else if (name = component_location / "oul.component.yaml"; exists(name));
+			else
+			{
+				throw ZippingError();
+			}
+
+			ITEM component(load_component(name.string()));
+			return component;
 		}
 		virtual ~ABSTRACT_ZIP_TOOL() = default;
 	};
