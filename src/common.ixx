@@ -2,6 +2,10 @@ module;
 
 #include <boost/filesystem.hpp>
 
+#define __clang__
+#include <wildcards/wildcards.hpp>
+#undef __clang__
+
 export module common;
 
 import std;
@@ -13,6 +17,14 @@ using namespace boost::filesystem;
 
 namespace oul
 {
+	/// @brief Zkontroluje, zda položka odpovídá zadanému vzoru.
+	/// @param entry - kontrolovaná položka
+	/// @param pattern - vzor
+	/// @return <code>true</code>, pokud položka vzoru odpovídá, <code>false</code> v opačném případě.
+	export bool match(cr<string> entry, cr<string> pattern)
+	{
+		return wildcards::match(entry, pattern).res;
+	}
     /// @brief Přesune soubor. Pokud cílová cesta neexistuje, bude vytvořena.
     /// @param source_directory - původní umístění
     /// @param target_directory - nové umístění

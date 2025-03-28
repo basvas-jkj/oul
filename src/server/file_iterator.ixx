@@ -2,17 +2,12 @@ module;
 
 #include <boost/filesystem.hpp>
 
-#define __clang__
-#include <wildcards/wildcards.hpp>
-#undef __clang__
-
 export module file_iterator;
 
 import std;
-import usings;
+import common;
 
 using namespace std;
-using namespace wildcards;
 using namespace boost::filesystem;
 namespace fs = boost::filesystem;
 using recursive_it = boost::filesystem::recursive_directory_iterator;
@@ -24,7 +19,7 @@ namespace oul
 	{
 		for (cr<string> pattern : patterns)
 		{
-			if (match(entry, pattern).res)
+			if (match(entry, pattern))
 			{
 				return true;
 			}
@@ -82,7 +77,13 @@ namespace oul
 			set<string> joined_exclude = join_filemap(exclude);
 			FILE_ITERATOR dir_it(base, move(joined_include), move(joined_exclude));
 
-			if (dir_it.it->is_directory() || match_any(base, *dir_it.it, dir_it.exclude) || !match_any(base, *dir_it.it, dir_it.include))
+			if (dir_it.it->is_directory() && match_any(base, *dir_it.it, dir_it.include))
+			{
+				dir_it.include_all = true;
+				dir_it.base_depth = dir_it.it.depth();
+				++dir_it;
+			}
+			else if (match_any(base, *dir_it.it, dir_it.exclude) || !match_any(base, *dir_it.it, dir_it.include))
 			{
 				++dir_it;
 			}
