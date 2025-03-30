@@ -7,6 +7,7 @@ import message;
 import :init;
 import :create;
 import :_delete;
+
 import :group_add;
 import :group_remove;
 import :add;
@@ -14,6 +15,7 @@ import :remove;
 import :exclude;
 
 import :list;
+import :rename;
 import :upload;
 import :install;
 export import :command;
@@ -85,6 +87,10 @@ namespace oul
 		else if (args[0] == "install")
 		{
 			command = make_unique<INSTALL>();
+		}
+		else if (args[0] == "rename")
+		{
+			command = make_unique<RENAME>();
 		}
 		else if (args[0] == "group")
 		{

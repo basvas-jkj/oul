@@ -142,6 +142,22 @@ namespace oul
 		{
 			cfg.remove_component(name);
 		}
+		void rename(cr<string> original_name, cr<string> new_name)
+		{
+			if (cfg.contains(new_name))
+			{
+				report_error(component_already_exists);
+				return;
+			}
+			vector<ITEM>::iterator it = cfg.get_component(original_name);
+			if (it == cfg.components.end())
+			{
+				report_error(component_not_found);
+				return;
+			}
+
+			it->name = new_name;
+		}
 
 		/**
 		 * @brief Přidá skuspinu souborů do zadané komponenty.
