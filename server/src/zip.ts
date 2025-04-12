@@ -24,3 +24,8 @@ export function zip_component(component_folder: string)
         return null;
     }
 }
+export function unzip_component(component_folder: string, input_file: string)
+{
+    let zip = new AdmZip(input_file);
+    zip.extractAllTo(component_folder);
+}

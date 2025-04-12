@@ -34,6 +34,19 @@ function log_request(url: string, status: number): void
     console.log("Server dostal požadavek:", url);
     console.log("\tstatus:", status);
 }
+async function retrieve_full_body(req: http.IncomingMessage): Promise<Buffer>
+{
+    return new Promise<Buffer>((resolve, reject)=>
+    {
+        let body = Buffer.from("");
+        req.on("data", (chunk)=>
+        {
+            body = Buffer.concat([body, chunk]);
+        });
+        req.on("end", ()=>resolve(body));
+        req.on("error", (error)=>reject(error));
+    });
+}
 
 function on_get_request({path, original}: PARSED_URL, res: http.ServerResponse)
 {
@@ -69,6 +82,34 @@ function on_get_request({path, original}: PARSED_URL, res: http.ServerResponse)
         log_request(original, 400);
     }
 }
+function on_post_request({path, original}: PARSED_URL, body: Buffer, res: http.ServerResponse)
+{
+    console.log(body.length)
+    if (path.length == 0 || path[0] == "")
+    {
+        res.writeHead(400);
+        res.end("Missing component name.");
+        log_request(original, 400);
+    }
+    else if (path.length == 1)
+    {
+        let name = path[0];
+        let zip_file = name + ".zip";
+        
+        fs.writeFileSync(zip_file, body);
+        unzip_component(name, zip_file);
+        res.writeHead(200);
+        res.end();
+        log_request(original, 200);
+    }
+    else
+    {
+        res.writeHead(400);
+        res.end("Path should contain component name only.");
+        log_request(original, 400);
+    }
+}
+
 export default function on_request(req: http.IncomingMessage, res: http.ServerResponse): void
 {
     let url = parse_url(req.url);
@@ -76,6 +117,10 @@ export default function on_request(req: http.IncomingMessage, res: http.ServerRe
     if (req.method == "GET")
     {
         on_get_request(url, res);
+    }
+    else if (req.method == "POST")
+    {
+        retrieve_full_body(req).then((body)=>on_post_request(url, body, res));
     }
     else
     {

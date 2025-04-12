@@ -36,8 +36,8 @@ namespace oul
 	protected:
 		void upload(cr<string> url, cr<fs::path> file) override
 		{
-			string archive_post_argument = format("archive=@{}", file.generic_string());
-			call_client("-F", archive_post_argument, url);
+			string post_argument = format("@{}", file.generic_string());
+			call_client("---data-binary", post_argument, url);
 		}
 		void download(cr<string> url, cr<fs::path> file) override
 		{
