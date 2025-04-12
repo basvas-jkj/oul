@@ -1,2 +1,4 @@
 .vs
 build
+
+server/node_modules
