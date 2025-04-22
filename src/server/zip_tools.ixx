@@ -1,3 +1,7 @@
+module;
+
+#include <boost/filesystem.hpp>
+
 export module zip:tools;
 import :base;
 

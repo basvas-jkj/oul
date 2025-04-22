@@ -1,4 +1,5 @@
-import std;
+#include <memory>
+
 import args;
 import common;
 import component_manager;

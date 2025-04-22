@@ -5,7 +5,6 @@ module;
 
 export module config:data_file;
 
-import std;
 import usings;
 
 using namespace std;

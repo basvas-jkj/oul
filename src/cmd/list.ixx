@@ -1,6 +1,9 @@
+module;
+
+#include <string>
+
 export module args:list;
 
-import std;
 import :command;
 
 using namespace std;

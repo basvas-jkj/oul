@@ -1,3 +1,8 @@
+module;
+
+#include <span>
+#include <string>
+
 export module args:remove;
 
 import :command;

@@ -8,7 +8,6 @@ module;
 
 export module common;
 
-import std;
 export import usings;
 export import message;
 

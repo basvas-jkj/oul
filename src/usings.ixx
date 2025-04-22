@@ -1,6 +1,11 @@
+module;
+
+#include <map>
+#include <string>
+#include <vector>
+
 export module usings;
 
-import std;
 using namespace std;
 
 export template <class T>

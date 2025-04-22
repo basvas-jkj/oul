@@ -1,10 +1,10 @@
 module;
 
+#include <span>
 #include <boost/filesystem.hpp>
 
 export module component_manager;
 
-import std;
 import common;
 import server;
 import message;

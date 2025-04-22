@@ -1,6 +1,11 @@
+module;
+#include <map>
+#include <string>
+#include <vector>
+#include <optional>
+
 export module args:command;
 
-import std;
 import usings;
 import common;
 import message;

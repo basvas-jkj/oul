@@ -6,7 +6,6 @@ module;
 
 export module tools;
 
-import std;
 import common;
 
 using namespace std;

@@ -1,6 +1,12 @@
+module;
+
+#include <tuple>
+#include <memory>
+#include <string>
+#include <vector>
+
 export module args;
 
-import std;
 import usings;
 import message;
 

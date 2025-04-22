@@ -11,7 +11,7 @@ import message;
 using namespace std;
 
 namespace fs = boost::filesystem;
-export namespace oul::args
+namespace oul::args
 {
 	/**
 	 * @brief Chyba: URL nebyla právně zadaná.
