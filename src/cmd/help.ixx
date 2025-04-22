@@ -6,12 +6,12 @@ using namespace std;
 
 export namespace oul::args
 {
-	class HELP: public COMMAND
-	{
-	public:
-		void run() const override
-		{
+    class HELP: public COMMAND
+    {
+    public:
+        void run() const override
+        {
 
-		}
-	};
+        }
+    };
 }

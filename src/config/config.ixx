@@ -82,16 +82,16 @@ namespace oul
          **/
         CONFIG(cr<string> l): location(l)
         {
-			Node root = load(location);
-			assert(!root.IsNull());
+            Node root = load(location);
+            assert(!root.IsNull());
 
-			project_name = root["project_name"].as<string>();
-			default_url = root["default_url"].as<string>();
+            project_name = root["project_name"].as<string>();
+            default_url = root["default_url"].as<string>();
 
-			for (cr<Node> component : root["components"])
-			{
-				components.emplace_back(component);
-			}
+            for (cr<Node> component : root["components"])
+            {
+                components.emplace_back(component);
+            }
         }
         CONFIG(cr<CONFIG>) = delete;
         CONFIG(CONFIG&&) = default;
@@ -179,7 +179,7 @@ namespace oul
             return components | views::transform(item_to_name);
         }
         /**
-         * @brief Přidá komponentu do konfigurace. 
+         * @brief Přidá komponentu do konfigurace.
          * @param i - konfigurace komponenty
          **/
         void add_component(cr<ITEM> i)
@@ -193,9 +193,9 @@ namespace oul
         void remove_component(cr<string> name)
         {
             auto has_equal_name = [&name](ITEM& i)
-            {
-                return i.name == name;
-            };
+                {
+                    return i.name == name;
+                };
 
             erase_if(components, has_equal_name);
         }
