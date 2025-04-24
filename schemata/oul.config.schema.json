@@ -1,0 +1,70 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "description": "Schéma konfigurace programu OUL.",
+    "required": [ "project_name", "default_url", "components" ],
+    "properties": {
+        "project_name": {
+            "type": "string",
+            "description": "jméno projektu"
+        },
+        "default_url": {
+            "type": "string",
+            "description": "Výchozí URL pro stahování komponent.",
+            "format": "uri"
+        },
+        "components": {
+            "type": "array",
+            "description": "Seznam stažených nebo lokálně vytvořených komponent.",
+            "items": {
+                "type": "object",
+                "description": "Konfigurace komponenty programu OUL.",
+                "required": [ "name", "location", "include" ],
+                "properies": {
+                    "name": {
+                        "type": "string",
+                        "description": "Lokální méno komponenty."
+                    },
+                    "original_name": {
+                        "type": "string",
+                        "description": "Jméno komponenty na serveru, ze kterého pochází."
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "URL serveru, ze kterého komponenta pochází.",
+                        "format": "uri"
+                    },
+                    "location": {
+                        "type": "string",
+                        "description": "Umístění komponenty v projektu relativně vůči konfiguraci."
+                    },
+                    "include": {
+                        "type": "object",
+                        "description": "Seznam zahrnutých souborů indexovaný jménem skupiny.",
+                        "additionalProperties": {
+                            "type": "array",
+                            "description": "Seznam souborů zahrnutých do skupiny.",
+                            "items": {
+                                "type": "string",
+                                "description": "Cesta k souboru nebo vzor."
+                            }
+                        }
+
+                    },
+                    "exclude": {
+                        "type": "object",
+                        "description": "Seznam vyčleněných souborů indexovaných jménem skupiny.",
+                        "additionalProperties": {
+                            "type": "array",
+                            "description": "Seznam souborů vyčleněných ze skupiny.",
+                            "items": {
+                                "type": "string",
+                                "description": "Cesta k souboru nebo vzor."
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
