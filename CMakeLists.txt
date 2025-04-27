@@ -3,7 +3,6 @@ cmake_minimum_required (VERSION 3.30)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 
 project(oul)
 
@@ -31,7 +30,7 @@ add_custom_command(
         TARGET oul POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
                 ${CMAKE_SOURCE_DIR}/msg/english.json
-                ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/english.json)
+                ${CMAKE_BINARY_DIR}/english.json)
 
 if (MSVC)
     target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/W4>)
