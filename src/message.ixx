@@ -7,6 +7,7 @@ module;
 
 export module message;
 
+import item;
 import usings;
 
 using namespace std;
@@ -39,8 +40,15 @@ namespace oul
         messages = DICTIONARY(oul_path);
     }
 
-    export enum ERROR
+    export enum class ERROR
     {
+        unexpected_error, component_list, local_only, help,
+
+        help_add, help_create, help_delete, help_exclude,
+        help_group_add, help_group_remove, help_help,
+        help_init, help_install, help_list, help_remove,
+        help_rename, help_upload,
+
         // comand line errors
         missing_command, unknown_command, missing_group_subcommand,
         missing_component_name, component_already_exists, component_not_found,
@@ -65,6 +73,25 @@ namespace oul
 
     static map<ERROR, string> error_list
     {
+        {unexpected_error, "unexpected_error"},
+        {component_list, "component_list"},
+        {local_only, "local_only"},
+        {help, "help"},
+
+        {help_add, "help_add"},
+        {help_create, "help_create"},
+        {help_delete, "help_delete"},
+        {help_exclude, "help_exclude"},
+        {help_group_add, "help_group_add"},
+        {help_group_remove, "help_group_remove"},
+        {help_help, "help_help"},
+        {help_init, "help_init"},
+        {help_install, "help_install"},
+        {help_list, "help_list"},
+        {help_remove, "help_remove"},
+        {help_rename, "help_rename"},
+        {help_upload, "help_upload"},
+
         {missing_command, "missing_command"},
         {unknown_command, "unknown_command"},
         {missing_group_subcommand, "missing_group_subcommand"},
@@ -108,4 +135,47 @@ namespace oul
         cr<string> error = error_list[name];
         println(cerr, "{}", messages[error]);
     }
+    export void print_component_list(cr<vector<ITEM>> components)
+    {
+        cr<string> component_list_text = error_list[component_list];
+        println(cout, "{}", messages[component_list_text]);
+        for (cr<ITEM> i : components)
+        {
+            cr<string> local_only_text = error_list[local_only];
+            cr<string> url = (i.url.empty()) ? messages[local_only_text] : i.url;
+            println(cout, "\t{}\t({})", i.name, url);
+        }
+    }
+    export void print_help()
+    {
+        vector commands =
+        {
+            help_add, help_create, help_delete, help_exclude,
+            help_group_add, help_group_remove, help_help,
+            help_init, help_install, help_list, help_remove,
+            help_rename, help_upload
+        };
+
+        cr<string> help_text = error_list[help];
+        println(cout, "{}", messages[help_text]);
+        for (auto&& command : commands)
+        {
+            cr<string> command_help_text = error_list[command];
+            println(cout, "\t{}", messages[command_help_text]);
+        }
+    }
+
+    /// @brief Základní třída pro výjimky použité v tomto projektu.
+    export class CommonException: exception
+    {
+        ERROR name;
+
+    public:
+        CommonException(ERROR n): name(n)
+        {}
+        void report() const
+        {
+            report_error(name);
+        }
+    };
 }

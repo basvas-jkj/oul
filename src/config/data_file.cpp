@@ -82,17 +82,17 @@ namespace oul
     }
     static void check_component(cr<Node> component)
     {
-        check_map(component, invalid_component);
+        check_map(component, ERROR::invalid_component);
 
-        check_scalar(component["name"], missing_component_name);
-        check_optional_scalar(component["original_name"], invalid_original_name);
-        check_scalar(component["location"], missing_location);
-        check_file_map(component["include"], true, missing_include);
-        check_file_map(component["exclude"], false, invalid_exclude);
+        check_scalar(component["name"], ERROR::missing_component_name);
+        check_optional_scalar(component["original_name"], ERROR::invalid_original_name);
+        check_scalar(component["location"], ERROR::missing_location);
+        check_file_map(component["include"], true, ERROR::missing_include);
+        check_file_map(component["exclude"], false, ERROR::invalid_exclude);
     }
     static void check_components_list(cr<Node> list)
     {
-        check_sequence(list, components_not_array);
+        check_sequence(list, ERROR::components_not_array);
 
         for (cr<Node> component : list)
         {
@@ -110,9 +110,9 @@ namespace oul
     {
         Node root = LoadFile(config_file);
 
-        check_map(root, root_not_object);
-        check_scalar(root["project_name"], missing_project_name);
-        check_scalar(root["default_url"], url_not_string);
+        check_map(root, ERROR::root_not_object);
+        check_scalar(root["project_name"], ERROR::missing_project_name);
+        check_scalar(root["default_url"], ERROR::url_not_string);
         check_components_list(root["components"]);
 
         return root;

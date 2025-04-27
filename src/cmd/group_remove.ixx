@@ -2,8 +2,6 @@ export module args:group_remove;
 
 import :command;
 
-using namespace std;
-
 export namespace oul::args
 {
     class GROUP_REMOVE: public COMMAND
@@ -13,11 +11,11 @@ export namespace oul::args
         {
             if (arguments.size() < 1)
             {
-                report_error(missing_component_name);
+                report_error(ERROR::missing_component_name);
             }
             if (arguments.size() < 2)
             {
-                report_error(missing_group_name);
+                report_error(ERROR::missing_group_name);
                 return false;
             }
             else

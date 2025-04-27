@@ -27,6 +27,6 @@ namespace oul
         {
             return make_unique<TOOL_ZIP>(zip_path, unzip_path);
         }
-        throw MissingZipTool(missing_zip_tool);
+        throw MissingZipTool(ERROR::missing_zip_tool);
     }
 }

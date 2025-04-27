@@ -1,10 +1,12 @@
 module;
 
 #include <string>
+#include <iostream>
 
 export module args:list;
 
 import :command;
+import message;
 
 using namespace std;
 
@@ -16,13 +18,7 @@ export namespace oul::args
         void run() const override
         {
             CONFIG c = read_configuration();
-
-            println("List of components used in this project:");
-            for (cr<ITEM> i : c.components)
-            {
-                cr<string> url = (i.url.empty()) ? "local only" : i.url;
-                println("\t{}\t({})", i.name, url);
-            }
+            print_component_list(c.components);
         }
     };
 }

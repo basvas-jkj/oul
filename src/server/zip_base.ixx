@@ -10,6 +10,7 @@ import tmp;
 import tools;
 import config;
 import common;
+import message;
 import file_iterator;
 
 using namespace std;
@@ -29,7 +30,7 @@ namespace oul
     export class ZippingError: public CommonException
     {
     public:
-        ZippingError(ERROR name = zipping_error): CommonException(name)
+        ZippingError(ERROR name = ERROR::zipping_error): CommonException(name)
         {}
     };
 

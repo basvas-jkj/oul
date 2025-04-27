@@ -7,9 +7,7 @@ module;
 #undef __clang__
 
 export module common;
-
 export import usings;
-export import message;
 
 using namespace std;
 using namespace boost::filesystem;
@@ -80,18 +78,4 @@ namespace oul
 
         return v;
     }
-
-    /// @brief Základní třída pro výjimky použité v tomto projektu.
-    export class CommonException: exception
-    {
-        ERROR name;
-
-    public:
-        CommonException(ERROR n): name(n)
-        {}
-        void report() const
-        {
-            report_error(name);
-        }
-    };
 }

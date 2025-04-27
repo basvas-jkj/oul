@@ -6,6 +6,7 @@ module;
 export module tmp;
 
 import usings;
+import message;
 
 using namespace std;
 using namespace boost::filesystem;
@@ -62,7 +63,7 @@ namespace oul
             }
             catch (...)
             {
-                println("Unexpected destructror failure.");
+                report_error(ERROR::unexpected_error);
             }
         }
 
@@ -140,7 +141,7 @@ namespace oul
             }
             catch (...)
             {
-                println("Unexpected destructror failure.");
+                report_error(ERROR::unexpected_error);
             }
         }
 

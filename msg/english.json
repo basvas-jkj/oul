@@ -1,4 +1,23 @@
 {
+    "unexpected_error": "Unexpected program failure.",
+    "component_list": "List of components used in this project:",
+    "local_only": "(local only)",
+    "help": "oul [command]",
+
+    "help_add": "add [component] [group] [files...]        Attaches [files] to the [group] of the [component].",
+    "help_create": "create [component] -w=[location]          Creates the [component] in the [location] folder.",
+    "help_delete": "delete [component]                        Removes [component] from the project.",
+    "help_exclude": "exclude [component] [group] [files...]    Excludes [files] from the [group] of the [component].",
+    "help_group_add": "group add [component] [group]             Creates the [group] in the [component].",
+    "help_group_remove": "group remove [component] [group]          Removes the [group] from the [component].",
+    "help_help": "help                                      Writes this help text.",
+    "help_init": "init                                      Initializes the configuration of the project.",
+    "help_install": "install [component] -as=[] -url=[] -w=[]  Downloads the [component] from the server.",
+    "help_list": "list                                      Lists the components in the project.",
+    "help_remove": "remove [component] [group] [files...]     Detaches [files] from the [group] of the [component].",
+    "help_rename": "rename [previous name] [new name]         Renames the [previous name] component to [new name].",
+    "help_upload": "upload [component] -as=[] -url=[]         Uploads the [component] to the server.",
+
     "missing_command": "Missing command. Run 'oul help' to get a list of supported commands.",
     "unknown_command": "Unknown command. Run 'oul help' to get a list of supported commands.",
     "missing_group_subcommand": "'oul group' requires subcommand ('add' or 'remove').",
@@ -36,4 +55,4 @@
     "zipping_error": "Creating or extracting a zip archive was not successful.",
 
     "missing_url": "No url was specified."
-} 
+}

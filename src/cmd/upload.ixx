@@ -19,7 +19,7 @@ namespace oul::args
     export class MissingUrl: public CommonException
     {
     public:
-        MissingUrl(ERROR name = missing_url): CommonException(name)
+        MissingUrl(ERROR name = ERROR::missing_url): CommonException(name)
         {}
     };
 
@@ -30,7 +30,7 @@ namespace oul::args
         {
             if (arguments.size() < 1)
             {
-                report_error(missing_component_name);
+                report_error(ERROR::missing_component_name);
                 return false;
             }
             else

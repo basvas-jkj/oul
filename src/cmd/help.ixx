@@ -2,8 +2,6 @@ export module args:help;
 
 import :command;
 
-using namespace std;
-
 export namespace oul::args
 {
     class HELP: public COMMAND
@@ -11,7 +9,7 @@ export namespace oul::args
     public:
         void run() const override
         {
-
+            print_help();
         }
     };
 }

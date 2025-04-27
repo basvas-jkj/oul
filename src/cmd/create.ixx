@@ -5,7 +5,6 @@ module;
 
 export module args:create;
 
-import message;
 import component_manager;
 import :command;
 
@@ -18,7 +17,7 @@ export namespace oul::args
         {
             if (arguments.size() < 1)
             {
-                report_error(missing_component_name);
+                report_error(ERROR::missing_component_name);
                 return false;
             }
             else
@@ -43,7 +42,7 @@ export namespace oul::args
             }
             else if (c->contains(name))
             {
-                report_error(component_already_exists);
+                report_error(ERROR::component_already_exists);
                 return;
             }
 

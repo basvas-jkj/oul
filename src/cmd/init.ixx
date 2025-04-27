@@ -6,7 +6,6 @@ module;
 export module args:init;
 
 import config;
-import message;
 import :command;
 
 using namespace std;
@@ -21,7 +20,7 @@ export namespace oul::args
             optional<string> path = CONFIG::find();
             if (path.has_value())
             {
-                report_error(config_found);
+                report_error(ERROR::config_found);
             }
             else
             {

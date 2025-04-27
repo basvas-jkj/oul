@@ -113,7 +113,7 @@ namespace oul
             }
             catch (...)
             {
-                println("Unexpected destructror failure.");
+                report_error(ERROR::unexpected_error);
             }
         }
 

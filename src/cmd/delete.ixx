@@ -4,8 +4,6 @@ import config;
 import component_manager;
 import :command;
 
-using namespace std;
-
 export namespace oul::args
 {
     class DELETE: public COMMAND
@@ -15,7 +13,7 @@ export namespace oul::args
         {
             if (arguments.size() < 1)
             {
-                report_error(missing_component_name);
+                report_error(ERROR::missing_component_name);
                 return false;
             }
             else

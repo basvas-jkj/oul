@@ -6,6 +6,7 @@ export module server:base;
 import tools;
 import common;
 import config;
+import message;
 import file_iterator;
 
 using namespace std;
@@ -16,14 +17,14 @@ namespace oul
     export class MissingClient: public CommonException
     {
     public:
-        MissingClient(): CommonException(missing_client)
+        MissingClient(): CommonException(ERROR::missing_client)
         {}
     };
     /// @brief Chyba: spuštění klienta archovu selhalo
     export class ClientError: public CommonException
     {
     public:
-        ClientError(): CommonException(client_error)
+        ClientError(): CommonException(ERROR::client_error)
         {}
     };
     /// @brief Základní typ klientů.

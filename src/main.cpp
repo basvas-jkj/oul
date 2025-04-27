@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     }
     catch (...)
     {
-        println("Unknown internal error.");
+        report_error(ERROR::unexpected_error);
     }
 
     return 1;

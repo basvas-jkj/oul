@@ -20,12 +20,12 @@ export namespace oul::args
         {
             if (arguments.size() < 1)
             {
-                report_error(missing_component_name);
+                report_error(ERROR::missing_component_name);
                 return false;
             }
             else if (arguments.size() < 2)
             {
-                report_error(missing_component_name);
+                report_error(ERROR::missing_component_name);
                 return false;
             }
             else

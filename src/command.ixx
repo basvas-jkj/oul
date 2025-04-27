@@ -73,7 +73,7 @@ namespace oul
             optional<string> path = CONFIG::find();
             if (path == nullopt)
             {
-                throw ConfigurationNotFound(config_not_found);
+                throw ConfigurationNotFound(ERROR::config_not_found);
             }
             else
             {

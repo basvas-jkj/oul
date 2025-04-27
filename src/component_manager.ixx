@@ -67,7 +67,7 @@ namespace oul
     export class MissingComponent: public CommonException
     {
     public:
-        MissingComponent(ERROR name = component_not_found): CommonException(name)
+        MissingComponent(ERROR name = ERROR::component_not_found): CommonException(name)
         {}
     };
     /**
@@ -97,7 +97,7 @@ namespace oul
             vector<ITEM>::iterator component_it = cfg.get_component(component);
             if (component_it == cfg.components.end())
             {
-                throw MissingComponent(component_not_found);
+                throw MissingComponent(ERROR::component_not_found);
             }
             else
             {
@@ -109,7 +109,7 @@ namespace oul
             file_map::iterator group_it = files.find(group);
             if (group_it == files.end())
             {
-                throw MissingGroup(group_not_found);
+                throw MissingGroup(ERROR::group_not_found);
             }
             else
             {
@@ -146,13 +146,13 @@ namespace oul
         {
             if (cfg.contains(new_name))
             {
-                report_error(component_already_exists);
+                report_error(ERROR::component_already_exists);
                 return;
             }
             vector<ITEM>::iterator it = cfg.get_component(original_name);
             if (it == cfg.components.end())
             {
-                report_error(component_not_found);
+                report_error(ERROR::component_not_found);
                 return;
             }
 
@@ -198,7 +198,7 @@ namespace oul
                 fs::path shifted = shift(entry, component.location);
                 if (is_outside_component(shifted))
                 {
-                    report_error(file_outside_component);
+                    report_error(ERROR::file_outside_component);
                 }
                 else if (check_entry_validity(entry))
                 {
@@ -206,7 +206,7 @@ namespace oul
                 }
                 else
                 {
-                    report_error(file_not_exist);
+                    report_error(ERROR::file_not_exist);
                 }
             }
         }
@@ -226,7 +226,7 @@ namespace oul
                 fs::path shifted = shift(entry, component.location);
                 if (is_outside_component(shifted))
                 {
-                    report_error(file_outside_component);
+                    report_error(ERROR::file_outside_component);
                 }
                 else
                 {
@@ -251,7 +251,7 @@ namespace oul
                 fs::path shifted = shift(entry, component.location);
                 if (is_outside_component(shifted))
                 {
-                    report_error(file_outside_component);
+                    report_error(ERROR::file_outside_component);
                     continue;
                 }
 
@@ -268,7 +268,7 @@ namespace oul
         {
             if (cfg.contains(local_name))
             {
-                report_error(component_already_exists);
+                report_error(ERROR::component_already_exists);
                 return;
             }
 

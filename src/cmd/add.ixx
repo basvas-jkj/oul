@@ -5,7 +5,6 @@ module;
 
 export module args:add;
 
-import message;
 import component_manager;
 import :command;
 
@@ -18,15 +17,15 @@ export namespace oul::args
         {
             if (arguments.size() < 1)
             {
-                report_error(missing_component_name);
+                report_error(ERROR::missing_component_name);
             }
             if (arguments.size() < 2)
             {
-                report_error(missing_group_name);
+                report_error(ERROR::missing_group_name);
             }
             if (arguments.size() < 3)
             {
-                report_error(empty_file_list);
+                report_error(ERROR::empty_file_list);
                 return false;
             }
             else

@@ -15,7 +15,7 @@ namespace oul
     export class UnknownClient: public CommonException
     {
     public:
-        UnknownClient(): CommonException(unknown_client)
+        UnknownClient(): CommonException(ERROR::unknown_client)
         {}
     };
     /// @brief Vybere vhodného klienta pro danou url.

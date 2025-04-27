@@ -11,6 +11,7 @@ import usings;
 import message;
 
 import :init;
+import :help;
 import :create;
 import :_delete;
 
@@ -55,12 +56,16 @@ namespace oul
         unique_ptr<COMMAND> command;
         if (args.size() == 0)
         {
-            report_error(missing_command);
+            report_error(ERROR::missing_command);
             return nullptr;
         }
         if (args[0] == "init")
         {
             command = make_unique<INIT>();
+        }
+        else if (args[0] == "help")
+        {
+            command = make_unique<HELP>();
         }
         else if (args[0] == "create")
         {
@@ -103,7 +108,7 @@ namespace oul
             start += 1;
             if (args.size() == 1)
             {
-                report_error(missing_group_subcommand);
+                report_error(ERROR::missing_group_subcommand);
                 return nullptr;
             }
             else if (args[1] == "add")
@@ -116,20 +121,20 @@ namespace oul
             }
             else
             {
-                report_error(missing_group_subcommand);
+                report_error(ERROR::missing_group_subcommand);
                 return nullptr;
             }
         }
         else
         {
-            report_error(unknown_command);
+            report_error(ERROR::unknown_command);
             return nullptr;
         }
 
         OPTIONS opt;
         vector<string> arguments;
 
-        for (int f = start; f < args.size(); f += 1)
+        for (size_t f = start; f < args.size(); f += 1)
         {
             string& arg = args[f];
 
