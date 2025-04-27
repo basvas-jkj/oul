@@ -1,10 +1,7 @@
 module;
 
 #include <boost/filesystem.hpp>
-
-#define __clang__
 #include <wildcards/wildcards.hpp>
-#undef __clang__
 
 export module common;
 export import usings;

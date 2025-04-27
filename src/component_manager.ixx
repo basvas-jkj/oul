@@ -121,7 +121,7 @@ namespace oul
         /**
          * @brief Konstruktor vytvářející objekty třídy <code>COMPONENT_MANAGER</code>.
          **/
-        COMPONENT_MANAGER(CONFIG&& c): cfg(move(c))
+        COMPONENT_MANAGER(CONFIG&& c): cfg(std::move(c))
         {};
 
         /**

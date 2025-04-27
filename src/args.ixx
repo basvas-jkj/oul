@@ -45,7 +45,7 @@ namespace oul
         {
             string name = arg.substr(0, index);
             string value = arg.substr(index + 1);
-            return tuple(move(name), move(value));
+            return tuple(std::move(name), std::move(value));
         }
     }
     export unique_ptr<COMMAND> read_args(int argc, char* argv[])
@@ -145,11 +145,11 @@ namespace oul
             }
             else
             {
-                arguments.push_back(move(arg));
+                arguments.push_back(std::move(arg));
             }
         }
 
-        command->init(move(opt), move(arguments));
+        command->init(std::move(opt), std::move(arguments));
         return command;
     }
 }

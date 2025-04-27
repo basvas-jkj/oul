@@ -105,7 +105,7 @@ namespace oul
             location = (fs::current_path() / location).string();
 
             CONFIG cfg;
-            cfg.location = move(location);
+            cfg.location = std::move(location);
             cfg.project_name = name;
             cfg.default_url = default_url;
         }

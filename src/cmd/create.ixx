@@ -46,7 +46,7 @@ export namespace oul::args
                 return;
             }
 
-            COMPONENT_MANAGER manager(move(*c));
+            COMPONENT_MANAGER manager(std::move(*c));
             manager.create(name, location);
         }
     };

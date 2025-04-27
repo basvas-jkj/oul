@@ -26,7 +26,7 @@ namespace oul
     export template <CmdArgs ...T>
         bool call_tool(cr<path> tool_path, cr<path> working_directory, T&&... args)
     {
-        child ch(tool_path, forward<T>(args)..., start_dir(working_directory), std_out > null, std_err > null);
+        child ch(tool_path, std::forward<T>(args)..., start_dir(working_directory), std_out > null, std_err > null);
         ch.wait();
         return ch.exit_code() == 0;
     }

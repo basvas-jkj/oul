@@ -39,6 +39,7 @@ namespace oul
             check_scalar(node, name);
         }
     }
+    [[maybe_unused]]
     static void check_optional_sequence(cr<Node> node, ERROR name)
     {
         if (node.IsDefined())
@@ -162,7 +163,7 @@ namespace oul
         for (cr<ITEM> i : c.components)
         {
             ordered_json component = genererate_json(i);
-            root["components"].push_back(move(component));
+            root["components"].push_back(std::move(component));
         }
 
         return root;
@@ -198,7 +199,7 @@ namespace oul
         for (cr<ITEM> i : c.components)
         {
             Node component = genererate_yaml(i);
-            root["components"].push_back(move(component));
+            root["components"].push_back(std::move(component));
         }
 
         if (!root["components"].IsSequence())

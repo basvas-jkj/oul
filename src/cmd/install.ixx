@@ -53,7 +53,7 @@ export namespace oul::args
                 where = cfg.location;
             }
 
-            COMPONENT_MANAGER manager(move(cfg));
+            COMPONENT_MANAGER manager(std::move(cfg));
             manager.install(server_name, local_name, url, where);
         }
     };

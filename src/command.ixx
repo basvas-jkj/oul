@@ -88,7 +88,7 @@ namespace oul
         static COMPONENT_MANAGER open_manager()
         {
             CONFIG c = read_configuration();
-            COMPONENT_MANAGER manager(move(c));
+            COMPONENT_MANAGER manager(std::move(c));
             return manager;
         }
 
@@ -97,8 +97,8 @@ namespace oul
 
         void init(OPTIONS&& opt, vector<string>&& arguments)
         {
-            this->opt = move(opt);
-            this->arguments = move(arguments);
+            this->opt = std::move(opt);
+            this->arguments = std::move(arguments);
         }
         virtual bool check() const
         {
