@@ -2,6 +2,7 @@
 
 import args;
 import common;
+import message;
 import component_manager;
 
 using namespace std;
@@ -9,6 +10,7 @@ using namespace oul;
 
 int main(int argc, char* argv[])
 {
+    init_messages(argv[0]);
     try
     {
         unique_ptr<COMMAND> c = read_args(argc, argv);

@@ -3,6 +3,7 @@ module;
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <boost/filesystem/path.hpp>
 
 export module message;
 
@@ -11,6 +12,7 @@ import usings;
 using namespace std;
 using namespace nlohmann;
 
+namespace fs = boost::filesystem;
 namespace oul
 {
     class DICTIONARY
@@ -19,8 +21,10 @@ namespace oul
 
     public:
         DICTIONARY()
+        {}
+        DICTIONARY(cr<fs::path> path)
         {
-            ifstream input("english.json");
+            ifstream input(path.string());
             object = json::parse(input);
         }
         cr<string> operator[](cr<string> error_name)
@@ -29,6 +33,11 @@ namespace oul
         }
     };
     static DICTIONARY messages;
+    export void init_messages(fs::path&& oul_path)
+    {
+        oul_path.replace_filename("english.json");
+        messages = DICTIONARY(oul_path);
+    }
 
     export enum ERROR
     {
