@@ -5,6 +5,7 @@ module;
 
 export module config:data_file;
 
+import item;
 import usings;
 
 using namespace std;
@@ -13,7 +14,6 @@ using namespace nlohmann;
 
 namespace oul
 {
-    export struct ITEM;
     export struct CONFIG;
 
     export Node load(cr<string> config_file);
