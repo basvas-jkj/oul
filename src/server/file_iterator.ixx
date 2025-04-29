@@ -5,6 +5,7 @@ module;
 #include <iterator>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/directory.hpp>
+#include <boost/filesystem/operations.hpp>
 
 export module file_iterator;
 
@@ -16,7 +17,7 @@ using namespace boost::filesystem;
 namespace oul
 {
     export template <class T>
-        concept DirectoryEntry = requires(T entry)
+        concept DirectoryEntry = same_as<T, directory_entry> || requires(T entry)
     {
         { entry.is_regular_file() }->same_as<bool>;
         { entry.is_directory() }->same_as<bool>;
@@ -33,7 +34,7 @@ namespace oul
 
 
     /// @return Shoduje se položka s alespoň jedním vzorem?
-    bool match_any(cr<string> entry, cr<set<string>> patterns)
+    bool match_any(cr<string> entry, cr<vector<string>> patterns)
     {
         for (cr<string> pattern : patterns)
         {
@@ -45,22 +46,23 @@ namespace oul
         return false;
     }
     /// @return Shoduje se položka s alespoň jedním vzorem?
-    template <DirectoryEntry DR>
-    bool match_any(cr<path> base, cr<DR> entry, cr<set<string>> patterns)
+    template <class DR>
+        requires DirectoryEntry<DR> || same_as<DR, directory_entry>
+    bool match_any(cr<path> base, cr<DR> entry, cr<vector<string>> patterns)
     {
         cr<string> entry_string = relative(entry.path(), base).generic_string();
         return match_any(entry_string, patterns);
     }
     /// @brief Spojí seznam souborů do jedné množiny.
     /// @param list - Seznam souborů strukturovaný podle kategorií.
-    set<string> join_filemap(cr<file_map> list)
+    vector<string> join_filemap(cr<file_map> list)
     {
         set<string> files;
         for (auto&& group : list)
         {
             files.insert_range(group.second);
         }
-        return files;
+        return vector<string>(files.begin(), files.end());
     }
 
 
@@ -73,32 +75,61 @@ namespace oul
         IT it;
         IT end_it;
 
-        set<string> include;
-        set<string> exclude;
+        file_map include;
+        file_map exclude;
 
         /// @brief Vytvoří <code>FILE_ITERATOR</code> z rekurzivního iterátoru.
         FILE_ITERATOR<IT>(cr<IT> it): it(it), end_it(it)
         {}
 
+        template <class DR>
+            requires DirectoryEntry<DR> || same_as<DR, directory_entry>
+        bool should_be_included(cr<DR> entry)
+        {
+            for (auto&& [group_name, group_files] : include)
+            {
+                file_map::iterator it = exclude.find(group_name);
+                bool included = match_any(base, entry, group_files);
+                bool excluded = it != exclude.end() && match_any(base, entry, it->second);
+
+                if (included && !excluded)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        template <class DR>
+            requires DirectoryEntry<DR> || same_as<DR, directory_entry>
+        bool should_be_excluded(cr<DR> entry)
+        {
+            vector<string>&& all_excluded_patterns = join_filemap(exclude);
+            return match_any(base, entry, all_excluded_patterns);
+        }
     public:
         FILE_ITERATOR<IT>(IT&& it, IT&& end_it, cr<file_map> include, cr<file_map> exclude):
-            it(it), end_it(end_it),
-            include(join_filemap(include)),
-            exclude(join_filemap(exclude))
+            it(it), end_it(end_it), include(include), exclude(exclude)
         {
-            if (it->is_directory() && match_any(base, *it, include))
+            if (it == end_it)
             {
-                include_all = true;
-                include_all_base = depth();
-                ++*this;
+                return;
             }
-            else if (it->is_directory() && match_any(base, *it, exclude))
+            else if (it->is_directory())
             {
-                exclude_all = true;
-                exclude_all_base = depth();
-                ++*this;
+                if (should_be_included(*it))
+                {
+                    include_all = true;
+                    include_all_base = depth();
+                }
+                else if (should_be_excluded(*it))
+                {
+                    exclude_all = true;
+                    exclude_all_base = depth();
+                }
+
+                ++ * this;
             }
-            else if (match_any(base, *it, exclude) || !match_any(base, *it, include))
+            else if (!should_be_included(*it))
             {
                 ++*this;
             }
@@ -159,12 +190,7 @@ namespace oul
                         continue;
                     }
                 }
-                if (match_any(base, *it, exclude))
-                {
-                    exclude_all = true;
-                    exclude_all_base = depth();
-                }
-                else if (include_all)
+                else if (include_all && !should_be_excluded(*it))
                 {
                     if (include_all_base >= depth())
                     {
@@ -176,7 +202,7 @@ namespace oul
                         break;
                     }
                 }
-                else if (match_any(base, *it, include))
+                else if (should_be_included(*it))
                 {
                     if (it->is_directory())
                     {
@@ -187,6 +213,11 @@ namespace oul
                     {
                         break;
                     }
+                }
+                else if (should_be_excluded(*it))
+                {
+                    exclude_all = true;
+                    exclude_all_base = depth();
                 }
 
                 ++it;
