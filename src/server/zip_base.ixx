@@ -79,7 +79,7 @@ namespace oul
         TMP_FILE zip(cr<ITEM> component, cr<string> component_location)
         {
             TMP_FILE zip_file = create_zip(component);
-            FILE_ITERATOR it = FILE_ITERATOR::init(component_location, component.include, component.exclude);
+            FILE_ITERATOR it(component_location, component.include, component.exclude);
 
             for (cr<path> entry : it)
             {

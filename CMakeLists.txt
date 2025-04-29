@@ -32,6 +32,16 @@ add_custom_command(
                 ${CMAKE_SOURCE_DIR}/msg/english.json
                 ${CMAKE_BINARY_DIR}/english.json)
 
+enable_testing()
+find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+
+add_executable(file_iterator_test "test/file_iterator_test.cpp")
+target_sources(file_iterator_test PUBLIC FILE_SET CXX_MODULES FILES "test/mock_filesystem.ixx" "src/server/file_iterator.ixx" "src/common.ixx" "src/usings.ixx" "src/message.ixx")
+set_property(TARGET file_iterator_test PROPERTY CXX_STANDARD 23)
+target_link_libraries(file_iterator_test PRIVATE Boost::filesystem)
+
+add_test(file_iterator_test "file_iterator_test")
+
 if (MSVC)
     target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/W4>)
 else()

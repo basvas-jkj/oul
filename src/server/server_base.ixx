@@ -68,7 +68,7 @@ namespace oul
             save_json(component, out);
             out.close();
 
-            auto it = FILE_ITERATOR::init(component_location, component.include, component.exclude);
+            FILE_ITERATOR it(component_location, component.include, component.exclude);
             for (cr<fs::path> file : it)
             {
                 upload(url, file);
@@ -80,7 +80,9 @@ namespace oul
             fs::path json_path = fs::path(url) / "oul.component.json";
             ITEM component = load_component(json_path.string());
 
-            auto it = FILE_ITERATOR::init(url, component.include, component.exclude);
+            FILE_ITERATOR it(url, component.include, component.exclude);
+
+
             for (cr<fs::path> file : it)
             {
                 download(url, file);
