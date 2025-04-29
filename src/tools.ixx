@@ -1,7 +1,7 @@
 module;
 
 #include <boost/process.hpp>
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 #undef ERROR
 
 export module tools;

@@ -1,8 +1,7 @@
 module;
 
-#include <boost/process.hpp>
-#include <boost/filesystem.hpp>
-#undef ERROR
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 export module zip:base;
 
@@ -14,7 +13,6 @@ import message;
 import file_iterator;
 
 using namespace std;
-using namespace boost::process;
 using namespace boost::filesystem;
 
 namespace oul

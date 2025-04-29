@@ -1,7 +1,9 @@
 module;
 
+#include <string>
 #include <fstream>
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 export module tmp;
 

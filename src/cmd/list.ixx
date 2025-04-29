@@ -1,14 +1,7 @@
-module;
-
-#include <string>
-#include <iostream>
-
 export module args:list;
 
 import :command;
 import message;
-
-using namespace std;
 
 export namespace oul::args
 {

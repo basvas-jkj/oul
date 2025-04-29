@@ -1,7 +1,9 @@
 module;
 
 #include <span>
-#include <boost/filesystem.hpp>
+#include <string>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 export module component_manager;
 

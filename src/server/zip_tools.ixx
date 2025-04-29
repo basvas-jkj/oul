@@ -1,6 +1,6 @@
 module;
 
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 
 export module zip:tools;
 import :base;

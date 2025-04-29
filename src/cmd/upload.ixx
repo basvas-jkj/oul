@@ -1,6 +1,7 @@
 module;
 
-#include <boost/filesystem.hpp>
+#include <string>
+#include <boost/filesystem/operations.hpp>
 
 export module args:upload;
 
@@ -10,7 +11,6 @@ import message;
 
 using namespace std;
 
-namespace fs = boost::filesystem;
 namespace oul::args
 {
     /**

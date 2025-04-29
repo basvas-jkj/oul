@@ -3,8 +3,9 @@ module;
 #include <ranges>
 #include <iostream>
 #include <optional>
-#include <yaml-cpp/yaml.h>
-#include <boost/filesystem.hpp>
+#include <yaml-cpp/node/node.h>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 export module config;
 

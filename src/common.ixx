@@ -1,7 +1,9 @@
 module;
 
-#include <boost/filesystem.hpp>
+#include <string>
 #include <wildcards/wildcards.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 export module common;
 export import usings;

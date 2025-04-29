@@ -1,6 +1,6 @@
 module;
 
-#include <boost/filesystem.hpp>
+#include <string>
 
 export module args:rename;
 
@@ -10,7 +10,6 @@ import message;
 
 using namespace std;
 
-namespace fs = boost::filesystem;
 export namespace oul::args
 {
     class RENAME: public COMMAND

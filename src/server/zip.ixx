@@ -1,11 +1,15 @@
 module;
 
 #include <boost/process.hpp>
+#include <boost/filesystem/path.hpp>
 #undef ERROR
 
 export module zip;
 import :base;
 import :tools;
+
+using namespace boost::process;
+using namespace boost::filesystem;
 
 namespace oul
 {
