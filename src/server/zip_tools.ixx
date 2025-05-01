@@ -41,7 +41,7 @@ namespace oul
 
         void zip(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) override
         {
-            bool success = call_tool("a", zip_path, working_dir, zip_file.get_path(), entry);
+            bool success = call_tool(zip_path, working_dir, "a", zip_file.get_path(), entry);
             if (!success)
             {
                 throw new ZippingError(ERROR::zipping_error);
@@ -49,7 +49,7 @@ namespace oul
         }
         void unzip(cr<path> working_dir, cr<TMP_FILE> zip_file) override
         {
-            bool success = call_tool("x", zip_path, working_dir, zip_file.get_path());
+            bool success = call_tool(unzip_path, working_dir, "x", zip_file.get_path());
             if (!success)
             {
                 throw new ZippingError(ERROR::zipping_error);

@@ -107,8 +107,8 @@ namespace oul
             return match_any(base, entry, all_excluded_patterns);
         }
     public:
-        FILE_ITERATOR<IT>(IT&& it, IT&& end_it, cr<file_map> include, cr<file_map> exclude):
-            it(it), end_it(end_it), include(include), exclude(exclude)
+        FILE_ITERATOR<IT>(IT&& it, IT&& end_it, cr<file_map> include, cr<file_map> exclude, cr<path> base = ""):
+            it(it), end_it(end_it), include(include), exclude(exclude), base(base)
         {
             if (it == end_it)
             {
@@ -139,7 +139,7 @@ namespace oul
 /// @param exclude - soubory/složky/vzory cest, které iterátor nevrací (předané jako file_map) 
 /// @return připravený iterátor
         FILE_ITERATOR<recursive_directory_iterator>(cr<path> base, cr<file_map> include, cr<file_map> exclude):
-            FILE_ITERATOR<IT>(recursive_directory_iterator(base), recursive_directory_iterator(), include, exclude)
+            FILE_ITERATOR<IT>(recursive_directory_iterator(base), recursive_directory_iterator(), include, exclude, base)
         {}
 
     private:
