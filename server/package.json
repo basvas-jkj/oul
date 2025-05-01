@@ -1,15 +1,24 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "main": "index.js",
-  "author": "",
-  "license": "MIT",
-  "description": "",
-  "dependencies": {
-    "adm-zip": "^0.5.16"
-  },
-  "devDependencies": {
-    "@types/adm-zip": "^0.5.7",
-    "@types/node": "^22.13.14"
-  }
+    "name": "oul_server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "author": "",
+    "license": "MIT",
+    "description": "",
+    "dependencies": {
+        "adm-zip": "^0.5.16"
+    },
+    "devDependencies": {
+        "@types/adm-zip": "^0.5.7",
+        "@types/node": "^22.13.14",
+        "rimraf": "^6.0.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    },
+    "scripts": {
+        "build": "tsc",
+        "clean": "rimraf build",
+        "server": "npm run build && node build/index.js",
+        "run": "ts-node src/index.ts"
+    }
 }
