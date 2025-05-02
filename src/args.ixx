@@ -33,6 +33,9 @@ using namespace oul::args;
 
 namespace oul
 {
+    /// @brief Převede řetězec přepínače na dvojici [jméno přepínače, argument přepínače].
+    /// @param arg - řetězec obsahující jméno přepínače a volitelně jeho argument (odpovídá vzoru -.*(=.*)?)
+    /// @return dvojice [jméno přepínače, ""] (přepínač bez argumentu) nebo [jméno přepínače, argument přepínače]
     static tuple<string, string> parse_option(cr<string> arg)
     {
         size_t index = arg.find('=');
@@ -48,6 +51,10 @@ namespace oul
             return tuple(std::move(name), std::move(value));
         }
     }
+    /// @brief Přečte a zpracuje argumenty příkazové řádky.
+    /// @param argc - počet argumentů příkazové řádky
+    /// @param argv - seznam argumentů příkazové řádky
+    /// @return objekt reprezentující příkaz určený dle prvního argumentu
     export unique_ptr<COMMAND> read_args(int argc, char* argv[])
     {
         vector<string> args(argv + 1, argv + argc);

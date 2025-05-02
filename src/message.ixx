@@ -16,30 +16,42 @@ using namespace nlohmann;
 namespace fs = boost::filesystem;
 namespace oul
 {
+    /// @brief Třída reprezentující chybové hlášky načtené ze souboru.
     class DICTIONARY
     {
         json object;
 
     public:
+        /// @brief Konstruktor vytvářející prázdné objekty typu <code>DICTIONARY</code>.
         DICTIONARY()
         {}
+        /// @brief Konstruktor načítají chybové hlášky ze souboru.
+        /// @param path - Cesta k souboru, ve kterém jsou chybové hlášky uloženy.
         DICTIONARY(cr<fs::path> path)
         {
             ifstream input(path.string());
             object = json::parse(input);
         }
+        /// @brief Vrátí text chybové hlášky.
+        /// @param error_name - jméno chybové hlášky
+        /// @return text chybové hlášky odpovídající zadanému jménu
         cr<string> operator[](cr<string> error_name)
         {
             return object[error_name].get_ref<string&>();
         }
     };
+
+    /// @brief Načtené zprávy.
     static DICTIONARY messages;
+    /// @brief Načte chybové hlášky ze souboru.
+    /// @param oul_path - cesta k spustitelnému souboru oul
     export void init_messages(fs::path&& oul_path)
     {
         oul_path.replace_filename("english.json");
         messages = DICTIONARY(oul_path);
     }
 
+    /// @brief Výčet všech chybových a jiných hlášek.
     export enum class ERROR
     {
         unexpected_error, component_list, local_only, help,
@@ -71,6 +83,7 @@ namespace oul
     };
     using enum ERROR;
 
+    /// @brief Objekt zobrazující kódy chybových hlášek na jména.
     static map<ERROR, string> error_list
     {
         {unexpected_error, "unexpected_error"},
@@ -130,11 +143,16 @@ namespace oul
 
         {missing_url, "missing_url"}
     };
+
+    /// @brief Vypíše chybovou hlášku na standardní chybový výstup.
+    /// @param name - kód chybové hlášky 
     export void report_error(ERROR name)
     {
         cr<string> error = error_list[name];
         println(cerr, "{}", messages[error]);
     }
+    /// @brief Vypíše seznam komponent.
+    /// @param components - seznam komponent k vypsání
     export void print_component_list(cr<vector<ITEM>> components)
     {
         cr<string> component_list_text = error_list[component_list];
@@ -146,6 +164,7 @@ namespace oul
             println(cout, "\t{}\t({})", i.name, url);
         }
     }
+    /// @brief Vypíše nápovědu programu.
     export void print_help()
     {
         vector commands =
@@ -171,8 +190,11 @@ namespace oul
         ERROR name;
 
     public:
+        /// @brief Konstruktor vytvářející objekty <code>CommonException</code>
+        /// @param n - kód chybové hlášky
         CommonException(ERROR n): name(n)
         {}
+        /// @brief Vypíše hlášku výjimky na standarní chybový výstup.
         void report() const
         {
             report_error(name);
