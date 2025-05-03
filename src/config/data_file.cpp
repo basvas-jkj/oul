@@ -87,7 +87,6 @@ namespace oul
 
         check_scalar(component["name"], ERROR::missing_component_name);
         check_optional_scalar(component["original_name"], ERROR::invalid_original_name);
-        check_scalar(component["location"], ERROR::missing_location);
         check_file_map(component["include"], true, ERROR::missing_include);
         check_file_map(component["exclude"], false, ERROR::invalid_exclude);
     }
@@ -124,10 +123,15 @@ namespace oul
      * @return platná konfigurace komponenty
      * @throw InvalidConfiguration
      **/
-    Node load_component(cr<string> component_file)
+    Node load_component(cr<string> component_file, bool validate_location)
     {
         Node root = LoadFile(component_file);
         check_component(root);
+
+        if (validate_location)
+        {
+            check_scalar(root["location"], ERROR::missing_location);
+        }
         return root;
     }
 

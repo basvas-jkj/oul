@@ -34,14 +34,14 @@ namespace oul
          * @brief Konstruktor vytvářející objekt struktury <code>ITEM</code>.
          * @param component - Konfigurace komponenty.
          **/
-        ITEM(cr<Node> component)
+        explicit ITEM(cr<Node> component)
         {
             name = component["name"].as<string>();
-            original_name = component["original_name"].as<string>();
-            url = component["url"].as<string>();
-            location = component["location"].as<string>();
+            original_name = component["original_name"].as<string>("");
+            url = component["url"].as<string>("");
+            location = component["location"].as<string>(".");
             include = component["include"].as<file_map>();
-            exclude = component["exclude"].as<file_map>();
+            exclude = component["exclude"].as<file_map>(file_map());
         }
     };
 }

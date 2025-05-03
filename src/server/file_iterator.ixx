@@ -108,7 +108,7 @@ namespace oul
         }
     public:
         FILE_ITERATOR<IT>(IT&& it, IT&& end_it, cr<file_map> include, cr<file_map> exclude, cr<path> base = ""):
-            it(it), end_it(end_it), include(include), exclude(exclude), base(base)
+            base(base), it(it), end_it(end_it), include(include), exclude(exclude)
         {
             if (it == end_it)
             {

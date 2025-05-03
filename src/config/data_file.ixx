@@ -17,7 +17,7 @@ namespace oul
     export struct CONFIG;
 
     export Node load(cr<string> config_file);
-    export Node load_component(cr<string> component_file);
+    export Node load_component(cr<string> component_file, bool validate_location = true);
     export void save_json(cr<CONFIG> c);
     export void save_yaml(cr<CONFIG> c);
 

@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <boost/filesystem/operations.hpp>
 
 export module args:install;
 
@@ -9,9 +10,10 @@ import zip;
 
 using namespace std;
 
-export namespace oul::args
+namespace fs = boost::filesystem;
+namespace oul::args
 {
-    class INSTALL: public COMMAND
+    export class INSTALL: public COMMAND
     {
         bool check() const override
         {
@@ -44,13 +46,13 @@ export namespace oul::args
             }
             else
             {
-                url = url + "/" + server_name;
+                url = (fs::path(url) / server_name).generic_string();
             }
 
             string where = opt.get("-w");
             if (where == "")
             {
-                where = cfg.location;
+                where = local_name;
             }
 
             COMPONENT_MANAGER manager(std::move(cfg));
