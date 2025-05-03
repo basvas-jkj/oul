@@ -2,6 +2,7 @@ module;
 
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <yaml-cpp/yaml.h>
 
 export module server:base;
 import tools;
@@ -11,6 +12,7 @@ import message;
 import file_iterator;
 
 using namespace std;
+using namespace YAML;
 namespace fs = boost::filesystem;
 namespace oul
 {
@@ -79,11 +81,9 @@ namespace oul
         {
             fs::create_directories(component_location);
             fs::path json_path = fs::path(url) / "oul.component.json";
-            ITEM component = load_component(json_path.string());
+            ITEM component(load_component(json_path.string(), false));
 
             FILE_ITERATOR it(url, component.include, component.exclude);
-
-
             for (cr<fs::path> file : it)
             {
                 download(url, file);

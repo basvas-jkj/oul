@@ -200,7 +200,7 @@ namespace oul
          **/
         string get_url(cr<string> component_name) const
         {
-            return default_url + "/" + component_name;
+            return (fs::path(default_url) / component_name).generic_string();
         }
         fs::path get_directory() const
         {

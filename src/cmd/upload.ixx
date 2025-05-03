@@ -11,6 +11,7 @@ import message;
 
 using namespace std;
 
+namespace fs = boost::filesystem;
 namespace oul::args
 {
     /**
@@ -73,7 +74,7 @@ namespace oul::args
                 component.url = url;
             }
 
-            url += "/" + server_name;
+            url = (fs::path(url) / server_name).generic_string();
 
             client_ptr client = select_client(url, cfg.get_directory() / component.location);
             client->upload(component);

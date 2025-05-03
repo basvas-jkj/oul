@@ -142,6 +142,23 @@ namespace oul
         /// @param local_name - jméno, pod jakým bude komponenta uložena v konfiguraci
         /// @param url - url serveru nebo cesta ke složce
         /// @param where - umístění komponenty
+        void install(cr<string> server_name, cr<string> local_name, cr<string> url, cr<string> where)
+        {
+            if (cfg.contains(local_name))
+            {
+                report_error(ERROR::component_already_exists);
+                return;
+            }
+
+            client_ptr client = select_client(url, cfg.get_directory() / where);
+            ITEM component = client->download();
+            component.name = local_name;
+            component.original_name = server_name;
+            component.location = where;
+            component.url = fs::path(url).parent_path().generic_string();
+
+            cfg.add_component(component);
+        }
         /// @brief Odebere komponentu z projektu.
         /// @param name - jméno komponenty
         void remove(cr<string> name)
@@ -261,23 +278,6 @@ namespace oul
                     erase(include_list, shifted.generic_string());
                 }
             }
-        }
-        void install(cr<string> server_name, cr<string> local_name, cr<string> url, cr<string> where)
-        {
-            if (cfg.contains(local_name))
-            {
-                report_error(ERROR::component_already_exists);
-                return;
-            }
-
-            client_ptr client = select_client(url, where);
-            ITEM component = client->download();
-            component.name = local_name;
-            component.original_name = server_name;
-            component.location = where;
-            component.url = url;
-
-            cfg.add_component(component);
         }
     };
 }
