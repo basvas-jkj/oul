@@ -10,11 +10,13 @@ import :command;
 
 using namespace std;
 
-export namespace oul::args
+namespace oul::args
 {
-    class INIT: public COMMAND
+    /// @brief Reprezentuje příkaz init - vytvoření konfigurace projektu.
+    export class INIT: public COMMAND
     {
     public:
+        /// @brief Spustí příkaz init programu OUL.
         void run() const override
         {
             optional<string> path = CONFIG::find();

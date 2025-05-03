@@ -8,11 +8,14 @@ export module args:create;
 import component_manager;
 import :command;
 
-export namespace oul::args
+namespace oul::args
 {
-    class CREATE: public COMMAND
+    /// @brief Reprezentuje příkaz create - vytvoření nové komponenty.
+    export class CREATE: public COMMAND
     {
     public:
+        /// @brief Zkontroluje argumenty příkazové řádky předané programu OUL.
+        /// @return <code>true</code>, pokud argumenty byly předány správně, jinak <code>false</code>
         bool check() const override
         {
             if (arguments.size() < 1)
@@ -25,6 +28,7 @@ export namespace oul::args
                 return true;
             }
         }
+        /// @brief Spustí příkaz create programu OUL.
         void run() const override
         {
             cr<string> name = arguments[0];

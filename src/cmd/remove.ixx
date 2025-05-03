@@ -9,11 +9,14 @@ import :command;
 
 using namespace std;
 
-export namespace oul::args
+namespace oul::args
 {
-    class REMOVE: public COMMAND
+    /// @brief Reprezentuje příkaz remove - odebrání souborů z komponenty.
+    export class REMOVE: public COMMAND
     {
     public:
+        /// @brief Zkontroluje argumenty příkazové řádky předané programu OUL.
+        /// @return <code>true</code>, pokud argumenty byly předány správně, jinak <code>false</code>
         bool check() const override
         {
             if (arguments.size() < 1)
@@ -34,6 +37,7 @@ export namespace oul::args
                 return true;
             }
         }
+        /// @brief Spustí příkaz remove programu OUL.
         void run() const override
         {
             COMPONENT_MANAGER manager = open_manager();

@@ -10,11 +10,14 @@ import message;
 
 using namespace std;
 
-export namespace oul::args
+namespace oul::args
 {
-    class RENAME: public COMMAND
+    /// @brief Reprezentuje příkaz rename - přejmenování komponenty.
+    export class RENAME: public COMMAND
     {
     public:
+        /// @brief Zkontroluje argumenty příkazové řádky předané programu OUL.
+        /// @return <code>true</code>, pokud argumenty byly předány správně, jinak <code>false</code>
         bool check() const override
         {
             if (arguments.size() < 1)
@@ -32,6 +35,7 @@ export namespace oul::args
                 return true;
             }
         }
+        /// @brief Spustí příkaz rename programu OUL.
         void run() const override
         {
             cr<string> original_name = arguments[0];

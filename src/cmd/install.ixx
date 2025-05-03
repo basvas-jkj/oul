@@ -13,8 +13,11 @@ using namespace std;
 namespace fs = boost::filesystem;
 namespace oul::args
 {
+    /// @brief Reprezentuje příkaz install - stažení komponenty ze serveru.
     export class INSTALL: public COMMAND
     {
+        /// @brief Zkontroluje argumenty příkazové řádky předané programu OUL.
+        /// @return <code>true</code>, pokud argumenty byly předány správně, jinak <code>false</code>
         bool check() const override
         {
             if (arguments.size() < 1)
@@ -28,6 +31,7 @@ namespace oul::args
             }
         }
     public:
+        /// @brief Spustí příkaz install programu OUL.
         void run() const override
         {
             CONFIG cfg = read_configuration();

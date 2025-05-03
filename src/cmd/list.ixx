@@ -3,11 +3,13 @@ export module args:list;
 import :command;
 import message;
 
-export namespace oul::args
+namespace oul::args
 {
-    class LIST: public COMMAND
+    /// @brief Reprezentuje příkaz list - vypsání seznamu komponent v projektu.
+    export class LIST: public COMMAND
     {
     public:
+        /// @brief Spustí příkaz list programu OUL.
         void run() const override
         {
             CONFIG c = read_configuration();

@@ -11,11 +11,14 @@ import :command;
 
 using namespace std;
 
-export namespace oul::args
+namespace oul::args
 {
-    class EXCLUDE: public COMMAND
+    /// @brief Reprezentuje příkaz exclude - vyčlenění souborů z komponenty.
+    export class EXCLUDE: public COMMAND
     {
     public:
+        /// @brief Zkontroluje argumenty příkazové řádky předané programu OUL.
+        /// @return <code>true</code>, pokud argumenty byly předány správně, jinak <code>false</code>
         bool check() const override
         {
             if (arguments.size() < 1)
@@ -36,6 +39,7 @@ export namespace oul::args
                 return true;
             }
         }
+        /// @brief Spustí příkaz exclude programu OUL.
         void run() const override
         {
             COMPONENT_MANAGER manager = open_manager();

@@ -14,9 +14,7 @@ using namespace std;
 namespace fs = boost::filesystem;
 namespace oul::args
 {
-    /**
-     * @brief Chyba: URL nebyla právně zadaná.
-     **/
+    /// @brief Chyba: URL nebyla právně zadaná.
     export class MissingUrl: public CommonException
     {
     public:
@@ -24,9 +22,12 @@ namespace oul::args
         {}
     };
 
-    class UPLOAD: public COMMAND
+    /// @brief Reprezentuje příkaz upload - nahrání komponenty na server.
+    export class UPLOAD: public COMMAND
     {
     public:
+        /// @brief Zkontroluje argumenty příkazové řádky předané programu OUL.
+        /// @return <code>true</code>, pokud argumenty byly předány správně, jinak <code>false</code>
         bool check() const override
         {
             if (arguments.size() < 1)
@@ -39,6 +40,7 @@ namespace oul::args
                 return true;
             }
         }
+        /// @brief Spustí příkaz upload programu OUL.
         void run() const override
         {
             cr<string> name = arguments[0];

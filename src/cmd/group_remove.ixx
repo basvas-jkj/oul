@@ -2,11 +2,14 @@ export module args:group_remove;
 
 import :command;
 
-export namespace oul::args
+namespace oul::args
 {
-    class GROUP_REMOVE: public COMMAND
+    /// @brief Reprezentuje příkaz group remove - odebrání skupiny souborů.
+    export class GROUP_REMOVE: public COMMAND
     {
     public:
+        /// @brief Zkontroluje argumenty příkazové řádky předané programu OUL.
+        /// @return <code>true</code>, pokud argumenty byly předány správně, jinak <code>false</code>
         bool check() const override
         {
             if (arguments.size() < 1)
@@ -23,6 +26,7 @@ export namespace oul::args
                 return true;
             }
         }
+        /// @brief Spustí příkaz group remove programu OUL.
         void run() const override
         {
             COMPONENT_MANAGER manager = open_manager();
