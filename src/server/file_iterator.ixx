@@ -16,24 +16,27 @@ using namespace boost::filesystem;
 
 namespace oul
 {
+    /// @brief Koncept omezující argument na typ boost::filesytem::directory_entry nebo jiné typy s kompatibilním rozhraním.
     export template <class T>
-        concept DirectoryEntry = same_as<T, directory_entry> || requires(T entry)
+    concept DirectoryEntry = same_as<T, directory_entry> || requires(T entry)
     {
         { entry.is_regular_file() }->same_as<bool>;
         { entry.is_directory() }->same_as<bool>;
         { entry.depth() }->same_as<int>;
         same_as<path, remove_cvref_t<decltype(entry.path())>>;
     };
+    /// @brief Koncept omezující argument na typ boost::filesytem::recursive_directory_iterator nebo jiné typy s kompatibilním rozhraním.
     export template <class T>
-        concept DirectoryIterator = same_as<T, recursive_directory_iterator> || requires(T it)
+    concept DirectoryIterator = same_as<T, recursive_directory_iterator> || requires(T it)
     {
         input_iterator<T>;
         DirectoryEntry<typename T::value_type>;
     };
 
-
-
-    /// @return Shoduje se položka s alespoň jedním vzorem?
+    /// @brief Shoduje se položka s alespoň jedním vzorem?
+    /// @param entry - testovaná položka
+    /// @param patterns - seznam vzorů
+    /// @return <code>true</code>, pokud položka odpovídá alespoň jednomu vzoru, jinak <code>false</code>
     bool match_any(cr<string> entry, cr<vector<string>> patterns)
     {
         for (cr<string> pattern : patterns)
@@ -45,7 +48,12 @@ namespace oul
         }
         return false;
     }
-    /// @return Shoduje se položka s alespoň jedním vzorem?
+    /// @brief Shoduje se položka s alespoň jedním vzorem?
+    /// @tparam DR - typ kompatibilní s boost::filesytem::directory_entry
+    /// @param base - cesta, vůči které se položka vyjádří relativně před porovnáním se vzorem
+    /// @param entry - testovaná položka
+    /// @param patterns - seznam vzorů
+    /// @return <code>true</code>, pokud položka vyjádřená relativně vůči <code>base</code> odpovídá alespoň jednomu vzoru, jinak <code>false</code>
     template <class DR>
         requires DirectoryEntry<DR> || same_as<DR, directory_entry>
     bool match_any(cr<path> base, cr<DR> entry, cr<vector<string>> patterns)
@@ -55,9 +63,10 @@ namespace oul
     }
 
     /// @brief Rekurzivní iterátor souborového systému, který umožňuje specifikovat, které soubory
-    /// budou nebo nebudou zahrnuty. Vrací pouze soubory.
+    /// budou nebo nebudou zahrnuty. Vrací pouze soubory, nikoli složky.
+    /// @tparam IT - typ kompatibilní s boost::filesytem::recursive_directory_iterator
     export template <DirectoryIterator IT>
-        class FILE_ITERATOR
+    class FILE_ITERATOR
     {
         path base;
         IT it;
@@ -70,6 +79,10 @@ namespace oul
         FILE_ITERATOR<IT>(cr<IT> it): it(it), end_it(it)
         {}
 
+        /// @brief Testuje, zda má být položka iterována.
+        /// @tparam DR - typ kompatibilní s boost::filesytem::directory_entry
+        /// @param entry - testovaná položka
+        /// @return <code>true</code>, pokud existuje alespoň jedna skupina, do která je položka zahrnuta a současně z ní není vyčleněna, jinak <code>false</code>
         template <class DR>
             requires DirectoryEntry<DR> || same_as<DR, directory_entry>
         bool should_be_included(cr<DR> entry)
@@ -87,6 +100,10 @@ namespace oul
             }
             return false;
         }
+        /// @brief Testuje, zda má být položka vyčleněna z iterování.
+        /// @tparam DR - typ kompatibilní s boost::filesytem::directory_entry 
+        /// @param entry - testovaná položka
+        /// @return <code>true</code>, pokud je položka vyčleněna ze všech skupin, jinak <code>false</code>
         template <class DR>
             requires DirectoryEntry<DR> || same_as<DR, directory_entry>
         bool should_be_excluded(cr<DR> entry)
@@ -102,6 +119,12 @@ namespace oul
             return excluded_groups_count == include.size();
         }
     public:
+        /// @brief Konstruktor <code>FILE_ITERATOR</code> vhodný pro mockování souborového systému.
+        /// @param it - iterátor na první prvek (<code>begin</code>)
+        /// @param end_it - iterátor na konec iterování (<code>end</code>)
+        /// @param include - soubory/složky/vzory cest, které iterátor vrací (předané jako file_map)
+        /// @param exclude - soubory/složky/vzory cest, které iterátor nevrací (předané jako file_map) 
+        /// @param base - Nepovinná kořenová složka iterátoru.
         FILE_ITERATOR<IT>(IT&& it, IT&& end_it, cr<file_map> include, cr<file_map> exclude, cr<path> base = ""):
             base(base), it(it), end_it(end_it), include(include), exclude(exclude)
         {
@@ -122,17 +145,17 @@ namespace oul
                     exclude_all_base = depth();
                 }
 
-                ++ * this;
+                ++*this;
             }
             else if (!should_be_included(*it))
             {
                 ++*this;
             }
         }
-        /// @param base - Kořen iterátoru.
-/// @param include - soubory/složky/vzory cest, které iterátor vrací (předané jako file_map)
-/// @param exclude - soubory/složky/vzory cest, které iterátor nevrací (předané jako file_map) 
-/// @return připravený iterátor
+        /// @brief Konstruktor <code>FILE_ITERATOR</code> pro vytvoření iterátoru přes skutečný souborový systém.
+        /// @param base - Kořenová složka iterátoru.
+        /// @param include - soubory/složky/vzory cest, které iterátor vrací (předané jako file_map)
+        /// @param exclude - soubory/složky/vzory cest, které iterátor nevrací (předané jako file_map) 
         FILE_ITERATOR<recursive_directory_iterator>(cr<path> base, cr<file_map> include, cr<file_map> exclude):
             FILE_ITERATOR<IT>(recursive_directory_iterator(base), recursive_directory_iterator(), include, exclude, base)
         {}
@@ -143,6 +166,7 @@ namespace oul
         int include_all_base;
         int exclude_all_base;
 
+        /// @return hloubka, do jaké je iterátor zanořen
         int depth()
         {
             if constexpr (same_as<IT, recursive_directory_iterator>)

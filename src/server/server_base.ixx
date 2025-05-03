@@ -38,8 +38,15 @@ namespace oul
         fs::path component_location;
         fs::path client_path;
 
+        /// @brief Základní konstruktor objektů reprezentujících klienty.
+        /// @param url - url, se kterou je klient spojený
+        /// @param cl - umístění komponenty, kterou klient spravuje
         CLIENT(cr<string> url, cr<fs::path> cl): url(url), component_location(cl)
         {}
+        /// @brief Základní konstruktor objektů reprezentujících klienty.
+        /// @param url - url, se kterou je klient spojený
+        /// @param cl - umístění komponenty, kterou klient spravuje
+        /// @param client_name - jméno klienta volatelné z příkazové řádky
         CLIENT(cr<string> url, cr<fs::path> cl, cr<string> client_name):
             url(url), component_location(cl)
         {
@@ -50,6 +57,10 @@ namespace oul
             }
         }
 
+        /// @brief Zavolá klienta jako samostatný proces.
+        /// @tparam ...T - typy argumentů převoditelné
+        /// @param ...args - argumenty, se kterými je klient zavolán
+        /// @throw <code>ClientError</code>, pokud volání klienta selže
         template <CmdArgs ...T>
         void call_client(T&&... args)
         {
@@ -60,9 +71,17 @@ namespace oul
             }
         }
 
+        /// @brief Odešle jeden soubor na server.
+        /// @param url - url serveru
+        /// @param file - cesta k odesílanému souboru
         virtual void upload(cr<string> url, cr<fs::path> file) = 0;
+        /// @brief Stáhne jeden soubor ze serveru.
+        /// @param url - url serveru
+        /// @param where - cesta, na kterou se má soubor stáhnout
         virtual void download(cr<string> url, cr<fs::path> where) = 0;
     public:
+        /// @brief Odešle komponentu na server.
+        /// @param component - konfigurace odesílané komponenty
         virtual void upload(cr<ITEM> component)
         {
             fs::create_directories(url);
@@ -77,6 +96,8 @@ namespace oul
                 upload(url, file);
             }
         }
+        /// @brief Stáhne komponentu ze serveru.
+        /// @return konfigurace stažené komponenty
         virtual ITEM download()
         {
             fs::create_directories(component_location);

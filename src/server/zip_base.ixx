@@ -57,6 +57,9 @@ namespace oul
         path zip_path;
         path unzip_path;
 
+        /// @brief Základní konstruktor objektů reprezentujících zipové nástroje.
+        /// @param zip_path - cesta k nástroji pro vytváření archivu
+        /// @param unzip_path - cesta k nástroji pro rozbalení archivu
         ABSTRACT_ZIP_TOOL(cr<path> zip_path, cr<path> unzip_path):
             zip_path(zip_path), unzip_path(unzip_path)
         {}
@@ -74,6 +77,7 @@ namespace oul
         /// @brief Vytvoří zip archiv a přidá do něj všechny soubory dané komponenty (včetně konfigurace).
         /// @param component - konfigurace komponenty
         /// @param component_location - umístění komponenty
+        /// @return objekt reprezentující dočasný soubor zipového archivu
         TMP_FILE zip(cr<ITEM> component, cr<string> component_location)
         {
             TMP_FILE zip_file = create_zip(component);
@@ -86,6 +90,10 @@ namespace oul
 
             return zip_file;
         }
+        /// @brief Rozbalí zip archiv.
+        /// @param zip_file - zip archiv
+        /// @param component_location - umístění komponenty
+        /// @return konfigurace rozbalené komponenty
         ITEM unzip(cr<TMP_FILE> zip_file, cr<string> component_location)
         {
             unzip(component_location, zip_file);
