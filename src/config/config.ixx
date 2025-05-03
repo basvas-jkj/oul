@@ -19,9 +19,7 @@ namespace fs = boost::filesystem;
 
 namespace oul
 {
-    /**
-     * @brief Chyba v konfiguraci.
-     **/
+    /// @brief Chyba: neplatná konfigurace.
     export class InvalidConfiguration: public CommonException
     {
     public:
@@ -29,9 +27,7 @@ namespace oul
         {}
     };
 
-    /**
-     * @brief Struktura pro ukládání konfigurace projektu.
-     **/
+    /// @brief Struktura pro ukládání konfigurace projektu.
     export struct CONFIG
     {
         string location;
@@ -39,19 +35,14 @@ namespace oul
         string default_url;
         vector<ITEM> components;
 
-        /**
-         * @brief Konstruktor vytvářející prázdný objekt structury <code>CONFIG</code>.
-         **/
+        /// @brief Konstruktor vytvářející prázdný objekt structury <code>CONFIG</code>.
         CONFIG() {}
-        /**
-         * @brief Konstruktor vytvářející objekt structury <code>CONFIG</code>.
-         * Současně také načte konfiguraci ze souboru a zvaliduje.
-         * @param l - umístění konfigurace v souborovém systému
-         **/
+        /// @brief Konstruktor vytvářející objekt structury <code>CONFIG</code>.
+        /// Současně také načte konfiguraci ze souboru a zvaliduje.
+        /// @param l - umístění konfiguračního souboru v souborovém systému
         CONFIG(cr<string> l): location(l)
         {
             Node root = load(location);
-            assert(!root.IsNull());
 
             project_name = root["project_name"].as<string>();
             default_url = root["default_url"].as<string>();
@@ -63,9 +54,7 @@ namespace oul
         }
         CONFIG(cr<CONFIG>) = delete;
         CONFIG(CONFIG&&) = default;
-        /**
-         * @brief Zajišťuje zápsání změněné konfigurace do souboru.
-         **/
+        /// @brief Zajišťuje zápsání změněné konfigurace do souboru.
         ~CONFIG() noexcept
         {
             try
@@ -85,9 +74,7 @@ namespace oul
             }
         }
 
-        /**
-         * @brief Vytvoří prázdnou konfiguraci. Potřebné údaje získá interaktivně ze standardního vstupu.
-         **/
+        /// @brief Vytvoří prázdnou konfiguraci. Potřebné údaje získá interaktivně ze standardního vstupu.
         static void initialize()
         {
             string name;
@@ -110,10 +97,8 @@ namespace oul
             cfg.project_name = name;
             cfg.default_url = default_url;
         }
-        /**
-         * @brief Najde cestu ke konfiguračnímu souboru.Pokud je soubor nalezen, nastaví pracovní složku na jeho umístění.
-         * @return Pokud byla konfigurace nalezena, vrátí cestu. Jinak vrátí "".
-         **/
+        /// @brief Najde cestu ke konfiguračnímu souboru.Pokud je soubor nalezen, nastaví pracovní složku na jeho umístění.
+        /// @return Pokud byla konfigurace nalezena, vrátí cestu. Jinak vrátí "".
         static optional<string> find()
         {
             fs::path current = fs::current_path();
@@ -137,27 +122,20 @@ namespace oul
             return nullopt;
         }
 
-        /**
-         * @brief Převede seznam všech komponent v konfiguraci na seznam názvů.
-         * @return iterovatelný seznam (<code>view</code>) názvů všech komponent
-         **/
+        /// @brief Převede seznam všech komponent v konfiguraci na seznam názvů.
+        /// @return iterovatelný seznam (<code>view</code>) názvů všech komponent
         auto get_component_names() const
         {
             auto item_to_name = [](cr<ITEM> i) { return i.name; };
             return components | views::transform(item_to_name);
         }
-        /**
-         * @brief Přidá komponentu do konfigurace.
-         * @param i - konfigurace komponenty
-         **/
+        /// @param i - konfigurace komponenty
         void add_component(cr<ITEM> i)
         {
             components.push_back(i);
         }
-        /**
-         * @brief Odebere komponentu z konfigurace.
-         * @param name - jméno komponenty
-         **/
+        /// @brief Odebere komponentu z konfigurace.
+        /// @param name - jméno komponenty
         void remove_component(cr<string> name)
         {
             auto has_equal_name = [&name](ITEM& i)
@@ -167,11 +145,9 @@ namespace oul
 
             erase_if(components, has_equal_name);
         }
-        /**
-         * @brief Zjistí, zda konfigurace projektu obsahuje komponentu daného jména.
-         * @param name - jméno komponenty
-         * @return Je v konfiguraci přítomná komponenta?
-         **/
+        /// @brief Zjistí, zda konfigurace projektu obsahuje komponentu daného jména.
+        /// @param name - jméno komponenty
+        /// @return <code>true</code>, pokud konfigurace danou komponentu obsahuje, <code>false</code> v opačném případě.
         bool contains(cr<string> name) const
         {
             for (cr<string> component : get_component_names())
@@ -183,25 +159,23 @@ namespace oul
             }
             return false;
         }
-        /**
-         * @brief Najde v konfiguraci projektu komponentu a vrátí iterátor.
-         * @param name - jméno komponenty
-         * @return Platný iterátor ukazující na komponentu, pokud je v konfiguraci přítomná. Jinak vrátí <code>end()</code>
-         **/
+        /// @brief Najde v konfiguraci projektu komponentu a vrátí iterátor.
+        /// @param name - jméno komponenty
+        /// @return Platný iterátor ukazující na komponentu, pokud je v konfiguraci přítomná. Jinak vrátí <code>end()</code>
         vector<ITEM>::iterator get_component(cr<string> name)
         {
             return ranges::find_if(components, [name](cr<ITEM> i) { return i.name == name; });
         }
 
-        /**
-         * @brief Získá výchozí URL pro stažení komponenty.
-         * @param component_name - jméno komponenty
-         * @return spojení výchozí URL projektu a jména komponenty
-         **/
+        /// @brief Získá výchozí URL pro stažení komponenty.
+        /// @param component_name - jméno komponenty
+        /// @return spojení výchozí URL projektu a jména komponenty
         string get_url(cr<string> component_name) const
         {
             return (fs::path(default_url) / component_name).generic_string();
         }
+        /// @brief Vrací cestu složky nadřazené konfiguračnímu souboru.
+        /// @return cesta ke složce, ve které je uložen konfigurační soubor 
         fs::path get_directory() const
         {
             return fs::path(location).parent_path();
