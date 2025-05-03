@@ -53,18 +53,6 @@ namespace oul
         cr<string> entry_string = relative(entry.path(), base).generic_string();
         return match_any(entry_string, patterns);
     }
-    /// @brief Spojí seznam souborů do jedné množiny.
-    /// @param list - Seznam souborů strukturovaný podle kategorií.
-    vector<string> join_filemap(cr<file_map> list)
-    {
-        set<string> files;
-        for (auto&& group : list)
-        {
-            files.insert_range(group.second);
-        }
-        return vector<string>(files.begin(), files.end());
-    }
-
 
     /// @brief Rekurzivní iterátor souborového systému, který umožňuje specifikovat, které soubory
     /// budou nebo nebudou zahrnuty. Vrací pouze soubory.
@@ -103,8 +91,15 @@ namespace oul
             requires DirectoryEntry<DR> || same_as<DR, directory_entry>
         bool should_be_excluded(cr<DR> entry)
         {
-            vector<string>&& all_excluded_patterns = join_filemap(exclude);
-            return match_any(base, entry, all_excluded_patterns);
+            size_t excluded_groups_count = 0;
+            for (auto&& [group_name, group_files] : exclude)
+            {
+                if (match_any(base, entry, group_files))
+                {
+                    excluded_groups_count += 1;
+                }
+            }
+            return excluded_groups_count == include.size();
         }
     public:
         FILE_ITERATOR<IT>(IT&& it, IT&& end_it, cr<file_map> include, cr<file_map> exclude, cr<path> base = ""):

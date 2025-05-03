@@ -55,14 +55,14 @@ export vector<mock_directory_entry> plain_filesystem =
 export vector<mock_directory_entry> structured_filesystem =
 {
     make_directory(1, "config"),
-    make_file(2, "config/config.ixx"),
+    make_file(2, "config/config.cpp"),
     make_file(2, "config/item.ixx"),
     make_directory(1, "empty"),
     make_file(1, "main.cpp"),
     make_directory(1, "server"),
     make_directory(2, "server/zip"),
-    make_directory(3, "server/zip/zip_base.ixx"),
-    make_directory(3, "server/zip/zip_tools.ixx"),
+    make_file(3, "server/zip/zip_base.ixx"),
+    make_file(3, "server/zip/zip_tools.cpp"),
     make_file(2, "server/server_base.ixx"),
-    make_file(2, "server/server_tools.ixx")
+    make_file(2, "server/server_tools.cpp")
 };

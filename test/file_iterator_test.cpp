@@ -18,10 +18,6 @@ namespace oul
         return vector<fs::path>(fi.begin(), fi.end());
     }
 
-    //#pragma region adf
-
-    //#pragma endregion
-
 #pragma region empty_filesystem_tests
     BOOST_AUTO_TEST_CASE(empty_file_system__nothing_included)
     {
@@ -156,62 +152,82 @@ namespace oul
     }
 #pragma endregion
 
-#if 0
-
-
-    BOOST_AUTO_TEST_CASE(_)
+#pragma region structured_filesystem_test
+    BOOST_AUTO_TEST_CASE(structured_filesystem__include_directories)
     {
-        file_map include = {};
+        file_map include =
+        {
+            {"src", {"config", "empty", "server/zip"}}
+        };
         file_map exclude = {};
-        vector<fs::path> expected = {};
-        vector<fs::path> result = compute_result(empty_filesystem, include, exclude);
+        vector<fs::path> expected = {"config/config.cpp", "config/item.ixx", "server/zip/zip_base.ixx", "server/zip/zip_tools.cpp"};
+        vector<fs::path> result = compute_result(structured_filesystem, include, exclude);
 
         BOOST_TEST(result == expected, boost::test_tools::per_element());
     }
-    BOOST_AUTO_TEST_CASE(_)
+    BOOST_AUTO_TEST_CASE(structured_filesystem__include_exclude_directories)
     {
-        file_map include = {};
-        file_map exclude = {};
-        vector<fs::path> expected = {};
-        vector<fs::path> result = compute_result(empty_filesystem, include, exclude);
+        file_map include =
+        {
+            {"src", {"config", "server"}}
+        };
+        file_map exclude =
+        {
+            {"src", {"config/*.cpp", "server/zip"}}
+        };
+        vector<fs::path> expected = {"config/item.ixx", "server/server_base.ixx", "server/server_tools.cpp"};
+        vector<fs::path> result = compute_result(structured_filesystem, include, exclude);
 
         BOOST_TEST(result == expected, boost::test_tools::per_element());
     }
-    BOOST_AUTO_TEST_CASE(_)
+    BOOST_AUTO_TEST_CASE(structured_filesystem__split_all_files_into_two_groups)
     {
-        file_map include = {};
-        file_map exclude = {};
-        vector<fs::path> expected = {};
-        vector<fs::path> result = compute_result(empty_filesystem, include, exclude);
+        file_map include =
+        {
+            {"cpp", {"*"}},
+            {"ixx", {"*"}}
+        };
+        file_map exclude =
+        {
+            {"cpp", {"*.ixx"}},
+            {"ixx", {"*.cpp"}}
+        };
+        vector<fs::path> expected = {"config/config.cpp", "config/item.ixx", "main.cpp", "server/zip/zip_base.ixx", "server/zip/zip_tools.cpp", "server/server_base.ixx", "server/server_tools.cpp"};
+        vector<fs::path> result = compute_result(structured_filesystem, include, exclude);
 
         BOOST_TEST(result == expected, boost::test_tools::per_element());
     }
-    BOOST_AUTO_TEST_CASE(_)
+    BOOST_AUTO_TEST_CASE(structured_filesystem__two_groups_one_with_all_files)
     {
-        file_map include = {};
-        file_map exclude = {};
-        vector<fs::path> expected = {};
-        vector<fs::path> result = compute_result(empty_filesystem, include, exclude);
+        file_map include =
+        {
+            {"all", {"*"}},
+            {"server", {"server"}}
+        };
+        file_map exclude =
+        {
+            {"server", {"server/zip"}}
+        };
+        vector<fs::path> expected = {"config/config.cpp", "config/item.ixx", "main.cpp", "server/zip/zip_base.ixx", "server/zip/zip_tools.cpp", "server/server_base.ixx", "server/server_tools.cpp"};
+        vector<fs::path> result = compute_result(structured_filesystem, include, exclude);
 
         BOOST_TEST(result == expected, boost::test_tools::per_element());
     }
-    BOOST_AUTO_TEST_CASE(_)
+    BOOST_AUTO_TEST_CASE(structured_filesystem__both_include_exclude_same_directory_different_groups)
     {
-        file_map include = {};
-        file_map exclude = {};
-        vector<fs::path> expected = {};
-        vector<fs::path> result = compute_result(empty_filesystem, include, exclude);
+        file_map include =
+        {
+            {"zip", {"server/zip"}},
+            {"server", {"server"}}
+        };
+        file_map exclude =
+        {
+            {"server", {"server/zip"}}
+        };
+        vector<fs::path> expected = {"server/zip/zip_base.ixx", "server/zip/zip_tools.cpp", "server/server_base.ixx", "server/server_tools.cpp"};
+        vector<fs::path> result = compute_result(structured_filesystem, include, exclude);
 
         BOOST_TEST(result == expected, boost::test_tools::per_element());
     }
-    BOOST_AUTO_TEST_CASE(_)
-    {
-        file_map include = {};
-        file_map exclude = {};
-        vector<fs::path> expected = {};
-        vector<fs::path> result = compute_result(empty_filesystem, include, exclude);
-
-        BOOST_TEST(result == expected, boost::test_tools::per_element());
-    }
-#endif
+#pragma endregion
 }
