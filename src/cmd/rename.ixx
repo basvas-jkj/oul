@@ -5,7 +5,6 @@ module;
 export module args:rename;
 
 import :command;
-import server;
 import message;
 
 using namespace std;

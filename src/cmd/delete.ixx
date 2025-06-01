@@ -1,6 +1,5 @@
 export module args:_delete;
 
-import config;
 import component_manager;
 import :command;
 

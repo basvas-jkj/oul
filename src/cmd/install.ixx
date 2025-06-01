@@ -6,7 +6,6 @@ module;
 export module args:install;
 
 import :command;
-import zip;
 
 using namespace std;
 

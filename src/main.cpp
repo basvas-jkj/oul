@@ -3,7 +3,6 @@
 import args;
 import common;
 import message;
-import component_manager;
 
 using namespace std;
 using namespace oul;
