@@ -21,7 +21,6 @@ function parse_url(url: string): PARSED_URL
 {
     let url_object = new URL("http://locahost" + url);
     let split_path = url_object.pathname.split("/");
-    url_object.searchParams
     split_path.shift();
     return {
         path: split_path,
@@ -97,10 +96,21 @@ function on_post_request({path, original}: PARSED_URL, body: Buffer, res: http.S
         let zip_file = name + ".zip";
         
         fs.writeFileSync(zip_file, body);
-        unzip_component(name, zip_file);
-        res.writeHead(200);
-        res.end();
-        log_request(original, 200);
+        
+        try
+        {
+            unzip_component(name, zip_file);
+            res.writeHead(204);
+            res.end();
+            log_request(original, 204);
+        }
+        catch (err: any)
+        {
+            console.warn(err);
+            res.writeHead(400);
+            res.end(err.toString());
+            log_request(original, 400);
+        }
     }
     else
     {
