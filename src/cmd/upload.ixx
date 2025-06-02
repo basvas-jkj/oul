@@ -6,7 +6,6 @@ module;
 export module args:upload;
 
 import :command;
-import server;
 import message;
 
 using namespace std;
@@ -43,9 +42,9 @@ namespace oul::args
         /// @brief Spustí příkaz upload programu OUL.
         void run() const override
         {
-            cr<string> name = arguments[0];
+            cr<string> local_name = arguments[0];
             CONFIG cfg = read_configuration();
-            vector<ITEM>::iterator i = cfg.get_component(name);
+            vector<ITEM>::iterator i = cfg.get_component(local_name);
             if (i == cfg.components.end())
             {
                 throw MissingComponent();
@@ -55,8 +54,8 @@ namespace oul::args
             string server_name = opt.get("-as");
             if (server_name == "")
             {
-                server_name = name;
-                component.original_name = name;
+                server_name = local_name;
+                component.original_name = local_name;
             }
 
             string url = opt.get("-url");
@@ -77,9 +76,10 @@ namespace oul::args
             }
 
             url = (fs::path(url) / server_name).generic_string();
+            fs::path location = cfg.get_directory() / component.location;
 
-            client_ptr client = select_client(url, cfg.get_directory() / component.location);
-            client->upload(component);
+            COMPONENT_MANAGER manager(std::move(cfg));
+            manager.upload(url, location, component);
         }
     };
 }

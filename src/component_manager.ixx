@@ -140,7 +140,7 @@ namespace oul
         /// @brief Stáhne novou komponentu ze serveru.
         /// @param server_name - jméno komponentu na serveru
         /// @param local_name - jméno, pod jakým bude komponenta uložena v konfiguraci
-        /// @param url - url serveru nebo cesta ke složce
+        /// @param url - url komponenty nebo cesta ke složce
         /// @param where - umístění komponenty
         void install(cr<string> server_name, cr<string> local_name, cr<string> url, cr<string> where)
         {
@@ -158,6 +158,15 @@ namespace oul
             component.url = fs::path(url).parent_path().generic_string();
 
             cfg.add_component(component);
+        }
+        /// @brief Nahraje komponentu na server.
+        /// @param url - url komponenty nebo cesta ke složce
+        /// @param location - umístění komponenty
+        /// @param component - komponenta nahrávaná na server
+        void upload(cr<string> url, cr<fs::path> location, cr<ITEM> component)
+        {
+            client_ptr client = select_client(url, location);
+            client->upload(component);
         }
         /// @brief Odebere komponentu z projektu.
         /// @param name - jméno komponenty
