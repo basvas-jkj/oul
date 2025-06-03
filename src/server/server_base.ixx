@@ -74,11 +74,11 @@ namespace oul
         /// @brief Odešle jeden soubor na server.
         /// @param url - url serveru
         /// @param file - cesta k odesílanému souboru
-        virtual void upload(cr<string> url, cr<fs::path> file) = 0;
+        virtual void upload_file(cr<string> url, cr<fs::path> file) = 0;
         /// @brief Stáhne jeden soubor ze serveru.
         /// @param url - url serveru
         /// @param where - cesta, na kterou se má soubor stáhnout
-        virtual void download(cr<string> url, cr<fs::path> where) = 0;
+        virtual void download_file(cr<string> url, cr<fs::path> where) = 0;
     public:
         /// @brief Odešle komponentu na server.
         /// @param component - konfigurace odesílané komponenty
@@ -93,7 +93,7 @@ namespace oul
             FILE_ITERATOR it(component_location, component.include, component.exclude);
             for (cr<fs::path> file : it)
             {
-                upload(url, file);
+                upload_file(url, file);
             }
         }
         /// @brief Stáhne komponentu ze serveru.
@@ -107,7 +107,7 @@ namespace oul
             FILE_ITERATOR it(url, component.include, component.exclude);
             for (cr<fs::path> file : it)
             {
-                download(url, file);
+                download_file(url, file);
             }
             return component;
         }

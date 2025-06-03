@@ -21,7 +21,7 @@ namespace oul
         /// @param working_dir - pracovní složka, vůči které je soubor do archivu vložen (ovlivňuje cestu souboru uvnitř archivu)
         /// @param zip_file - cesta k archivu
         /// @param entry - soubor přidávaný do archivu
-        void zip(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) override
+        void add_file(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) override
         {
             bool success = call_tool(zip_path, working_dir, zip_file.get_path(), entry);
             if (!success)
@@ -32,7 +32,7 @@ namespace oul
         /// @brief Rozbalí daný archiv do zadané složky.
         /// @param working_dir - pracovní složka, do které je archiv rozbalen
         /// @param zip_file - cesta k archivu
-        void unzip(cr<path> working_dir, cr<TMP_FILE> zip_file) override
+        void extract_files(cr<path> working_dir, cr<TMP_FILE> zip_file) override
         {
             bool success = call_tool(unzip_path, working_dir, zip_file.get_path());
             if (!success)
@@ -54,7 +54,7 @@ namespace oul
         /// @param working_dir - pracovní složka, vůči které je soubor do archivu vložen (ovlivňuje cestu souboru uvnitř archivu)
         /// @param zip_file - cesta k archivu
         /// @param entry - soubor přidávaný do archivu
-        void zip(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) override
+        void add_file(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) override
         {
             bool success = call_tool(zip_path, working_dir, "a", zip_file.get_path(), entry);
             if (!success)
@@ -65,7 +65,7 @@ namespace oul
         /// @brief Rozbalí daný archiv do zadané složky.
         /// @param working_dir - pracovní složka, do které je archiv rozbalen
         /// @param zip_file - cesta k archivu
-        void unzip(cr<path> working_dir, cr<TMP_FILE> zip_file) override
+        void extract_files(cr<path> working_dir, cr<TMP_FILE> zip_file) override
         {
             bool success = call_tool(unzip_path, working_dir, "x", zip_file.get_path());
             if (!success)

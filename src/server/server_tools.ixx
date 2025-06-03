@@ -22,14 +22,14 @@ namespace oul
         /// @brief Odešle jeden soubor na server.
         /// @param url - url serveru
         /// @param file - cesta k odesílanému souboru
-        void upload(cr<string> url, cr<fs::path> file) override
+        void upload_file(cr<string> url, cr<fs::path> file) override
         {
             call_client(url, file);
         }
         /// @brief Stáhne jeden soubor ze serveru.
         /// @param url - url serveru
         /// @param where - cesta, na kterou se má soubor stáhnout
-        void download(cr<string> url, cr<fs::path> file) override
+        void download_file(cr<string> url, cr<fs::path> file) override
         {
             call_client(file, url);
         }
@@ -49,7 +49,7 @@ namespace oul
         /// @brief Odešle jeden soubor na server.
         /// @param url - url serveru
         /// @param file - cesta k odesílanému souboru
-        void upload(cr<string> url, cr<fs::path> file) override
+        void upload_file(cr<string> url, cr<fs::path> file) override
         {
             string post_argument = format("@{}", file.generic_string());
             call_client("--data-binary", post_argument, url);
@@ -57,7 +57,7 @@ namespace oul
         /// @brief Stáhne jeden soubor ze serveru.
         /// @param url - url serveru
         /// @param where - cesta, na kterou se má soubor stáhnout
-        void download(cr<string> url, cr<fs::path> file) override
+        void download_file(cr<string> url, cr<fs::path> file) override
         {
             call_client("-o", file, url);
         }
@@ -67,14 +67,14 @@ namespace oul
         void upload(cr<ITEM> component) override
         {
             TMP_FILE file = tool->zip(component, component_location.string());
-            upload(url, file.get_path());
+            upload_file(url, file.get_path());
         }
         /// @brief Stáhne komponentu ze serveru jako zipový archiv a rozbalí ji.
         /// @return konfigurace stažené komponenty
         ITEM download() override
         {
             TMP_FILE file("%%%%-%%%%-%%%%-%%%%.zip", false);
-            download(url, file.get_path());
+            download_file(url, file.get_path());
             return tool->unzip(file, component_location.string());
         }
         /// @param url - url, se kterou je klient spojený
@@ -91,7 +91,7 @@ namespace oul
         /// @brief Odešle jeden soubor na server.
         /// @param url - url serveru
         /// @param file - cesta k odesílanému souboru
-        void upload(cr<string> url, cr<fs::path> file) override
+        void upload_file(cr<string> url, cr<fs::path> file) override
         {
             fs::path entry = fs::relative(file, component_location);
             copy_file(component_location, url, entry);
@@ -99,7 +99,7 @@ namespace oul
         /// @brief Stáhne jeden soubor ze serveru.
         /// @param url - url serveru
         /// @param where - cesta, na kterou se má soubor stáhnout
-        void download(cr<string> url, cr<fs::path> file) override
+        void download_file(cr<string> url, cr<fs::path> file) override
         {
             fs::path entry = fs::relative(file, url);
             copy_file(url, component_location, entry);
