@@ -258,9 +258,9 @@ namespace oul
         {
             return !(*this == o);
         }
-        path operator*()
+        decltype(auto) operator*(this auto&& self)
         {
-            return it->path().generic_path();
+            return self.it->path().generic_path();
         }
         path operator->()
         {
