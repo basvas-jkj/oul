@@ -1,0 +1,28 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+  AfterClass: true
+  AfterStruct: true
+  AfterControlStatement: true
+  AfterNamespace: true
+  BeforeLambdaBody: true
+  BeforeElse: true
+  BeforeCatch: true
+ColumnLimit: 100
+UseTab: Always
+IndentWidth: 4
+TabWidth: 4
+PointerAlignment: Left
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortBlocksOnASingleLine: Always
+LambdaBodyIndentation: OuterScope
+NamespaceIndentation: All
+BreakTemplateDeclarations: Yes
+FixNamespaceComments: false
+SpaceBeforeCaseColon: false
+SpaceBeforeCtorInitializerColon: false
+SpaceBeforeInheritanceColon: false
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+BreakConstructorInitializers: AfterColon

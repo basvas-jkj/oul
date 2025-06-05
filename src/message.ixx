@@ -1,9 +1,9 @@
 module;
 
+#include <boost/filesystem/path.hpp>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <boost/filesystem/path.hpp>
 
 export module message;
 
@@ -16,188 +16,210 @@ using namespace nlohmann;
 namespace fs = boost::filesystem;
 namespace oul
 {
-    /// @brief Třída reprezentující chybové hlášky načtené ze souboru.
-    class DICTIONARY
-    {
-        json object;
+	/// @brief Třída reprezentující chybové hlášky načtené ze souboru.
+	class DICTIONARY
+	{
+		json object;
 
-    public:
-        /// @brief Konstruktor vytvářející prázdné objekty typu <code>DICTIONARY</code>.
-        DICTIONARY()
-        {}
-        /// @brief Konstruktor načítají chybové hlášky ze souboru.
-        /// @param path - Cesta k souboru, ve kterém jsou chybové hlášky uloženy.
-        DICTIONARY(cr<fs::path> path)
-        {
-            ifstream input(path.string());
-            object = json::parse(input);
-        }
-        /// @brief Vrátí text chybové hlášky.
-        /// @param error_name - jméno chybové hlášky
-        /// @return text chybové hlášky odpovídající zadanému jménu
-        cr<string> operator[](cr<string> error_name)
-        {
-            return object[error_name].get_ref<string&>();
-        }
-    };
+	public:
+		/// @brief Konstruktor vytvářející prázdné objekty typu <code>DICTIONARY</code>.
+		DICTIONARY() {}
+		/// @brief Konstruktor načítají chybové hlášky ze souboru.
+		/// @param path - Cesta k souboru, ve kterém jsou chybové hlášky uloženy.
+		DICTIONARY(cr<fs::path> path)
+		{
+			ifstream input(path.string());
+			object = json::parse(input);
+		}
+		/// @brief Vrátí text chybové hlášky.
+		/// @param error_name - jméno chybové hlášky
+		/// @return text chybové hlášky odpovídající zadanému jménu
+		cr<string> operator[](cr<string> error_name)
+		{
+			return object[error_name].get_ref<string&>();
+		}
+	};
 
-    /// @brief Načtené zprávy.
-    static DICTIONARY messages;
-    /// @brief Načte chybové hlášky ze souboru.
-    /// @param oul_path - cesta k spustitelnému souboru oul
-    export void init_messages(fs::path&& oul_path)
-    {
-        oul_path.replace_filename("english.json");
-        messages = DICTIONARY(oul_path);
-    }
+	/// @brief Načtené zprávy.
+	static DICTIONARY messages;
+	/// @brief Načte chybové hlášky ze souboru.
+	/// @param oul_path - cesta k spustitelnému souboru oul
+	export void init_messages(fs::path&& oul_path)
+	{
+		oul_path.replace_filename("english.json");
+		messages = DICTIONARY(oul_path);
+	}
 
-    /// @brief Výčet všech chybových a jiných hlášek.
-    export enum class ERROR
-    {
-        unexpected_error, component_list, local_only, help,
+	/// @brief Výčet všech chybových a jiných hlášek.
+	export enum class ERROR {
+		unexpected_error,
+		component_list,
+		local_only,
+		help,
 
-        help_add, help_create, help_delete, help_exclude,
-        help_group_add, help_group_remove, help_help,
-        help_init, help_install, help_list, help_remove,
-        help_rename, help_upload,
+		help_add,
+		help_create,
+		help_delete,
+		help_exclude,
+		help_group_add,
+		help_group_remove,
+		help_help,
+		help_init,
+		help_install,
+		help_list,
+		help_remove,
+		help_rename,
+		help_upload,
 
-        // comand line errors
-        missing_command, unknown_command, missing_group_subcommand,
-        missing_component_name, component_already_exists, component_not_found,
-        missing_group_name, group_already_exists, group_not_found,
-        file_not_exist, empty_file_list, file_outside_component,
+		// comand line errors
+		missing_command,
+		unknown_command,
+		missing_group_subcommand,
+		missing_component_name,
+		component_already_exists,
+		component_not_found,
+		missing_group_name,
+		group_already_exists,
+		group_not_found,
+		file_not_exist,
+		empty_file_list,
+		file_outside_component,
 
-        // configuration errors
-        config_found, config_not_found,
+		// configuration errors
+		config_found,
+		config_not_found,
 
-        root_not_object, missing_project_name, components_not_array, url_not_string,
-        invalid_component, invalid_component_name, invalid_original_name, missing_location,
-        missing_include, invalid_exclude,
+		root_not_object,
+		missing_project_name,
+		components_not_array,
+		url_not_string,
+		invalid_component,
+		invalid_component_name,
+		invalid_original_name,
+		missing_location,
+		missing_include,
+		invalid_exclude,
 
-        // external tools
-        missing_client, client_error, unknown_client,
-        missing_zip_tool, zipping_error,
+		// external tools
+		missing_client,
+		client_error,
+		unknown_client,
+		missing_zip_tool,
+		zipping_error,
 
-        // server errors
-        missing_url
-    };
-    using enum ERROR;
+		// server errors
+		missing_url
+	};
+	using enum ERROR;
 
-    /// @brief Objekt zobrazující kódy chybových hlášek na jména.
-    static map<ERROR, string> error_list
-    {
-        {unexpected_error, "unexpected_error"},
-        {component_list, "component_list"},
-        {local_only, "local_only"},
-        {help, "help"},
+	/// @brief Objekt zobrazující kódy chybových hlášek na jména.
+	static map<ERROR, string> error_list{{unexpected_error, "unexpected_error"},
+										 {component_list, "component_list"},
+										 {local_only, "local_only"},
+										 {help, "help"},
 
-        {help_add, "help_add"},
-        {help_create, "help_create"},
-        {help_delete, "help_delete"},
-        {help_exclude, "help_exclude"},
-        {help_group_add, "help_group_add"},
-        {help_group_remove, "help_group_remove"},
-        {help_help, "help_help"},
-        {help_init, "help_init"},
-        {help_install, "help_install"},
-        {help_list, "help_list"},
-        {help_remove, "help_remove"},
-        {help_rename, "help_rename"},
-        {help_upload, "help_upload"},
+										 {help_add, "help_add"},
+										 {help_create, "help_create"},
+										 {help_delete, "help_delete"},
+										 {help_exclude, "help_exclude"},
+										 {help_group_add, "help_group_add"},
+										 {help_group_remove, "help_group_remove"},
+										 {help_help, "help_help"},
+										 {help_init, "help_init"},
+										 {help_install, "help_install"},
+										 {help_list, "help_list"},
+										 {help_remove, "help_remove"},
+										 {help_rename, "help_rename"},
+										 {help_upload, "help_upload"},
 
-        {missing_command, "missing_command"},
-        {unknown_command, "unknown_command"},
-        {missing_group_subcommand, "missing_group_subcommand"},
+										 {missing_command, "missing_command"},
+										 {unknown_command, "unknown_command"},
+										 {missing_group_subcommand, "missing_group_subcommand"},
 
-        {missing_component_name, "missing_component_name"},
-        {component_already_exists, "component_already_exists"},
-        {component_not_found, "component_not_found"},
+										 {missing_component_name, "missing_component_name"},
+										 {component_already_exists, "component_already_exists"},
+										 {component_not_found, "component_not_found"},
 
-        {missing_group_name, "missing_group_name"},
-        {group_already_exists, "group_already_exists"},
-        {group_not_found, "group_not_found"},
+										 {missing_group_name, "missing_group_name"},
+										 {group_already_exists, "group_already_exists"},
+										 {group_not_found, "group_not_found"},
 
-        {file_not_exist, "file_not_exist"},
-        {empty_file_list, "empty_file_list"},
-        {file_outside_component, "file_outside_component"},
+										 {file_not_exist, "file_not_exist"},
+										 {empty_file_list, "empty_file_list"},
+										 {file_outside_component, "file_outside_component"},
 
-        {config_found, "config_found"},
-        {config_not_found, "config_not_found"},
+										 {config_found, "config_found"},
+										 {config_not_found, "config_not_found"},
 
-        {root_not_object, "root_not_object"},
-        {missing_project_name, "missing_project_name"},
-        {components_not_array, "components_not_array"},
-        {url_not_string, "url_not_string"},
-        {invalid_component, "invalid_component"},
-        {invalid_component_name, "invalid_component_name"},
-        {invalid_original_name, "invalid_original_name"},
-        {missing_location, "missing_location"},
-        {missing_include, "missing_include"},
-        {invalid_exclude, "invalid_exclude"},
+										 {root_not_object, "root_not_object"},
+										 {missing_project_name, "missing_project_name"},
+										 {components_not_array, "components_not_array"},
+										 {url_not_string, "url_not_string"},
+										 {invalid_component, "invalid_component"},
+										 {invalid_component_name, "invalid_component_name"},
+										 {invalid_original_name, "invalid_original_name"},
+										 {missing_location, "missing_location"},
+										 {missing_include, "missing_include"},
+										 {invalid_exclude, "invalid_exclude"},
 
-        {missing_client, "missing_client"},
-        {client_error, "client_error"},
-        {unknown_client, "unknown_client"},
-        {missing_zip_tool, "missing_zip_tool"},
-        {zipping_error, "zipping_error"},
+										 {missing_client, "missing_client"},
+										 {client_error, "client_error"},
+										 {unknown_client, "unknown_client"},
+										 {missing_zip_tool, "missing_zip_tool"},
+										 {zipping_error, "zipping_error"},
 
-        {missing_url, "missing_url"}
-    };
+										 {missing_url, "missing_url"}};
 
-    /// @brief Vypíše chybovou hlášku na standardní chybový výstup.
-    /// @param name - kód chybové hlášky 
-    export void report_error(ERROR name)
-    {
-        cr<string> error = error_list[name];
-        println(cerr, "{}", messages[error]);
-    }
-    /// @brief Vypíše seznam komponent.
-    /// @param components - seznam komponent k vypsání
-    export void print_component_list(cr<vector<ITEM>> components)
-    {
-        cr<string> component_list_text = error_list[component_list];
-        println(cout, "{}", messages[component_list_text]);
-        for (cr<ITEM> i : components)
-        {
-            cr<string> local_only_text = error_list[local_only];
-            cr<string> url = (i.url.empty()) ? messages[local_only_text] : i.url;
-            println(cout, "\t{}\t({})", i.name, url);
-        }
-    }
-    /// @brief Vypíše nápovědu programu.
-    export void print_help()
-    {
-        vector commands =
-        {
-            help_add, help_create, help_delete, help_exclude,
-            help_group_add, help_group_remove, help_help,
-            help_init, help_install, help_list, help_remove,
-            help_rename, help_upload
-        };
+	/// @brief Vypíše chybovou hlášku na standardní chybový výstup.
+	/// @param name - kód chybové hlášky
+	export void report_error(ERROR name)
+	{
+		cr<string> error = error_list[name];
+		println(cerr, "{}", messages[error]);
+	}
+	/// @brief Vypíše seznam komponent.
+	/// @param components - seznam komponent k vypsání
+	export void print_component_list(cr<vector<ITEM>> components)
+	{
+		cr<string> component_list_text = error_list[component_list];
+		println(cout, "{}", messages[component_list_text]);
+		for (cr<ITEM> i : components)
+		{
+			cr<string> local_only_text = error_list[local_only];
+			cr<string> url = (i.url.empty()) ? messages[local_only_text] : i.url;
+			println(cout, "\t{}\t({})", i.name, url);
+		}
+	}
+	/// @brief Vypíše nápovědu programu.
+	export void print_help()
+	{
+		vector commands = {help_add,	   help_create,		  help_delete, help_exclude,
+						   help_group_add, help_group_remove, help_help,   help_init,
+						   help_install,   help_list,		  help_remove, help_rename,
+						   help_upload};
 
-        cr<string> help_text = error_list[help];
-        println(cout, "{}", messages[help_text]);
-        for (auto&& command : commands)
-        {
-            cr<string> command_help_text = error_list[command];
-            println(cout, "\t{}", messages[command_help_text]);
-        }
-    }
+		cr<string> help_text = error_list[help];
+		println(cout, "{}", messages[help_text]);
+		for (auto&& command : commands)
+		{
+			cr<string> command_help_text = error_list[command];
+			println(cout, "\t{}", messages[command_help_text]);
+		}
+	}
 
-    /// @brief Základní třída pro výjimky použité v tomto projektu.
-    export class CommonException: exception
-    {
-        ERROR name;
+	/// @brief Základní třída pro výjimky použité v tomto projektu.
+	export class CommonException: exception
+	{
+		ERROR name;
 
-    public:
-        /// @brief Konstruktor vytvářející objekty <code>CommonException</code>
-        /// @param n - kód chybové hlášky
-        CommonException(ERROR n): name(n)
-        {}
-        /// @brief Vypíše hlášku výjimky na standarní chybový výstup.
-        void report() const
-        {
-            report_error(name);
-        }
-    };
+	public:
+		/// @brief Konstruktor vytvářející objekty <code>CommonException</code>
+		/// @param n - kód chybové hlášky
+		CommonException(ERROR n): name(n) {}
+		/// @brief Vypíše hlášku výjimky na standarní chybový výstup.
+		void report() const
+		{
+			report_error(name);
+		}
+	};
 }
