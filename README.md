@@ -7,7 +7,7 @@ a uprovovat ve více různých projektech.
 - CMake                                             (verze 3.30.2)
 - Ninja                                             (verze 1.12.1)
 - clang                                             (verze 20.1.2)
-- vcpkg                                             (verze 2025-02-11-bec4296bf5289dc9ce83b4f5095943e44162f9c2) 
+- vcpkg                                             (tag 2025-02-14) 
 - wildcards                                         (verze 1.4.0)
 - yaml-cpp                                          (verze 0.8.0)
 - nlohmann-json                                     (verze 3.11.3)

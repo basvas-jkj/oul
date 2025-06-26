@@ -1,4 +1,5 @@
 .vs
 build
+vcpkg_installed
 
 server/node_modules
