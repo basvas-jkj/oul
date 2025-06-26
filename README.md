@@ -27,25 +27,25 @@ a uprovovat ve více různých projektech.
 (PRESET=debug nebo PRESET=release)
 
 ## používání programu
-oul add [component] [group] [files...]        Přidá soubory [files] do skupiny [group] komponenty [component].
-oul create [component]                        Vytvoří komponentu [component].
-    -w=[location]                                 ve složce [location] (výchozí: [component])                                              
-oul delete [component]                        Odstraní komponentu [component] z projektu.
-oul exclude [component] [group] [files...]    Vyčlení soubory [files] ze skupiny [group] komponenty [component].
-oul group add [component] [group]             Vytvoří skupinu [group] v komponentě [component].
-oul group remove [component] [group]          Odstraní skupinu [group] z komponenty [component].
-oul help                                      Vypíše text nápovědy.
-oul init                                      Vytvoří konfiguraci projektu.
-oul install [component]                       Stáhne komponentu [component] ze serveru.
-    -as=[name]                                    uloží ji pod jménem [name] (výchozí: [component]) 
-    -url=[url]                                    ze serveru daného [url] (výchozí: dle konfigurace projektu)
-    -w=[location]                                 do složky [location] (výchozí: [component])                                              
-oul list                                      Vypíše seznam komponent v projektu.
-oul remove [component] [group] [files...]     Odebere soubory [files] ze skupiny [group] komponenty [component].
-oul rename [previous name] [new name]         Přejmenuje komponantu [previous name] na [new name].
-oul upload [component]                        Nahraje komponentu [component] na server.
-    -as=[name]                                    nahraje ji pod jménem [name] (výchozí: [component])
-    -url=[url]                                    na server daný [url] (výchozí: dle konfigurace projektu)
+- oul add [component] [group] [files...]        Přidá soubory [files] do skupiny [group] komponenty [component].
+- oul create [component]                        Vytvoří komponentu [component].
+      -w=[location]                                 ve složce [location] (výchozí: [component])
+- oul delete [component]                        Odstraní komponentu [component] z projektu.
+- oul exclude [component] [group] [files...]    Vyčlení soubory [files] ze skupiny [group] komponenty [component].
+- oul group add [component] [group]             Vytvoří skupinu [group] v komponentě [component].
+- oul group remove [component] [group]          Odstraní skupinu [group] z komponenty [component].
+- oul help                                      Vypíše text nápovědy.
+- oul init                                      Vytvoří konfiguraci projektu.
+- oul install [component]                       Stáhne komponentu [component] ze serveru.
+      -as=[name]                                    uloží ji pod jménem [name] (výchozí: [component]) 
+      -url=[url]                                    ze serveru daného [url] (výchozí: dle konfigurace projektu)
+      -w=[location]                                 do složky [location] (výchozí: [component])                                              
+- oul list                                      Vypíše seznam komponent v projektu.
+- oul remove [component] [group] [files...]     Odebere soubory [files] ze skupiny [group] komponenty [component].
+- oul rename [previous name] [new name]         Přejmenuje komponantu [previous name] na [new name].
+- oul upload [component]                        Nahraje komponentu [component] na server.
+      -as=[name]                                    nahraje ji pod jménem [name] (výchozí: [component])
+      -url=[url]                                    na server daný [url] (výchozí: dle konfigurace projektu)
 
 Příkazy add, remove, rename, create ani delete nevytváří, nemažou ani nepřejmenovávají sobory.
 Pouze příkaz add kontroluje existenci přidávaných souborů.
