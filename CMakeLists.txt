@@ -9,8 +9,15 @@ project(oul)
 # find packages
 find_package(yaml-cpp REQUIRED)
 find_package(nlohmann_json REQUIRED)
-find_package(unofficial-wildcards REQUIRED)
-find_package(Boost REQUIRED algorithm filesystem process)
+find_package(Boost REQUIRED filesystem process)
+
+function(link_stdlib target_name)
+    if (LINUX)
+    target_link_options(target_name PRIVATE -lstdc++)
+    else()
+    # Windows doesn't require this.
+    endif()
+endfunction()
 
 # OUL - main projetct
 file(GLOB_RECURSE oul_source RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
@@ -21,10 +28,10 @@ set_property(TARGET oul PROPERTY CXX_STANDARD 23)
 
 target_link_libraries(oul PRIVATE yaml-cpp::yaml-cpp)
 target_link_libraries(oul PRIVATE nlohmann_json::nlohmann_json)
-target_link_libraries(oul PRIVATE unofficial::wildcards::wildcards)
-target_link_libraries(oul PRIVATE Boost::algorithm)
 target_link_libraries(oul PRIVATE Boost::filesystem)
 target_link_libraries(oul PRIVATE Boost::process)
+link_stdlib(oul)
+
 
 add_custom_command(
         TARGET oul POST_BUILD
@@ -39,6 +46,8 @@ add_executable(file_iterator_test "test/file_iterator_test.cpp")
 target_sources(file_iterator_test PUBLIC FILE_SET CXX_MODULES FILES "test/mock_filesystem.ixx" "src/server/file_iterator.ixx" "src/common.ixx" "src/usings.ixx")
 set_property(TARGET file_iterator_test PROPERTY CXX_STANDARD 23)
 target_link_libraries(file_iterator_test PRIVATE Boost::filesystem)
+target_link_libraries(file_iterator_test PRIVATE Boost::unit_test_framework)
+link_stdlib(file_iterator_test)
 
 add_test(file_iterator_test "file_iterator_test")
 
