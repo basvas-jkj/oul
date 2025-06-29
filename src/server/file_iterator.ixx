@@ -5,6 +5,7 @@ module;
 #include <boost/filesystem/path.hpp>
 #include <iterator>
 #include <ranges>
+#include <regex>
 #include <set>
 
 export module file_iterator;
@@ -33,16 +34,29 @@ namespace oul
 		DirectoryEntry<typename T::value_type>;
 	};
 
+	/// @brief Převede vzory na objekty typu regulární výraz.
+	/// @param patterns - seznam vzorů
+	/// @return seznam regulárních výrazů
+	vector<regex> patterns_to_regex(cr<vector<string>> patterns)
+	{
+		vector<regex> regular_expressions;
+		for (cr<string> pattern : patterns)
+		{
+			regular_expressions.push_back(regex(pattern));
+		}
+		return regular_expressions;
+	}
+
 	/// @brief Shoduje se položka s alespoň jedním vzorem?
 	/// @param entry - testovaná položka
 	/// @param patterns - seznam vzorů
 	/// @return <code>true</code>, pokud položka odpovídá alespoň jednomu vzoru, jinak
 	/// <code>false</code>
-	bool match_any(cr<string> entry, cr<vector<string>> patterns)
+	bool match_any(cr<string> entry, cr<vector<regex>> patterns)
 	{
-		for (cr<string> pattern : patterns)
+		for (cr<regex> pattern : patterns)
 		{
-			if (match(entry, pattern))
+			if (regex_match(entry, pattern))
 			{
 				return true;
 			}
@@ -60,8 +74,9 @@ namespace oul
 		requires DirectoryEntry<DR> || same_as<DR, directory_entry>
 	bool match_any(cr<path> base, cr<DR> entry, cr<vector<string>> patterns)
 	{
+		vector<regex> regex_patterns = patterns_to_regex(patterns);
 		cr<string> entry_string = relative(entry.path(), base).generic_string();
-		return match_any(entry_string, patterns);
+		return match_any(entry_string, regex_patterns);
 	}
 
 	/// @brief Rekurzivní iterátor souborového systému, který umožňuje specifikovat, které soubory
