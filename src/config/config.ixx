@@ -128,7 +128,7 @@ namespace oul
 		auto get_component_names() const
 		{
 			auto item_to_name = [](cr<ITEM> i) { return i.name; };
-			return components | views::transform(item_to_name);
+			return views::transform(components, item_to_name);
 		}
 		/// @param i - konfigurace komponenty
 		void add_component(cr<ITEM> i)
@@ -140,7 +140,6 @@ namespace oul
 		void remove_component(cr<string> name)
 		{
 			auto has_equal_name = [&name](ITEM& i) { return i.name == name; };
-
 			erase_if(components, has_equal_name);
 		}
 		/// @brief Zjistí, zda konfigurace projektu obsahuje komponentu daného jména.

@@ -34,19 +34,6 @@ namespace oul
 		DirectoryEntry<typename T::value_type>;
 	};
 
-	/// @brief Převede vzory na objekty typu regulární výraz.
-	/// @param patterns - seznam vzorů
-	/// @return seznam regulárních výrazů
-	vector<regex> patterns_to_regex(cr<vector<string>> patterns)
-	{
-		vector<regex> regular_expressions;
-		for (cr<string> pattern : patterns)
-		{
-			regular_expressions.push_back(regex(pattern));
-		}
-		return regular_expressions;
-	}
-
 	/// @brief Shoduje se položka s alespoň jedním vzorem?
 	/// @param entry - testovaná položka
 	/// @param patterns - seznam vzorů
@@ -74,7 +61,10 @@ namespace oul
 		requires DirectoryEntry<DR> || same_as<DR, directory_entry>
 	bool match_any(cr<path> base, cr<DR> entry, cr<vector<string>> patterns)
 	{
-		vector<regex> regex_patterns = patterns_to_regex(patterns);
+		auto&& pattern_to_regex = [](cr<string> pattern) { return regex(pattern); };
+		vector regex_patterns =
+			ranges::to<vector<regex>>(views::transform(patterns, pattern_to_regex));
+
 		cr<string> entry_string = relative(entry.path(), base).generic_string();
 		return match_any(entry_string, regex_patterns);
 	}
