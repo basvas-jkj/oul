@@ -13,7 +13,7 @@ find_package(Boost REQUIRED filesystem process)
 
 function(linux_link_library target_name library_name)
     if (LINUX)
-    target_link_options(${target_name} PRIVATE library_name)
+    target_link_options(${target_name} PRIVATE ${library_name})
     else()
     # Windows doesn't require this.
     endif()
