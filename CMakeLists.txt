@@ -11,9 +11,9 @@ find_package(yaml-cpp REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(Boost REQUIRED filesystem process)
 
-function(link_stdlib target_name)
+function(linux_link_library target_name library_name)
     if (LINUX)
-    target_link_options(target_name PRIVATE -lstdc++)
+    target_link_options(${target_name} PRIVATE library_name)
     else()
     # Windows doesn't require this.
     endif()
@@ -30,7 +30,7 @@ target_link_libraries(oul PRIVATE yaml-cpp::yaml-cpp)
 target_link_libraries(oul PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(oul PRIVATE Boost::filesystem)
 target_link_libraries(oul PRIVATE Boost::process)
-link_stdlib(oul)
+linux_link_library(oul -lstdc++)
 
 
 add_custom_command(
@@ -47,7 +47,8 @@ target_sources(file_iterator_test PUBLIC FILE_SET CXX_MODULES FILES "test/mock_f
 set_property(TARGET file_iterator_test PROPERTY CXX_STANDARD 23)
 target_link_libraries(file_iterator_test PRIVATE Boost::filesystem)
 target_link_libraries(file_iterator_test PRIVATE Boost::unit_test_framework)
-link_stdlib(file_iterator_test)
+linux_link_library(file_iterator_test -lstdc++)
+linux_link_library(file_iterator_test -lm)
 
 add_test(file_iterator_test "file_iterator_test")
 
