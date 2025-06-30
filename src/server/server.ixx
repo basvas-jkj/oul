@@ -2,6 +2,7 @@ module;
 
 #include <boost/filesystem/path.hpp>
 #include <boost/process.hpp>
+#include <regex>
 #undef ERROR
 
 export module server;
@@ -24,7 +25,7 @@ namespace oul
 	{
 		try
 		{
-			string pattern = "[ABCDEFGHIJKLMNOPQRSTUVXYZ]:[/\\]*";
+			static regex pattern = "[A-Z]:[/\\].*";
 			if (url.starts_with("http://") || url.starts_with("ftp://"))
 			{
 				return make_unique<CURL>(url, component_location);
@@ -37,7 +38,7 @@ namespace oul
 			{
 				return make_unique<LOCAL>(url.substr(7), component_location);
 			}
-			else if (url[0] == '/' || url[0] == '\\' || match(url, pattern))
+			else if (url[0] == '/' || url[0] == '\\' || regex_match(url, pattern))
 			{
 				fs::create_directories(url);
 				return make_unique<LOCAL>(url, component_location);
