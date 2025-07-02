@@ -134,6 +134,11 @@ namespace oul
 				return nullptr;
 			}
 		}
+		else if (args[0] == "-v" || args[0] == "-version")
+		{
+			print_version();
+			return nullptr;
+		}
 		else
 		{
 			report_error(ERROR::unknown_command);

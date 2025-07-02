@@ -12,6 +12,8 @@ using namespace boost::filesystem;
 
 namespace oul
 {
+	/// @brief Identifier of the current oul version.
+	export const string version_id = "1.1";
 	/// @brief Přesune soubor. Pokud cílová cesta neexistuje, bude vytvořena.
 	/// @param source_directory - původní umístění
 	/// @param target_directory - nové umístění

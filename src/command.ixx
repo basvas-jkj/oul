@@ -129,6 +129,11 @@ namespace oul
 		{
 			this->opt = std::move(opt);
 			this->arguments = std::move(arguments);
+
+			if (this->opt.includes("-v"))
+			{
+				print_version();
+			}
 		}
 		/// @brief Zkontroluje argumenty příkazové řádky předané programu OUL.
 		/// @return vždy <code>true</code>

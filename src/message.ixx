@@ -8,7 +8,7 @@ module;
 export module message;
 
 import item;
-import usings;
+import common;
 
 using namespace std;
 using namespace nlohmann;
@@ -194,6 +194,11 @@ namespace oul
 			message.replace(index, 1, arg);
 
 		println(cerr, "{}", message);
+	}
+	/// @brief Vypíše identifikátor verze.
+	export void print_version()
+	{
+		println(cout, "oul {}", version_id);
 	}
 	/// @brief Vypíše seznam komponent.
 	/// @param components - seznam komponent k vypsání
