@@ -22,6 +22,11 @@ namespace oul::args
 				report_error(ERROR::missing_group_name);
 				return false;
 			}
+			else if (arguments.size() > 2)
+			{
+				report_error(ERROR::too_much_arguments);
+				return false;
+			}
 			else
 			{
 				return true;

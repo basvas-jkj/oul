@@ -84,6 +84,7 @@ namespace oul
 		file_not_exist,
 		empty_file_list,
 		file_outside_component,
+		too_much_arguments,
 
 		// configuration errors
 		config_found,
@@ -150,6 +151,7 @@ namespace oul
 
 										 {config_found, "config_found"},
 										 {config_not_found, "config_not_found"},
+										 {too_much_arguments, "too_much_arguments"},
 
 										 {root_not_object, "root_not_object"},
 										 {missing_project_name, "missing_project_name"},
