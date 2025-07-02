@@ -42,7 +42,7 @@ namespace oul::args
 		void run() const override
 		{
 			COMPONENT_MANAGER manager = open_manager();
-			span<const string> files(arguments.begin(), arguments.end());
+			span<const string> files(arguments.begin() + 2, arguments.end());
 			manager.remove_files(arguments[0], arguments[1], files);
 		}
 	};

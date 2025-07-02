@@ -34,7 +34,7 @@ linux_link_library(oul -lstdc++)
 
 
 add_custom_command(
-        TARGET oul POST_BUILD
+        TARGET oul PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
                 "${CMAKE_SOURCE_DIR}/msg/english.json"
                 "${CMAKE_BINARY_DIR}/english.json")

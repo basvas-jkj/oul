@@ -58,7 +58,7 @@ namespace oul
 		/// <code>false</code>
 		bool includes(cr<string> name) const
 		{
-			return options.find(name) != short_variants.end();
+			return options.find(name) != options.end();
 		}
 		/// @brief Vrátí argument daného přepínače.
 		/// @param name - jméno dotazovaného přepínače
