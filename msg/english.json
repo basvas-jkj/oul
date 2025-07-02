@@ -34,6 +34,7 @@
     "empty_file_list": "Missing file list.",
     "file_outside_component": "File has to be in the directory of this component.",
     "too_much_arguments": "Too much arguments. Run 'oul help' to get an info about the supported argument count.",
+    "unknown_option": "Unknown option '*'. Run 'oul help' to get a list of supported options.",
 
     "config_found": "Configuration file had been created.",
     "config_not_found": "Configuration file not found.\nCall 'oul init' or move to an initialized project.",

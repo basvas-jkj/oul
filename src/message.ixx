@@ -85,6 +85,7 @@ namespace oul
 		empty_file_list,
 		file_outside_component,
 		too_much_arguments,
+		unknown_option,
 
 		// configuration errors
 		config_found,
@@ -152,6 +153,7 @@ namespace oul
 										 {config_found, "config_found"},
 										 {config_not_found, "config_not_found"},
 										 {too_much_arguments, "too_much_arguments"},
+										 {unknown_option, "unknown_option"},
 
 										 {root_not_object, "root_not_object"},
 										 {missing_project_name, "missing_project_name"},
@@ -178,6 +180,20 @@ namespace oul
 	{
 		cr<string> error = error_list[name];
 		println(cerr, "{}", messages[error]);
+	}
+	/// @brief Vypíše chybovou hlášku doplněnou o hodnotu argumentu na standardní chybový výstup.
+	/// @param name - kód chybové hlášky
+	/// @param arg - argument, která
+	export void report_error(ERROR name, cr<string> arg)
+	{
+		cr<string> error = error_list[name];
+		string message = messages[error];
+		size_t index = message.find('*');
+
+		if (index != (size_t)-1)
+			message.replace(index, 1, arg);
+
+		println(cerr, "{}", message);
 	}
 	/// @brief Vypíše seznam komponent.
 	/// @param components - seznam komponent k vypsání
@@ -222,6 +238,22 @@ namespace oul
 		void report() const
 		{
 			report_error(name);
+		}
+	};
+	export class ArgumentException: exception
+	{
+		ERROR name;
+		string argument;
+
+	public:
+		/// @brief Konstruktor vytvářející objekty <code>ArgumentException</code>
+		/// @param n - kód chybové hlášky
+		/// @param arg - argument chybové hlášky
+		ArgumentException(ERROR n, cr<string> arg): name(n), argument(arg) {}
+		/// @brief Vypíše hlášku výjimky na standarní chybový výstup.
+		void report() const
+		{
+			report_error(name, argument);
 		}
 	};
 }

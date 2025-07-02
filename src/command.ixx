@@ -27,6 +27,7 @@ namespace oul
 	export class OPTIONS
 	{
 		map<string, string> options;
+		vector<string> supported_options{"-as", "-url", "-v", "-version", "-w", "-where"};
 
 	public:
 		/// @brief Přidá přepínač a jeho arugument.
@@ -34,6 +35,11 @@ namespace oul
 		/// @param value - volitelná hodnota argumentu
 		void add(cr<string> name, cr<string> value = "")
 		{
+			if (ranges::find(supported_options, name) == supported_options.end())
+			{
+				throw ArgumentException(ERROR::unknown_option, name);
+			}
+
 			auto it = short_variants.find(name);
 
 			if (it == short_variants.end())

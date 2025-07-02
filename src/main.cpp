@@ -13,7 +13,6 @@ int main(int argc, char* argv[])
 	try
 	{
 		unique_ptr<COMMAND> c = read_args(argc, argv);
-
 		if (c != nullptr && c->check())
 		{
 			c->run();
@@ -21,6 +20,10 @@ int main(int argc, char* argv[])
 		}
 	}
 	catch (CommonException& e)
+	{
+		e.report();
+	}
+	catch (ArgumentException& e)
 	{
 		e.report();
 	}
