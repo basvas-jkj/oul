@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as path from "path";
 import * as http from "http";
 import {zip_component, unzip_component} from "./zip";
 
@@ -46,14 +47,46 @@ async function retrieve_full_body(req: http.IncomingMessage): Promise<Buffer>
         req.on("error", (error)=>reject(error));
     });
 }
+function is_component(entry: fs.Dirent): boolean
+{
+    if (!entry.isDirectory)
+    {
+        return false;
+    }
+    let component_config_file = path.join(entry.parentPath, entry.name, "oul.component.json");
+    let stats = fs.statSync(component_config_file, {throwIfNoEntry: false});
+
+    if (stats == undefined)
+    {
+        return false;
+    }
+    else
+    {
+        return stats.isFile();
+    }
+}
+function list_all_components(): string[]
+{
+    let components = [] as string[];
+    let entries = fs.readdirSync(".", {withFileTypes: true});
+    for (let entry of entries)
+    {
+        if (is_component(entry))
+        {
+            components.push(entry.name);
+        }
+    }
+    return components;
+}
 
 function on_get_request({path, original}: PARSED_URL, res: http.ServerResponse)
 {
     if (path.length == 0 || path[0] == "")
     {
-        res.writeHead(400);
-        res.end("Missing component name.");
-        log_request(original, 400);
+        let components = list_all_components();
+        res.writeHead(200);
+        res.end(JSON.stringify(components));
+        log_request(original, 200);
     }
     else if (path.length == 1)
     {
