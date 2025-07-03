@@ -1,3 +1,4 @@
+#include <iostream>
 #include <memory>
 
 import args;
@@ -7,11 +8,16 @@ import message;
 using namespace std;
 using namespace oul;
 
+namespace YAML
+{
+	class ParserException;
+}
+
 int main(int argc, char* argv[])
 {
-	init_messages(argv[0]);
 	try
 	{
+		init_messages(argv[0]);
 		unique_ptr<COMMAND> c = read_args(argc, argv);
 		if (c != nullptr && c->check())
 		{
@@ -26,6 +32,10 @@ int main(int argc, char* argv[])
 	catch (ArgumentException& e)
 	{
 		e.report();
+	}
+	catch (YAML::ParserException& e)
+	{
+		report_error(ERROR::invalid_configuration_format);
 	}
 	catch (...)
 	{

@@ -32,12 +32,13 @@
 
     "file_not_exist": "File included into component has to exist.",
     "empty_file_list": "Missing file list.",
-    "file_outside_component": "File has to be in the directory of this component.",
+    "file_outside_component": "File '*' is not located in the components directory '*'.",
     "too_much_arguments": "Too much arguments. Run 'oul help' to get an info about the supported argument count.",
     "unknown_option": "Unknown option '*'. Run 'oul help' to get a list of supported options.",
 
     "config_found": "Configuration file had been created.",
     "config_not_found": "Configuration file not found.\nCall 'oul init' or move to an initialized project.",
+    "invalid_configuration_format": "Configuration file is not valid JSON or YAML.",
 
     "root_not_object": "Root of the configuration shall be an object.",
     "missing_project_name": "Name of the project is missing in the configuration.",

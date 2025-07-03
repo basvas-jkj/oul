@@ -37,7 +37,7 @@ namespace oul
 		{
 			if (ranges::find(supported_options, name) == supported_options.end())
 			{
-				throw ArgumentException(ERROR::unknown_option, name);
+				throw ArgumentException(ERROR::unknown_option, {name});
 			}
 
 			auto it = short_variants.find(name);

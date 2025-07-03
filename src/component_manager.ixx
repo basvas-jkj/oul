@@ -230,7 +230,7 @@ namespace oul
 				fs::path shifted = shift(entry, component.location);
 				if (is_outside_component(shifted))
 				{
-					report_error(ERROR::file_outside_component);
+					report_error(ERROR::file_outside_component, {name, component.location});
 				}
 				else if (check_entry_validity(entry))
 				{

@@ -32,12 +32,13 @@ target_link_libraries(oul PRIVATE Boost::filesystem)
 target_link_libraries(oul PRIVATE Boost::process)
 linux_link_library(oul -lstdc++)
 
-
-add_custom_command(
-        TARGET oul PRE_BUILD
+add_custom_target(messages
         COMMAND ${CMAKE_COMMAND} -E copy
                 "${CMAKE_SOURCE_DIR}/msg/english.json"
                 "${CMAKE_BINARY_DIR}/english.json")
+add_dependencies(oul messages)
+
+# test projects
 
 enable_testing()
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
