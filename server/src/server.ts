@@ -120,22 +120,33 @@ function on_post_request({path, original}: PARSED_URL, body: Buffer, res: http.S
     }
 }
 
-export default function on_request(req: http.IncomingMessage, res: http.ServerResponse): void
+export default async function on_request(req: http.IncomingMessage, res: http.ServerResponse): Promise<void>
 {
-    let url = parse_url(req.url);
-    
-    if (req.method == "GET")
+    try
     {
-        on_get_request(url, res);
+        let url = parse_url(req.url);
+
+        if (req.method == "GET")
+        {
+            on_get_request(url, res);
+        }
+        else if (req.method == "POST")
+        {
+            let body = await retrieve_full_body(req);
+            on_post_request(url, body, res);
+        }
+        else
+        {
+            res.writeHead(501);
+            res.end("This method is not supported.");
+            log_request(req.url, 501);
+        }
     }
-    else if (req.method == "POST")
+    catch (e: unknown)
     {
-        retrieve_full_body(req).then((body)=>on_post_request(url, body, res));
-    }
-    else
-    {
-        res.writeHead(501);
-        res.end("This method is not supported.");
-        log_request(req.url, 501);
+        let message = (e instanceof Error) ? e.message : (e?.toString() ?? e);
+        res.writeHead(500);
+        res.end(message);
+        log_request(req.url, 500);
     }
 }

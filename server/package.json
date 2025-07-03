@@ -19,6 +19,6 @@
         "build": "tsc",
         "clean": "rimraf build",
         "server": "npm run build && node build/index.js",
-        "run": "ts-node src/index.ts"
+        "start": "ts-node src/index.ts"
     }
 }

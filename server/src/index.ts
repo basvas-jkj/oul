@@ -5,7 +5,7 @@ function on_listen(port: number): void
 {
     console.log(`Server se spustil (na portu ${port}).`);
 }
-function on_server_error(error): void
+function on_server_error(error: Error): void
  {
      console.warn(error.message);
  }
