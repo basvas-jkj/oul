@@ -1,3 +1,7 @@
+module;
+
+#include <string>
+
 export module args:list;
 
 import :command;
@@ -12,8 +16,16 @@ namespace oul::args
 		/// @brief Spustí příkaz list programu OUL.
 		void run() const override
 		{
-			CONFIG c = read_configuration();
-			print_component_list(c.components);
+			cr<string> url = opt.get("-url");
+			if (url == "")
+			{
+				CONFIG c = read_configuration();
+				print_component_list(c.components);
+			}
+			else
+			{
+				COMPONENT_MANAGER::list_server_components(url);
+			}
 		}
 	};
 }

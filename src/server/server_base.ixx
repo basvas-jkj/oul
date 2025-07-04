@@ -67,6 +67,23 @@ namespace oul
 				throw ClientError();
 			}
 		}
+		/// @brief Zavolá klienta jako samostatný proces.
+		/// @tparam ...T - typy argumentů převoditelné
+		/// @param ...args - argumenty, se kterými je klient zavolán
+		/// @throw <code>ClientError</code>, pokud volání klienta selže
+		template <CmdArgs... T>
+		string call_client_read_output(T&&... args)
+		{
+			pair<bool, string> result = call_tool_read_output(client_path, args...);
+			if (!result.first)
+			{
+				throw ClientError();
+			}
+			else
+			{
+				return result.second;
+			}
+		}
 
 		/// @brief Odešle jeden soubor na server.
 		/// @param url - url serveru
@@ -100,7 +117,10 @@ namespace oul
 		{
 			fs::create_directories(component_location);
 			fs::path json_path = fs::path(url) / "oul.component.json";
-			ITEM component(load_component(json_path.string(), false));
+
+			ifstream component_file(json_path.string());
+			auto&& loaded_component = load_component(component_file, false);
+			ITEM component(loaded_component);
 
 			FILE_ITERATOR it(url, component.include, component.exclude);
 			for (cr<fs::path> file : it)
@@ -109,6 +129,9 @@ namespace oul
 			}
 			return component;
 		}
+		/// @brief Stáhne seznam komponent ze serveru.
+		/// @return Seznam komponent uložených na serveru.
+		virtual vector<string> list_components() = 0;
 		virtual ~CLIENT() = default;
 	};
 	export using client_ptr = unique_ptr<CLIENT>;

@@ -25,7 +25,7 @@ namespace oul
 	{
 		try
 		{
-			static regex pattern("[A-Z]:[/\\].*");
+			static regex pattern("[A-Z]:[\\/].*");
 			if (url.starts_with("http://") || url.starts_with("ftp://"))
 			{
 				return make_unique<CURL>(url, component_location);

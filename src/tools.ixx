@@ -1,7 +1,10 @@
 module;
 
+#include <boost/asio.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/process.hpp>
+#include <future>
+#include <utility>
 #undef ERROR
 
 export module tools;
@@ -10,6 +13,7 @@ import common;
 
 using namespace std;
 using namespace boost::process;
+using namespace boost::asio;
 using namespace boost::filesystem;
 
 namespace oul
@@ -19,6 +23,33 @@ namespace oul
 	export template <class... T>
 	concept CmdArgs = ((convertible_to<T, string> || convertible_to<T, path>) && ...);
 
+	/// @brief Spustí externí nástroj a zachytí jeho standardní výstup.
+	/// @tparam ...T - std::string nebo boost::filesystem::path
+	/// @param tool_path - cesta nástroje
+	/// @param ...args - argumenty předané nástroji
+	/// @return dvojice (<code>true</code>, zachycený standardní výstup), pokud nástroj doběhne
+	/// úspěšně, jinak (<code>false</code>, "")
+	export template <CmdArgs... T>
+	pair<bool, string> call_tool_read_output(cr<path> tool_path, T&&... args)
+	{
+		io_service ios;
+		future<string> buffer;
+
+		child ch(tool_path, std::forward<T>(args)..., std_out > buffer, ios);
+
+		ios.run();
+		ch.wait();
+
+		int result = ch.exit_code();
+		if (result == 0)
+		{
+			return pair(true, buffer.get());
+		}
+		else
+		{
+			return pair(false, "");
+		}
+	}
 	/// @brief Spustí externí nástroj.
 	/// @tparam ...T - std::string nebo boost::filesystem::path
 	/// @param tool_path - cesta nástroje

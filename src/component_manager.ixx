@@ -2,6 +2,7 @@ module;
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <iostream>
 #include <span>
 #include <string>
 
@@ -289,6 +290,18 @@ namespace oul
 				{
 					erase(include_list, shifted.generic_string());
 				}
+			}
+		}
+
+		/// @brief Stáhne a vypíše seznam komponent ze serveru.
+		/// @param url - url serveru, ze kterého bude stažen seznam komponent
+		static void list_server_components(cr<string> url)
+		{
+			client_ptr client = select_client(url, "");
+			vector<string> components = client->list_components();
+			for (cr<string> component : components)
+			{
+				println(cout, "{}", component);
 			}
 		}
 	};
