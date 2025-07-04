@@ -219,7 +219,7 @@ namespace oul
 		{
 			cr<string> local_only_text = error_list[local_only];
 			cr<string> url = (i.url.empty()) ? messages[local_only_text] : i.url;
-			println(cout, "\t{}\t({})", i.name, url);
+			println(cout, "\t{}:\t{}\t({})", i.name, i.location, url);
 		}
 	}
 	/// @brief Vypíše nápovědu programu.
