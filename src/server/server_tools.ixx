@@ -2,6 +2,7 @@ module;
 
 #include <boost/filesystem.hpp>
 #include <iostream>
+#include <yaml-cpp/yaml.h>
 #undef ERROR
 
 export module server:tools;
@@ -42,7 +43,7 @@ namespace oul
 		/// @return Seznam komponent uložených na serveru.
 		vector<string> list_components() override
 		{
-			//
+			return vector<string>();
 		}
 	};
 	/// @brief Reprezentuje nástroj CURL.
@@ -95,14 +96,25 @@ namespace oul
 		vector<string> list_components() override
 		{
 			string output = call_client_read_output(url);
-			cout << output;
-			return vector<string>();
+			Node list = Load(output);
+			try
+			{
+				return list.as<vector<string>>();
+			}
+			catch (YAML::BadConversion&)
+			{
+				throw ClientError();
+			}
 		}
 	};
 	/// @brief Reprezentuji lokálního klienta (serverem se myslí lokální složka).
 	export class LOCAL: public CLIENT
 	{
 	private:
+		/// @brief
+		/// @param entry -
+		/// @return <code>true</code>, pokud položka reprezentuje komponentu, <code>false</code> v
+		/// opačném případě
 		bool is_component(cr<fs::directory_entry> entry)
 		{
 			if (!entry.is_directory())

@@ -2,6 +2,7 @@ module;
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <fstream>
 #include <iostream>
 #include <optional>
 #include <ranges>
@@ -39,9 +40,13 @@ namespace oul
 		/// @brief Konstruktor vytvářející objekt structury <code>CONFIG</code>.
 		/// Současně také načte konfiguraci ze souboru a zvaliduje.
 		/// @param l - umístění konfiguračního souboru v souborovém systému
-		CONFIG(cr<string> l): location(l)
+		CONFIG(cr<string> l): CONFIG(std::move(ifstream(l)))
 		{
-			Node root = load(location);
+			location = l;
+		}
+		CONFIG(istream&& source)
+		{
+			Node root = load(source);
 
 			project_name = root["project_name"].as<string>();
 			default_url = root["default_url"].as<string>();

@@ -147,9 +147,9 @@ namespace oul
 	/// @param config_file - cesta ke konfiguračnímu souboru
 	/// @return platná konfigurace
 	/// @throw <code>InvalidConfiguration</code>, pokud soubor neukládá platnou konfiguraci.
-	Node load(cr<string> config_file)
+	Node load(istream& config_file)
 	{
-		Node root = LoadFile(config_file);
+		Node root = Load(config_file);
 
 		check_map(root, ERROR::root_not_object);
 		check_scalar(root["project_name"], ERROR::missing_project_name);
@@ -164,9 +164,9 @@ namespace oul
 	/// @return platná konfigurace komponenty
 	/// @throw <code>InvalidConfiguration</code>, pokud soubor neukládá platnou konfiguraci
 	/// komponenty.
-	Node load_component(cr<string> component_file, bool validate_location)
+	Node load_component(istream& component_file, bool validate_location)
 	{
-		Node root = LoadFile(component_file);
+		Node root = Load(component_file);
 		check_component(root);
 
 		if (validate_location)

@@ -110,8 +110,9 @@ namespace oul
 				throw ZippingError();
 			}
 
-			ITEM component(load_component(name.string()));
-			return component;
+			ifstream component_file(name.string());
+			auto&& component = load_component(component_file);
+			return ITEM(component);
 		}
 		virtual ~ABSTRACT_ZIP_TOOL() = default;
 	};
