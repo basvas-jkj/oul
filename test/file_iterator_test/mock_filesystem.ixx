@@ -45,8 +45,7 @@ export vector<mock_directory_entry> empty_filesystem = {};
 export vector<mock_directory_entry> plain_filesystem = {
 	make_file(1, "args.cpp"),	 make_file(1, "args.hpp"), make_file(1, "command.cpp"),
 	make_file(1, "command.hpp"), make_file(1, "main.cpp"), make_file(1, "README.md"),
-	make_file(1, "README")
-};
+	make_file(1, "README")};
 export vector<mock_directory_entry> structured_filesystem = {
 	make_directory(1, "config"),
 	make_file(2, "config/config.cpp"),
@@ -58,5 +57,4 @@ export vector<mock_directory_entry> structured_filesystem = {
 	make_file(3, "server/zip/zip_base.ixx"),
 	make_file(3, "server/zip/zip_tools.cpp"),
 	make_file(2, "server/server_base.ixx"),
-	make_file(2, "server/server_tools.cpp")
-};
+	make_file(2, "server/server_tools.cpp")};
