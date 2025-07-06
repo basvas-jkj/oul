@@ -43,15 +43,32 @@ add_dependencies(oul messages)
 enable_testing()
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
-add_executable(file_iterator_test "test/file_iterator_test.cpp")
-target_sources(file_iterator_test PUBLIC FILE_SET CXX_MODULES FILES "test/mock_filesystem.ixx" "src/server/file_iterator.ixx" "src/common.ixx" "src/usings.ixx")
-set_property(TARGET file_iterator_test PROPERTY CXX_STANDARD 23)
-target_link_libraries(file_iterator_test PRIVATE Boost::filesystem)
-target_link_libraries(file_iterator_test PRIVATE Boost::unit_test_framework)
-linux_link_library(file_iterator_test -lstdc++)
-linux_link_library(file_iterator_test -lm)
+function(declare_test TEST_NAME)
+    file(GLOB_RECURSE test_source RELATIVE ${CMAKE_SOURCE_DIR} "test/${TEST_NAME}/*.cpp")
+    file(GLOB_RECURSE test_modules RELATIVE ${CMAKE_SOURCE_DIR} "test/${TEST_NAME}/*.ixx")
 
-add_test(file_iterator_test "file_iterator_test")
+    add_executable(${TEST_NAME} ${test_source})
+    target_sources(${TEST_NAME} PUBLIC FILE_SET CXX_MODULES FILES ${test_modules})
+    set_property(TARGET ${TEST_NAME} PROPERTY CXX_STANDARD 23)
+
+    target_link_libraries(${TEST_NAME} PRIVATE Boost::unit_test_framework)
+    linux_link_library(${TEST_NAME} -lstdc++)
+    linux_link_library(${TEST_NAME} -lm)
+
+    add_test(${TEST_NAME} "${TEST_NAME}")
+endfunction()
+
+declare_test("config_test")
+declare_test("file_iterator_test")
+
+target_sources(config_test PUBLIC "src/config/data_file.cpp")
+target_sources(config_test PUBLIC FILE_SET CXX_MODULES FILES "src/message.ixx" "src/config/data_file.ixx" "src/config/config.ixx" "src/config/item.ixx" "src/common.ixx" "src/usings.ixx")
+target_sources(file_iterator_test PUBLIC FILE_SET CXX_MODULES FILES "src/server/file_iterator.ixx" "src/common.ixx" "src/usings.ixx")
+
+target_link_libraries(config_test PRIVATE yaml-cpp::yaml-cpp)
+target_link_libraries(config_test PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(config_test PRIVATE Boost::filesystem)
+target_link_libraries(file_iterator_test PRIVATE Boost::filesystem)
 
 if (MSVC)
     target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/W4>)
