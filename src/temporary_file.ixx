@@ -5,10 +5,10 @@ module;
 #include <fstream>
 #include <string>
 
-export module tmp;
+export module temporary_file;
 
-import usings;
 import message;
+import support;
 
 using namespace std;
 using namespace boost::filesystem;
@@ -40,7 +40,7 @@ namespace oul
 
 	public:
 		/// @brief Konstruktor vytvářející objekty třídy <code>TMP_FILE</code>.
-		/// @param name jméno dočasného souboru (ekvivalent argumentu funkce
+		/// @param name - jméno dočasného souboru (ekvivalent argumentu funkce)
 		/// <code>boost::filesystem::unique_path</code>)
 		TMP_FILE(cr<string> name, bool use_subfolder):
 			name(unique_path(get_temporary_folder(use_subfolder) / name))
@@ -104,7 +104,7 @@ namespace oul
 		TMP_FOLDER(cr<string> name, bool use_subfolder):
 			name(unique_path(get_temporary_folder(use_subfolder) / name))
 		{
-			create_directory(name);
+			create_directory(this->name);
 		}
 		/// @brief Konstruktor vytvářející objekty třídy <code>TMP_FOLDER</code>.
 		/// @param name přesné umístění dočasné složky

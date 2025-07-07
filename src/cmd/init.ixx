@@ -5,7 +5,7 @@ module;
 
 export module argument_parser:init;
 
-import config;
+import configuration;
 import :command;
 
 using namespace std;

@@ -3,10 +3,10 @@ module;
 #include <nlohmann/json.hpp>
 #include <yaml-cpp/yaml.h>
 
-export module config:data_file;
+export module configuration:data_file;
 
 import item;
-import usings;
+import support;
 
 using namespace std;
 using namespace YAML;

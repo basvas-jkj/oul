@@ -6,10 +6,10 @@ module;
 
 export module server:base;
 import tools;
-import common;
-import config;
+import support;
 import message;
 import file_iterator;
+import configuration;
 
 using namespace std;
 using namespace YAML;

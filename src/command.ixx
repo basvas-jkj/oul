@@ -6,7 +6,6 @@ module;
 
 export module argument_parser:command;
 
-import usings;
 import support;
 import message;
 import component_manager;

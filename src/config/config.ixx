@@ -8,7 +8,7 @@ module;
 #include <ranges>
 #include <yaml-cpp/node/node.h>
 
-export module config;
+export module configuration;
 
 import support;
 import message;

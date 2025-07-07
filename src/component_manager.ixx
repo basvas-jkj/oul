@@ -11,56 +11,56 @@ export module component_manager;
 import support;
 import server;
 import message;
-export import config;
+export import configuration;
 
 using namespace std;
 namespace fs = boost::filesystem;
 
-/// @brief Zkontroluje, zda je řetězec vzor nebo konkrétní cesta.
-/// @param name - kontrolovaný řetězec
-/// @return <code>true</code>, pokud je řetězec vzor cesty, <code>false</code>, pokud jde o konkréní
-/// cestu
-bool is_pattern(cr<string> name)
-{
-	vector<char> special_chars{'*', '?', '\\', '[', ']', '(', ')', '|', '!'};
-	for (char ch : special_chars)
-	{
-		if (name.contains(ch))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-/// @brief Zkontroluje, zda je zadaná položka platná.
-/// @param entry - cesta nebo vzor
-/// @return <code>true</code>, pokud cesta odkazuje na existující soubor nebo jde-li o vzor,
-/// <code>false</code> v opačném případě
-bool check_entry_validity(cr<string> entry)
-{
-	return is_pattern(entry) || fs::exists(entry);
-}
-/// @brief Je daná položka mimo složku, která ukládá komponentu?
-/// @param entry - cesta k položce relativní vůči umístění komponenty
-/// @return <code>true</code>, pokud se položka nachází mimo složku komponenty, jinak
-/// <code>false</code>
-bool is_outside_component(cr<fs::path> entry)
-{
-	return entry.string().starts_with("..");
-}
-/// @brief Přidá řetězec do vektoru, pokud tam doposud nebyl.
-/// @param v - vektor, do kterého se řetězec přidává
-/// @param s - řetězec přidávaný do vektoru
-void add_if_not_presented(vector<string>& v, cr<string> s)
-{
-	if (ranges::find(v, s) == v.end())
-	{
-		v.push_back(s);
-	}
-}
-
 namespace oul
 {
+	/// @brief Zkontroluje, zda je řetězec vzor nebo konkrétní cesta.
+	/// @param name - kontrolovaný řetězec
+	/// @return <code>true</code>, pokud je řetězec vzor cesty, <code>false</code>, pokud jde o
+	/// konkréní cestu
+	bool is_pattern(cr<string> name)
+	{
+		vector<char> special_chars{'*', '?', '\\', '[', ']', '(', ')', '|', '!'};
+		for (char ch : special_chars)
+		{
+			if (name.contains(ch))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	/// @brief Zkontroluje, zda je zadaná položka platná.
+	/// @param entry - cesta nebo vzor
+	/// @return <code>true</code>, pokud cesta odkazuje na existující soubor nebo jde-li o vzor,
+	/// <code>false</code> v opačném případě
+	bool check_entry_validity(cr<string> entry)
+	{
+		return is_pattern(entry) || fs::exists(entry);
+	}
+	/// @brief Je daná položka mimo složku, která ukládá komponentu?
+	/// @param entry - cesta k položce relativní vůči umístění komponenty
+	/// @return <code>true</code>, pokud se položka nachází mimo složku komponenty, jinak
+	/// <code>false</code>
+	bool is_outside_component(cr<fs::path> entry)
+	{
+		return entry.string().starts_with("..");
+	}
+	/// @brief Přidá řetězec do vektoru, pokud tam doposud nebyl.
+	/// @param v - vektor, do kterého se řetězec přidává
+	/// @param s - řetězec přidávaný do vektoru
+	void add_if_not_presented(vector<string>& v, cr<string> s)
+	{
+		if (ranges::find(v, s) == v.end())
+		{
+			v.push_back(s);
+		}
+	}
+
 	/// @brief Chyba: konfigurace neobsahuje hledanou komponentu.
 	export class MissingComponent: public CommonException
 	{

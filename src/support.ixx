@@ -16,7 +16,6 @@ namespace oul
 	/// @brief Identifier of the current oul version.
 	export const string version_id = "1.1";
 
-#pragma region usings
 	/// @brief Zkratka pro konstantní referenci.
 	/// @tparam T - Libovolný typ, u kterého dává smysl mít konstantní reference.
 	export template <class T>

@@ -3,7 +3,7 @@ module;
 #include <nlohmann/json.hpp>
 #include <yaml-cpp/yaml.h>
 
-module config;
+module configuration;
 
 using namespace YAML;
 using namespace nlohmann;

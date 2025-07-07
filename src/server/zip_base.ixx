@@ -5,12 +5,12 @@ module;
 
 export module zip:base;
 
-import tmp;
 import tools;
-import config;
 import support;
 import message;
 import file_iterator;
+import configuration;
+import temporary_file;
 
 using namespace std;
 using namespace boost::filesystem;
