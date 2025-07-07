@@ -253,6 +253,12 @@ namespace oul
 		{
 			report_error(name);
 		}
+		/// @brief Vrátí kód chyby, kterou tato výjimka oznamuje.
+		/// @return - kód chybové hlášky
+		ERROR get_error_code()
+		{
+			return name;
+		}
 	};
 	export class ArgumentException: exception
 	{

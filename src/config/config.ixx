@@ -40,11 +40,11 @@ namespace oul
 		/// @brief Konstruktor vytvářející objekt structury <code>CONFIG</code>.
 		/// Současně také načte konfiguraci ze souboru a zvaliduje.
 		/// @param l - umístění konfiguračního souboru v souborovém systému
-		CONFIG(cr<string> l): CONFIG(std::move(ifstream(l)))
+		CONFIG(cr<string> l): CONFIG(ifstream(l))
 		{
 			location = l;
 		}
-		CONFIG(istream&& source)
+		CONFIG(derived_from<istream> auto&& source)
 		{
 			Node root = load(source);
 
