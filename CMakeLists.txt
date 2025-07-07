@@ -62,8 +62,8 @@ declare_test("config_test")
 declare_test("file_iterator_test")
 
 target_sources(config_test PUBLIC "src/config/data_file.cpp")
-target_sources(config_test PUBLIC FILE_SET CXX_MODULES FILES "src/message.ixx" "src/config/data_file.ixx" "src/config/config.ixx" "src/config/item.ixx" "src/common.ixx" "src/usings.ixx")
-target_sources(file_iterator_test PUBLIC FILE_SET CXX_MODULES FILES "src/server/file_iterator.ixx" "src/common.ixx" "src/usings.ixx")
+target_sources(config_test PUBLIC FILE_SET CXX_MODULES FILES "src/message.ixx" "src/config/data_file.ixx" "src/config/config.ixx" "src/config/item.ixx" "src/support.ixx")
+target_sources(file_iterator_test PUBLIC FILE_SET CXX_MODULES FILES "src/server/file_iterator.ixx" "src/support.ixx")
 
 target_link_libraries(config_test PRIVATE yaml-cpp::yaml-cpp)
 target_link_libraries(config_test PRIVATE nlohmann_json::nlohmann_json)

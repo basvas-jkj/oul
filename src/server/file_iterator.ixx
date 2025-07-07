@@ -10,7 +10,7 @@ module;
 
 export module file_iterator;
 
-import common;
+import support;
 
 using namespace std;
 using namespace boost::filesystem;

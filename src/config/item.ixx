@@ -4,7 +4,7 @@ module;
 #include <yaml-cpp/yaml.h>
 
 export module item;
-import common;
+import support;
 
 using namespace std;
 using namespace YAML;

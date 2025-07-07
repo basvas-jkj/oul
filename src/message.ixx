@@ -8,7 +8,7 @@ module;
 export module message;
 
 import item;
-import common;
+import support;
 
 using namespace std;
 using namespace nlohmann;

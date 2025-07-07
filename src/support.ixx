@@ -2,10 +2,11 @@ module;
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <map>
 #include <string>
+#include <vector>
 
-export module common;
-export import usings;
+export module support;
 
 using namespace std;
 using namespace boost::filesystem;
@@ -14,6 +15,16 @@ namespace oul
 {
 	/// @brief Identifier of the current oul version.
 	export const string version_id = "1.1";
+
+#pragma region usings
+	/// @brief Zkratka pro konstantní referenci.
+	/// @tparam T - Libovolný typ, u kterého dává smysl mít konstantní reference.
+	export template <class T>
+	using cr = const T&;
+
+	/// @brief Seznam souborů členěný podle kategorií.
+	export using file_map = map<string, vector<string>>;
+
 	/// @brief Přesune soubor. Pokud cílová cesta neexistuje, bude vytvořena.
 	/// @param source_directory - původní umístění
 	/// @param target_directory - nové umístění
@@ -44,30 +55,17 @@ namespace oul
 
 		copy_file(source, target, copy_options::update_existing);
 	}
-	/// @brief Rozdělí řetězec na podřetězce podle zadaného oddělovače.
-	/// @param s - rozdělovaný řetězec
-	/// @param ch - oddělovač
-	/// @return seznam podřetězců
-	vector<string> split(cr<string> s, char ch)
+	/// @brief Připojí řetězec <code>next</code> na konec <code>url</code>.
+	/// Pokud <code>url</code> nekončí na /, připojí ho.
+	/// @param url - prodlužovaná URL
+	/// @param next - nová část
+	export void url_append(string& url, cr<string> next)
 	{
-		vector<string> v;
-		string::const_iterator start = s.begin();
-
-		while (start != s.end())
+		if (!url.ends_with('/'))
 		{
-			string::const_iterator end = find(start, s.end(), ch);
-			v.push_back(string(start, end));
-
-			if (end == s.end())
-			{
-				break;
-			}
-			else
-			{
-				start = end + 1;
-			}
+			url.append('/');
 		}
 
-		return v;
+		url.append(next);
 	}
 }

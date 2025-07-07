@@ -7,7 +7,7 @@ module;
 export module args:command;
 
 import usings;
-import common;
+import support;
 import message;
 import component_manager;
 

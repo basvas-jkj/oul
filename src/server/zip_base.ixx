@@ -8,7 +8,7 @@ export module zip:base;
 import tmp;
 import tools;
 import config;
-import common;
+import support;
 import message;
 import file_iterator;
 

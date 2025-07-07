@@ -8,7 +8,7 @@ module;
 
 export module component_manager;
 
-import common;
+import support;
 import server;
 import message;
 export import config;

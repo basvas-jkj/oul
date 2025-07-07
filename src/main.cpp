@@ -2,7 +2,7 @@
 #include <memory>
 
 import args;
-import common;
+import support;
 import message;
 
 using namespace std;

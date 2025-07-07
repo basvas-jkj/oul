@@ -10,7 +10,7 @@ module;
 
 export module config;
 
-import common;
+import support;
 import message;
 export import item;
 export import :data_file;
