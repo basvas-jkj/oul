@@ -118,16 +118,22 @@ namespace oul
 	}
 	/// @brief Zkontroluje, zda uzel obsahuje platnou konfiguraci komponenty.
 	/// @param component - kontrolovaný uzel
+	/// @param validate_location - Je součástí kontroly atribut <code>location</code>?
 	/// @throw <code>InvalidConfiguration</code>, pokud uzel neukládá platnou konfiguraci
 	/// komponenty.
-	static void check_component(cr<Node> component)
+	static void check_component(cr<Node> component, bool validate_location)
 	{
 		check_map(component, ERROR::invalid_component);
 
-		check_scalar(component["name"], ERROR::missing_component_name);
+		check_scalar(component["name"], ERROR::invalid_component_name);
 		check_optional_scalar(component["original_name"], ERROR::invalid_original_name);
 		check_file_map(component["include"], true, ERROR::missing_include);
 		check_file_map(component["exclude"], false, ERROR::invalid_exclude);
+
+		if (validate_location)
+		{
+			check_scalar(component["location"], ERROR::missing_location);
+		}
 	}
 	/// @brief Zkontroluje, zda uzel obsahuje posloupnost konfigirací komponenty.
 	/// @param list - kontrolovaný uzel
@@ -139,7 +145,7 @@ namespace oul
 
 		for (cr<Node> component : list)
 		{
-			check_component(component);
+			check_component(component, true);
 		}
 	}
 
@@ -149,14 +155,21 @@ namespace oul
 	/// @throw <code>InvalidConfiguration</code>, pokud soubor neukládá platnou konfiguraci.
 	Node load(istream& config_file)
 	{
-		Node root = Load(config_file);
+		try
+		{
+			Node root = Load(config_file);
 
-		check_map(root, ERROR::root_not_object);
-		check_scalar(root["project_name"], ERROR::missing_project_name);
-		check_scalar(root["default_url"], ERROR::url_not_string);
-		check_components_list(root["components"]);
+			check_map(root, ERROR::root_not_object);
+			check_scalar(root["project_name"], ERROR::missing_project_name);
+			check_scalar(root["default_url"], ERROR::url_not_string);
+			check_components_list(root["components"]);
 
-		return root;
+			return root;
+		}
+		catch (ParserException&)
+		{
+			throw InvalidConfiguration(ERROR::invalid_configuration_format);
+		}
 	}
 	/// @brief Načte a zkontroluje konfiguraci komponenty ze souboru
 	/// @param component_file - cesta ke konfiguračnímu souboru komponenty
@@ -166,14 +179,16 @@ namespace oul
 	/// komponenty.
 	Node load_component(istream& component_file, bool validate_location)
 	{
-		Node root = Load(component_file);
-		check_component(root);
-
-		if (validate_location)
+		try
 		{
-			check_scalar(root["location"], ERROR::missing_location);
+			Node root = Load(component_file);
+			check_component(root, validate_location);
+			return root;
 		}
-		return root;
+		catch (ParserException&)
+		{
+			throw InvalidConfiguration(ERROR::invalid_configuration_format);
+		}
 	}
 
 	/// @brief Převede konfiguraci komponenty do formátu JSON.
