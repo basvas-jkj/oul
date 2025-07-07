@@ -3,7 +3,7 @@ module;
 #include <boost/filesystem/operations.hpp>
 #include <string>
 
-export module args:install;
+export module argument_parser:install;
 
 import :command;
 

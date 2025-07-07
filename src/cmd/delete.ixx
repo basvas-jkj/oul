@@ -1,4 +1,4 @@
-export module args:_delete;
+export module argument_parser:_delete;
 
 import component_manager;
 import :command;

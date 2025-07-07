@@ -1,4 +1,4 @@
-export module args:group_remove;
+export module argument_parser:group_remove;
 
 import :command;
 

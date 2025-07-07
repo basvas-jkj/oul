@@ -3,7 +3,7 @@ module;
 #include <span>
 #include <string>
 
-export module args:exclude;
+export module argument_parser:exclude;
 
 import component_manager;
 import message;

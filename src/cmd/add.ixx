@@ -3,7 +3,7 @@ module;
 #include <span>
 #include <string>
 
-export module args:add;
+export module argument_parser:add;
 
 import component_manager;
 import :command;

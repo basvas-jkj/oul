@@ -4,7 +4,7 @@ module;
 #include <string>
 #include <vector>
 
-export module args:command;
+export module argument_parser:command;
 
 import usings;
 import support;

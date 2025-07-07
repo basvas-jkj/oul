@@ -3,7 +3,7 @@ module;
 #include <optional>
 #include <string>
 
-export module args:init;
+export module argument_parser:init;
 
 import config;
 import :command;

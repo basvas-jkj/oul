@@ -2,7 +2,7 @@ module;
 
 #include <string>
 
-export module args:rename;
+export module argument_parser:rename;
 
 import :command;
 import message;

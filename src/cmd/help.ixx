@@ -1,4 +1,4 @@
-export module args:help;
+export module argument_parser:help;
 
 import :command;
 

@@ -1,4 +1,4 @@
-export module args:group_add;
+export module argument_parser:group_add;
 
 import :command;
 

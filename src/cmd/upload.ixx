@@ -3,7 +3,7 @@ module;
 #include <boost/filesystem/operations.hpp>
 #include <string>
 
-export module args:upload;
+export module argument_parser:upload;
 
 import :command;
 import message;

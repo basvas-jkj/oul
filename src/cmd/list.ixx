@@ -2,7 +2,7 @@ module;
 
 #include <string>
 
-export module args:list;
+export module argument_parser:list;
 
 import :command;
 import message;

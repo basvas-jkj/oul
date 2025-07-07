@@ -5,7 +5,7 @@ module;
 #include <tuple>
 #include <vector>
 
-export module args;
+export module argument_parser;
 
 import usings;
 import message;
