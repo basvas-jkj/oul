@@ -62,7 +62,7 @@ namespace oul
 	{
 		if (!url.ends_with('/'))
 		{
-			url.append('/');
+			url.append("/");
 		}
 
 		url.append(next);

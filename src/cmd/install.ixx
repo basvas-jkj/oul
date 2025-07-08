@@ -6,6 +6,7 @@ module;
 export module argument_parser:install;
 
 import :command;
+import support;
 
 using namespace std;
 
@@ -56,7 +57,7 @@ namespace oul::args
 			}
 			else
 			{
-				url = (fs::path(url) / server_name).generic_string();
+				url_append(url, server_name);
 			}
 
 			string where = opt.get("-w");

@@ -7,6 +7,7 @@ export module argument_parser:upload;
 
 import :command;
 import message;
+import support;
 
 using namespace std;
 
@@ -80,7 +81,7 @@ namespace oul::args
 				component.url = url;
 			}
 
-			url = (fs::path(url) / server_name).generic_string();
+			url_append(url, server_name);
 			fs::path location = cfg.get_directory() / component.location;
 
 			COMPONENT_MANAGER manager(std::move(cfg));
