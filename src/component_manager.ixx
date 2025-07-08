@@ -153,12 +153,12 @@ namespace oul
 				return;
 			}
 
-			client_ptr client = select_client(url, cfg.get_directory() / where);
+			client_ptr client = select_client(server_name, url, cfg.get_directory() / where);
 			ITEM component = client->download();
 			component.name = local_name;
 			component.original_name = server_name;
 			component.location = where;
-			component.url = fs::path(url).parent_path().generic_string();
+			component.url = url;
 
 			cfg.add_component(component);
 		}
@@ -166,9 +166,10 @@ namespace oul
 		/// @param url - url komponenty nebo cesta ke složce
 		/// @param location - umístění komponenty
 		/// @param component - komponenta nahrávaná na server
-		void upload(cr<string> url, cr<fs::path> location, cr<ITEM> component)
+		void upload(cr<string> server_name, cr<string> url, cr<fs::path> location,
+					cr<ITEM> component)
 		{
-			client_ptr client = select_client(url, location);
+			client_ptr client = select_client(server_name, url, location);
 			client->upload(component);
 		}
 		/// @brief Odebere komponentu z projektu.
@@ -297,7 +298,7 @@ namespace oul
 		/// @param url - url serveru, ze kterého bude stažen seznam komponent
 		static void list_server_components(cr<string> url)
 		{
-			client_ptr client = select_client(url, "");
+			client_ptr client = select_client("", url, "");
 			vector<string> components = client->list_components();
 			for (cr<string> component : components)
 			{

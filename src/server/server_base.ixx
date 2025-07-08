@@ -1,7 +1,7 @@
 module;
 
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
+#include <boost/filesystem.hpp>
+#include <iostream>
 #include <yaml-cpp/yaml.h>
 
 export module server:base;
@@ -10,6 +10,7 @@ import support;
 import message;
 import file_iterator;
 import configuration;
+import temporary_file;
 
 using namespace std;
 using namespace YAML;
@@ -33,20 +34,28 @@ namespace oul
 	{
 	protected:
 		string url;
+		string component_name;
 		fs::path component_location;
 		fs::path client_path;
 
 		/// @brief Základní konstruktor objektů reprezentujících klienty.
+		/// @param name - jméno komponenty, kterou klient spojuje
 		/// @param url - url, se kterou je klient spojený
 		/// @param cl - umístění komponenty, kterou klient spravuje
-		CLIENT(cr<string> url, cr<fs::path> cl): url(url), component_location(cl) {}
+		CLIENT(cr<string> component_name, cr<string> url, cr<fs::path> cl):
+			url(url), component_name(component_name), component_location(cl)
+		{
+			url_append(this->url, component_name);
+		}
 		/// @brief Základní konstruktor objektů reprezentujících klienty.
+		/// @param name - jméno komponenty, kterou klient spojuje
 		/// @param url - url, se kterou je klient spojený
 		/// @param cl - umístění komponenty, kterou klient spravuje
 		/// @param client_name - jméno klienta volatelné z příkazové řádky
-		CLIENT(cr<string> url, cr<fs::path> cl, cr<string> client_name):
-			url(url), component_location(cl)
+		CLIENT(cr<string> component_name, cr<string> url, cr<fs::path> cl, cr<string> client_name):
+			url(url), component_name(component_name), component_location(cl)
 		{
+			url_append(this->url, component_name);
 			client_path = find_tool(client_name);
 			if (client_path == "")
 			{
@@ -94,39 +103,44 @@ namespace oul
 		/// @param where - cesta, na kterou se má soubor stáhnout
 		virtual void download_file(cr<string> url, cr<fs::path> where) = 0;
 
+		virtual fs::path copy_component(cr<ITEM> component, cr<fs::path> where) = 0;
+		virtual TMP_FOLDER fetch_component(cr<string> url) = 0;
+		void save_component(cr<fs::path> source, cr<fs::path> target, cr<ITEM> component)
+		{
+			FILE_ITERATOR it(source, component.include, component.exclude);
+			for (cr<fs::path> file : it)
+			{
+				fs::path shifted = fs::relative(file, source);
+				copy_file(source, target, shifted);
+			}
+		}
+
 	public:
 		/// @brief Odešle komponentu na server.
 		/// @param component - konfigurace odesílané komponenty
 		virtual void upload(cr<ITEM> component)
 		{
-			fs::create_directories(url);
-			fs::path json_path = fs::path(url) / "oul.component.json";
-			ofstream out(json_path.string());
-			save_json(component, out);
-			out.close();
+			TMP_FOLDER tmp(component_name, true);
 
-			FILE_ITERATOR it(component_location, component.include, component.exclude);
-			for (cr<fs::path> file : it)
-			{
-				upload_file(url, file);
-			}
+			fs::path p = copy_component(component, tmp.get_name());
+			upload_file(url, p);
 		}
 		/// @brief Stáhne komponentu ze serveru.
 		/// @return konfigurace stažené komponenty
 		virtual ITEM download()
 		{
-			fs::create_directories(component_location);
-			fs::path json_path = fs::path(url) / "oul.component.json";
+			TMP_FOLDER folder = fetch_component(url);
 
+			fs::path location = folder.get_name();
+			fs::path json_path = location / "oul.component.json";
 			ifstream component_file(json_path.string());
-			auto&& loaded_component = load_component(component_file, false);
-			ITEM component(loaded_component);
 
-			FILE_ITERATOR it(url, component.include, component.exclude);
-			for (cr<fs::path> file : it)
-			{
-				download_file(url, file);
-			}
+			auto&& loaded_component = load_component(component_file, false);
+			fs::create_directories(component_location);
+
+			ITEM component(loaded_component);
+			save_component(location, component_location, component);
+
 			return component;
 		}
 		/// @brief Stáhne seznam komponent ze serveru.

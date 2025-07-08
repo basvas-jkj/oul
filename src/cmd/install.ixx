@@ -53,11 +53,7 @@ namespace oul::args
 			string url = opt.get("-url");
 			if (url == "")
 			{
-				url = cfg.get_url(server_name);
-			}
-			else
-			{
-				url_append(url, server_name);
+				url = cfg.default_url;
 			}
 
 			string where = opt.get("-w");

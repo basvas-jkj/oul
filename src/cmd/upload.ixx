@@ -81,11 +81,10 @@ namespace oul::args
 				component.url = url;
 			}
 
-			url_append(url, server_name);
 			fs::path location = cfg.get_directory() / component.location;
 
 			COMPONENT_MANAGER manager(std::move(cfg));
-			manager.upload(url, location, component);
+			manager.upload(server_name, url, location, component);
 		}
 	};
 }

@@ -19,31 +19,76 @@ namespace oul
 	/// (http://www.openssh.com/)
 	export class SCP: public CLIENT
 	{
+		string upload_url;
+
 	protected:
 		/// @brief Odešle jeden soubor na server.
 		/// @param url - url serveru
 		/// @param file - cesta k odesílanému souboru
 		void upload_file(cr<string> url, cr<fs::path> file) override
 		{
-			call_client(url, file);
+			call_client("-r", file, upload_url);
 		}
 		/// @brief Stáhne jeden soubor ze serveru.
 		/// @param url - url serveru
 		/// @param where - cesta, na kterou se má soubor stáhnout
 		void download_file(cr<string> url, cr<fs::path> file) override
 		{
-			string output = call_client_read_output(file, url);
+			fs::create_directories(file);
+			call_client("-r", url, file);
+		}
+
+		fs::path copy_component(cr<ITEM> component, cr<fs::path> where) override
+		{
+			string component_path = (where / "oul.component.json").generic_string();
+			ofstream component_file(component_path);
+			save_json(component, component_file);
+			component_file.close();
+
+			FILE_ITERATOR it(component_location, component.include, component.exclude);
+			for (cr<fs::path> file : it)
+			{
+				fs::path shifted = fs::relative(file, component_location);
+				copy_file(component_location, where, shifted);
+			}
+
+			return where;
+		}
+
+		TMP_FOLDER fetch_component(cr<string> url) override
+		{
+			TMP_FOLDER folder("%%%%-%%%%-%%%%-%%%%", false);
+
+			call_client("-r", url + "/*", folder.get_name());
+
+			return folder;
 		}
 
 	public:
 		/// @param url - url, se kterou je klient spojený
 		/// @param cl - umístění komponenty, kterou klient spravuje
-		SCP(cr<string> url, cr<fs::path> base): CLIENT(url, base, "scp") {}
+		SCP(cr<string> component_name, cr<string> url, cr<fs::path> base):
+			CLIENT(component_name, url, base, "scp")
+		{
+			upload_url = url;
+		}
 		/// @brief Stáhne seznam komponent ze serveru.
 		/// @return Seznam komponent uložených na serveru.
 		vector<string> list_components() override
 		{
-			return vector<string>();
+			TMP_FOLDER folder = fetch_component(url);
+			fs::directory_iterator it(folder.get_name());
+
+			vector<string> list;
+			for (auto&& entry : it)
+			{
+				if (fs::exists(entry.path() / "oul.component.json"))
+				{
+					list.push_back(entry.path().filename().generic_string());
+				}
+			}
+
+			return list;
 		}
 	};
 	/// @brief Reprezentuje nástroj CURL.
