@@ -58,13 +58,18 @@ namespace oul
 	/// Pokud <code>url</code> nekončí na /, připojí ho.
 	/// @param url - prodlužovaná URL
 	/// @param next - nová část
-	export void url_append(string& url, cr<string> next)
+	export string url_append(string url, cr<string> next)
 	{
-		if (!url.ends_with('/'))
+		if (next == "")
+		{
+			return url;
+		}
+		else if (!url.ends_with('/'))
 		{
 			url.append("/");
 		}
 
 		url.append(next);
+		return url;
 	}
 }

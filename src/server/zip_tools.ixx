@@ -1,6 +1,6 @@
 module;
 
-#include <boost/filesystem/path.hpp>
+#include <boost/filesystem.hpp>
 
 export module zip:tools;
 import :base;
@@ -34,6 +34,7 @@ namespace oul
 		/// @param zip_file - cesta k archivu
 		void extract_files(cr<path> working_dir, cr<TMP_FILE> zip_file) override
 		{
+			create_directories(working_dir);
 			bool success = call_tool(unzip_path, working_dir, zip_file.get_path());
 			if (!success)
 			{
@@ -67,6 +68,7 @@ namespace oul
 		/// @param zip_file - cesta k archivu
 		void extract_files(cr<path> working_dir, cr<TMP_FILE> zip_file) override
 		{
+			create_directories(working_dir);
 			bool success = call_tool(unzip_path, working_dir, "x", zip_file.get_path());
 			if (!success)
 			{
