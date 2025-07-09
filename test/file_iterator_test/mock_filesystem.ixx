@@ -4,9 +4,10 @@ module;
 #include <vector>
 
 export module mock_filesystem;
-export import usings;
+export import support;
 
 using namespace std;
+using namespace oul;
 namespace fs = boost::filesystem;
 export struct mock_directory_entry
 {

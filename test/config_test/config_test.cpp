@@ -9,9 +9,9 @@
 #define LF "\n"
 #define BOOST_TEST_OUL_ERROR(ACTUAL, EXPECTED) BOOST_TEST(((int)ACTUAL) == ((int)EXPECTED))
 
-import config;
-import usings;
+import configuration;
 import message;
+import support;
 
 using namespace oul;
 using namespace std;
