@@ -33,29 +33,21 @@ namespace oul
 	export class CLIENT
 	{
 	protected:
-		string url;
 		string component_name;
 		fs::path component_location;
 		fs::path client_path;
 
 		/// @brief Základní konstruktor objektů reprezentujících klienty.
 		/// @param name - jméno komponenty, kterou klient spojuje
-		/// @param url - url, se kterou je klient spojený
 		/// @param cl - umístění komponenty, kterou klient spravuje
-		CLIENT(cr<string> component_name, cr<string> url, cr<fs::path> cl):
-			url(url), component_name(component_name), component_location(cl)
-		{
-			url_append(this->url, component_name);
-		}
+		CLIENT(cr<string> name, cr<fs::path> cl): component_name(name), component_location(cl) {}
 		/// @brief Základní konstruktor objektů reprezentujících klienty.
 		/// @param name - jméno komponenty, kterou klient spojuje
-		/// @param url - url, se kterou je klient spojený
 		/// @param cl - umístění komponenty, kterou klient spravuje
 		/// @param client_name - jméno klienta volatelné z příkazové řádky
-		CLIENT(cr<string> component_name, cr<string> url, cr<fs::path> cl, cr<string> client_name):
-			url(url), component_name(component_name), component_location(cl)
+		CLIENT(cr<string> name, cr<fs::path> cl, cr<string> client_name):
+			component_name(name), component_location(cl)
 		{
-			url_append(this->url, component_name);
 			client_path = find_tool(client_name);
 			if (client_path == "")
 			{
@@ -94,18 +86,7 @@ namespace oul
 			}
 		}
 
-		/// @brief Odešle jeden soubor na server.
-		/// @param url - url serveru
-		/// @param file - cesta k odesílanému souboru
-		virtual void upload_file(cr<string> url, cr<fs::path> file) = 0;
-		/// @brief Stáhne jeden soubor ze serveru.
-		/// @param url - url serveru
-		/// @param where - cesta, na kterou se má soubor stáhnout
-		virtual void download_file(cr<string> url, cr<fs::path> where) = 0;
-
-		virtual fs::path copy_component(cr<ITEM> component, cr<fs::path> where) = 0;
-		virtual TMP_FOLDER fetch_component(cr<string> url) = 0;
-		void save_component(cr<fs::path> source, cr<fs::path> target, cr<ITEM> component)
+		void copy_component(cr<ITEM> component, cr<fs::path> source, cr<fs::path> target)
 		{
 			FILE_ITERATOR it(source, component.include, component.exclude);
 			for (cr<fs::path> file : it)
@@ -115,34 +96,40 @@ namespace oul
 			}
 		}
 
+		void save_config(cr<ITEM> component, cr<fs::path> target)
+		{
+			create_directories(target.parent_path());
+
+			ofstream component_file(target.string());
+			save_json(component, component_file);
+			component_file.close();
+		}
+		ITEM load_config(cr<fs::path> source)
+		{
+			ifstream component_file(source.string());
+			auto&& loaded_component = load_component(component_file, false);
+			component_file.close();
+
+			return ITEM(loaded_component);
+		}
+
+		/// @brief
+		/// @param entry -
+		/// @return <code>true</code>, pokud položka reprezentuje komponentu, <code>false</code> v
+		/// opačném případě
+		bool is_component(cr<fs::directory_entry> entry)
+		{
+			fs::path config_file = entry.path() / "oul.component.json";
+			return is_regular_file(config_file);
+		}
+
 	public:
 		/// @brief Odešle komponentu na server.
 		/// @param component - konfigurace odesílané komponenty
-		virtual void upload(cr<ITEM> component)
-		{
-			TMP_FOLDER tmp(component_name, true);
-
-			fs::path p = copy_component(component, tmp.get_name());
-			upload_file(url, p);
-		}
+		virtual void upload(cr<ITEM> component) = 0;
 		/// @brief Stáhne komponentu ze serveru.
 		/// @return konfigurace stažené komponenty
-		virtual ITEM download()
-		{
-			TMP_FOLDER folder = fetch_component(url);
-
-			fs::path location = folder.get_name();
-			fs::path json_path = location / "oul.component.json";
-			ifstream component_file(json_path.string());
-
-			auto&& loaded_component = load_component(component_file, false);
-			fs::create_directories(component_location);
-
-			ITEM component(loaded_component);
-			save_component(location, component_location, component);
-
-			return component;
-		}
+		virtual ITEM download() = 0;
 		/// @brief Stáhne seznam komponent ze serveru.
 		/// @return Seznam komponent uložených na serveru.
 		virtual vector<string> list_components() = 0;

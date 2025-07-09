@@ -20,69 +20,65 @@ namespace oul
 	export class SCP: public CLIENT
 	{
 		string upload_url;
+		string download_url;
 
-	protected:
-		/// @brief Odešle jeden soubor na server.
-		/// @param url - url serveru
-		/// @param file - cesta k odesílanému souboru
-		void upload_file(cr<string> url, cr<fs::path> file) override
+		void upload_component(cr<fs::path> from)
 		{
-			call_client("-r", file, upload_url);
+			call_client("-r", from, upload_url);
 		}
-		/// @brief Stáhne jeden soubor ze serveru.
-		/// @param url - url serveru
-		/// @param where - cesta, na kterou se má soubor stáhnout
-		void download_file(cr<string> url, cr<fs::path> file) override
+		void download_component(cr<fs::path> where)
 		{
-			fs::create_directories(file);
-			call_client("-r", url, file);
-		}
-
-		fs::path copy_component(cr<ITEM> component, cr<fs::path> where) override
-		{
-			string component_path = (where / "oul.component.json").generic_string();
-			ofstream component_file(component_path);
-			save_json(component, component_file);
-			component_file.close();
-
-			FILE_ITERATOR it(component_location, component.include, component.exclude);
-			for (cr<fs::path> file : it)
-			{
-				fs::path shifted = fs::relative(file, component_location);
-				copy_file(component_location, where, shifted);
-			}
-
-			return where;
-		}
-
-		TMP_FOLDER fetch_component(cr<string> url) override
-		{
-			TMP_FOLDER folder("%%%%-%%%%-%%%%-%%%%", false);
-
-			call_client("-r", url + "/*", folder.get_name());
-
-			return folder;
+			call_client("-r", download_url, where);
 		}
 
 	public:
+		/// @param component_name - jméno komponenty, kterou klient spojuje
 		/// @param url - url, se kterou je klient spojený
 		/// @param cl - umístění komponenty, kterou klient spravuje
-		SCP(cr<string> component_name, cr<string> url, cr<fs::path> base):
-			CLIENT(component_name, url, base, "scp")
+		SCP(cr<string> component_name, cr<string> url, cr<fs::path> cl):
+			CLIENT(component_name, cl, "scp")
 		{
 			upload_url = url;
+			download_url = url_append(url, component_name + "/*");
+		}
+		/// @brief Odešle komponentu na server.
+		/// @param component - konfigurace odesílané komponenty
+		void upload(cr<ITEM> component) override
+		{
+			TMP_FOLDER folder(component_name, true);
+			fs::path tmp_dir = folder.get_name();
+
+			save_config(component, tmp_dir / "oul.component.json");
+			copy_component(component, component_location, tmp_dir);
+			upload_component(tmp_dir);
+		}
+		/// @brief Stáhne komponentu ze serveru.
+		/// @return konfigurace stažené komponenty
+		ITEM download() override
+		{
+			TMP_FOLDER folder(component_name, true);
+			fs::path tmp_dir = folder.get_name();
+
+			download_component(tmp_dir);
+			ITEM component = load_config(tmp_dir / "oul.component.json");
+			copy_component(component, tmp_dir, component_location);
+
+			return component;
 		}
 		/// @brief Stáhne seznam komponent ze serveru.
 		/// @return Seznam komponent uložených na serveru.
 		vector<string> list_components() override
 		{
-			TMP_FOLDER folder = fetch_component(url);
-			fs::directory_iterator it(folder.get_name());
+			TMP_FOLDER folder(component_name, true);
+			fs::path tmp_dir = folder.get_name();
+
+			download_component(tmp_dir);
 
 			vector<string> list;
-			for (auto&& entry : it)
+			fs::directory_iterator it(tmp_dir);
+			for (cr<fs::directory_entry> entry : it)
 			{
-				if (fs::exists(entry.path() / "oul.component.json"))
+				if (is_component(entry))
 				{
 					list.push_back(entry.path().filename().generic_string());
 				}
@@ -95,13 +91,13 @@ namespace oul
 	/// (https://curl.se/)
 	export class CURL: public CLIENT
 	{
+		string url;
 		zip_tool_ptr tool;
 
-	protected:
 		/// @brief Odešle jeden soubor na server.
 		/// @param url - url serveru
 		/// @param file - cesta k odesílanému souboru
-		void upload_file(cr<string> url, cr<fs::path> file) override
+		void upload_file(cr<string> url, cr<fs::path> file)
 		{
 			string post_argument = format("@{}", file.generic_string());
 			call_client("--data-binary", post_argument, url);
@@ -109,12 +105,20 @@ namespace oul
 		/// @brief Stáhne jeden soubor ze serveru.
 		/// @param url - url serveru
 		/// @param where - cesta, na kterou se má soubor stáhnout
-		void download_file(cr<string> url, cr<fs::path> file) override
+		void download_file(cr<string> url, cr<fs::path> file)
 		{
 			call_client("-o", file, url);
 		}
 
 	public:
+		/// @param component_name - jméno komponenty, kterou klient spojuje
+		/// @param url - url, se kterou je klient spojený
+		/// @param cl - umístění komponenty, kterou klient spravuje
+		CURL(cr<string> name, cr<string> url, cr<fs::path> cl): CLIENT(name, cl, "curl")
+		{
+			this->url = url_append(url, name);
+			tool = select_zip_tool();
+		}
 		/// @brief Zazipuje komponentu a odešle ji na server.
 		/// @param component - konfigurace odesílané komponenty
 		void upload(cr<ITEM> component) override
@@ -129,12 +133,6 @@ namespace oul
 			TMP_FILE file("%%%%-%%%%-%%%%-%%%%.zip", false);
 			download_file(url, file.get_path());
 			return tool->unzip(file, component_location.string());
-		}
-		/// @param url - url, se kterou je klient spojený
-		/// @param cl - umístění komponenty, kterou klient spravuje
-		CURL(cr<string> url, cr<fs::path> base): CLIENT(url, base, "curl")
-		{
-			tool = select_zip_tool();
 		}
 		/// @brief Stáhne seznam komponent ze serveru.
 		/// @return Seznam komponent uložených na serveru.
@@ -155,57 +153,46 @@ namespace oul
 	/// @brief Reprezentuji lokálního klienta (serverem se myslí lokální složka).
 	export class LOCAL: public CLIENT
 	{
-	private:
-		/// @brief
-		/// @param entry -
-		/// @return <code>true</code>, pokud položka reprezentuje komponentu, <code>false</code> v
-		/// opačném případě
-		bool is_component(cr<fs::directory_entry> entry)
-		{
-			if (!entry.is_directory())
-			{
-				return false;
-			}
-			fs::path config_file = entry.path() / "oul.component.json";
-			return is_regular_file(config_file);
-		}
-
-	protected:
-		/// @brief Odešle jeden soubor na server.
-		/// @param url - url serveru
-		/// @param file - cesta k odesílanému souboru
-		void upload_file(cr<string> url, cr<fs::path> file) override
-		{
-			fs::path entry = fs::relative(file, component_location);
-			copy_file(component_location, url, entry);
-		}
-		/// @brief Stáhne jeden soubor ze serveru.
-		/// @param url - url serveru
-		/// @param where - cesta, na kterou se má soubor stáhnout
-		void download_file(cr<string> url, cr<fs::path> file) override
-		{
-			fs::path entry = fs::relative(file, url);
-			copy_file(url, component_location, entry);
-		}
+		string url;
 
 	public:
+		/// @param component_name - jméno komponenty, kterou klient spojuje
 		/// @param url - url, se kterou je klient spojený (v tomto případě cesta k lokální složce)
 		/// @param cl - umístění komponenty, kterou klient spravuje
-		LOCAL(cr<string> url, cr<fs::path> base): CLIENT(url, base) {}
+		LOCAL(cr<string> name, cr<string> url, cr<fs::path> cl): CLIENT(name, cl)
+		{
+			this->url = url_append(url, component_name);
+		}
+		/// @brief Odešle komponentu na server.
+		/// @param component - konfigurace odesílané komponenty
+		void upload(cr<ITEM> component) override
+		{
+			save_config(component, fs::path(url) / "oul.component.json");
+			copy_component(component, component_location, url);
+		}
+		/// @brief Stáhne komponentu ze serveru.
+		/// @return konfigurace stažené komponenty
+		ITEM download() override
+		{
+			ITEM component = load_config(fs::path(url) / "oul.component.json");
+			copy_component(component, url, component_location);
+
+			return component;
+		}
 		/// @brief Stáhne seznam komponent ze serveru.
 		/// @return Seznam komponent uložených na serveru.
 		vector<string> list_components() override
 		{
-			vector<string> components;
+			vector<string> list;
 			fs::directory_iterator it(url);
 			for (cr<fs::directory_entry> entry : it)
 			{
 				if (is_component(entry))
 				{
-					components.push_back(entry.path().filename().generic_string());
+					list.push_back(entry.path().filename().generic_string());
 				}
 			}
-			return components;
+			return list;
 		}
 	};
 }
