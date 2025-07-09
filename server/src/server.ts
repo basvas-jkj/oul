@@ -116,7 +116,6 @@ function on_get_request({path, original}: PARSED_URL, res: http.ServerResponse)
 }
 function on_post_request({path, original}: PARSED_URL, body: Buffer, res: http.ServerResponse)
 {
-    console.log(body.length)
     if (path.length == 0 || path[0] == "")
     {
         res.writeHead(400);
@@ -133,9 +132,9 @@ function on_post_request({path, original}: PARSED_URL, body: Buffer, res: http.S
         try
         {
             unzip_component(name, zip_file);
-            res.writeHead(204);
+            res.writeHead(201);
             res.end();
-            log_request(original, 204);
+            log_request(original, 201);
         }
         catch (err: any)
         {
