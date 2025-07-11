@@ -27,7 +27,7 @@ namespace oul
 	export class InvalidConfiguration: public CommonException
 	{
 	public:
-		InvalidConfiguration(ERROR name): CommonException(name) {}
+		InvalidConfiguration(MESSAGE name): CommonException(name) {}
 	};
 
 	/// @brief Struktura pro ukládání konfigurace projektu.
@@ -77,7 +77,7 @@ namespace oul
 			}
 			catch (...)
 			{
-				report_error(ERROR::unexpected_error);
+				report_error(MESSAGE::unexpected_error);
 			}
 		}
 
@@ -87,32 +87,27 @@ namespace oul
 		{
 			string name;
 
-			print_init_prompt(ERROR::init_name);
-			cout << "Enter the project name: ";
+			print_init_prompt(MESSAGE::init_name);
 			getline(cin, name);
 			trim(name);
 
 			string format;
-			print_init_prompt(ERROR::init_format);
-			cout << "Do you prefer JSON or YAML for the configuration? (j/y): ";
+			print_init_prompt(MESSAGE::init_format);
 			getline(cin, format);
 			trim(format);
 			to_lower(format);
 
 			if (format != "y" && format != "yaml" && format[0] == 'y')
 			{
-				report_error(ERROR::init_yaml_fallback);
-				cout << "Unknown format, using YAML.\n";
+				report_error(MESSAGE::init_yaml_fallback);
 			}
 			else
 			{
-				report_error(ERROR::init_json_fallback);
-				cout << "Unknown format, using JSON.\n";
+				report_error(MESSAGE::init_json_fallback);
 			}
 
 			string default_url;
-			print_init_prompt(ERROR::init_url);
-			cout << "Enter URL used by default during installing components: ";
+			print_init_prompt(MESSAGE::init_url);
 			getline(cin, default_url);
 			trim(default_url);
 

@@ -3,7 +3,6 @@ module;
 #include <boost/filesystem/path.hpp>
 #include <boost/process.hpp>
 #include <regex>
-#undef ERROR
 
 export module server;
 export import :base;
@@ -16,7 +15,7 @@ namespace oul
 	export class UnknownClient: public CommonException
 	{
 	public:
-		UnknownClient(): CommonException(ERROR::unknown_client) {}
+		UnknownClient(): CommonException(MESSAGE::unknown_client) {}
 	};
 	/// @brief Vybere vhodného klienta pro danou url.
 	/// @param url - Adresa serveru nebo cesta.

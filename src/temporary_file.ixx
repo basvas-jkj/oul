@@ -58,7 +58,7 @@ namespace oul
 			}
 			catch (...)
 			{
-				report_error(ERROR::unexpected_error);
+				report_error(MESSAGE::unexpected_error);
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace oul
 			}
 			catch (...)
 			{
-				report_error(ERROR::unexpected_error);
+				report_error(MESSAGE::unexpected_error);
 			}
 		}
 

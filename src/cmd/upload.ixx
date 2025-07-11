@@ -25,12 +25,12 @@ namespace oul::args
 		{
 			if (arguments.size() < 1)
 			{
-				report_error(ERROR::missing_component_name);
+				report_error(MESSAGE::missing_component_name);
 				return false;
 			}
 			else if (arguments.size() > 1)
 			{
-				report_error(ERROR::too_much_arguments);
+				report_error(MESSAGE::too_much_arguments);
 				return false;
 			}
 			else
@@ -46,7 +46,7 @@ namespace oul::args
 			vector<ITEM>::iterator i = cfg.get_component(local_name);
 			if (i == cfg.components.end())
 			{
-				throw CommonException(ERROR::missing_url);
+				throw CommonException(MESSAGE::component_not_found);
 			}
 			ITEM& component = *i;
 
@@ -70,7 +70,7 @@ namespace oul::args
 				}
 				else
 				{
-					throw CommonException(ERROR::missing_url);
+					throw CommonException(MESSAGE::missing_url);
 				}
 			}
 			else if (component.url == "")

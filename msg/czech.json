@@ -44,7 +44,7 @@
     "unknown_option": "Neznámý přepínač '*'. Spusťte 'oul help' pro získání seznamu povolených přepínačů.",
 
     "config_found": "Konfigurační soubor už byl vytvořen.",
-    "config_not_found": "Konfigurační sobor nebyl nalezen.\nSpusťtě 'oul init' nebo se přesňte do inicializovaného projektu.",
+    "config_not_found": "Konfigurační sobor nebyl nalezen.\nSpusťtě 'oul init' nebo se přesuňte do inicializovaného projektu.",
     "invalid_configuration_format": "Konfigurační soubor není platný JSON nebo YAML.",
 
     "root_not_object": "Kořen konfigurace musí být objekt.",

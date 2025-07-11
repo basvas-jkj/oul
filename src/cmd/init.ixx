@@ -22,7 +22,7 @@ namespace oul::args
 			optional<string> path = CONFIG::find();
 			if (path.has_value())
 			{
-				report_error(ERROR::config_found);
+				report_error(MESSAGE::config_found);
 			}
 			else
 			{

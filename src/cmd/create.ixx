@@ -21,12 +21,12 @@ namespace oul::args
 		{
 			if (arguments.size() < 1)
 			{
-				report_error(ERROR::missing_component_name);
+				report_error(MESSAGE::missing_component_name);
 				return false;
 			}
 			else if (arguments.size() > 1)
 			{
-				report_error(ERROR::too_much_arguments);
+				report_error(MESSAGE::too_much_arguments);
 				return false;
 			}
 			else
@@ -52,7 +52,7 @@ namespace oul::args
 			}
 			else if (c->contains(name))
 			{
-				report_error(ERROR::component_already_exists);
+				report_error(MESSAGE::component_already_exists);
 				return;
 			}
 

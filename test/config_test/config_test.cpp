@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 
-#undef ERROR
 #define json(...) #__VA_ARGS__
 #define CO ","
 #define LF "\n"
@@ -16,7 +15,7 @@ import support;
 using namespace oul;
 using namespace std;
 using namespace boost::unit_test;
-using enum ERROR;
+using enum MESSAGE;
 
 #pragma region invalid_configuration_format_tests
 

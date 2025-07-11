@@ -57,13 +57,13 @@ namespace oul
 	export class MissingComponent: public CommonException
 	{
 	public:
-		MissingComponent(ERROR name = ERROR::component_not_found): CommonException(name) {}
+		MissingComponent(MESSAGE name = MESSAGE::component_not_found): CommonException(name) {}
 	};
 	/// @brief Chyba: konfigurace komponenty neobsahuje hledanou skupinu.
 	export class MissingGroup: public CommonException
 	{
 	public:
-		MissingGroup(ERROR name): CommonException(name) {}
+		MissingGroup(MESSAGE name): CommonException(name) {}
 	};
 
 	/// @brief Třída pro vytváření a správu komponent.
@@ -90,7 +90,7 @@ namespace oul
 			vector<ITEM>::iterator component_it = cfg.get_component(component);
 			if (component_it == cfg.components.end())
 			{
-				throw MissingComponent(ERROR::component_not_found);
+				throw MissingComponent(MESSAGE::component_not_found);
 			}
 			else
 			{
@@ -107,7 +107,7 @@ namespace oul
 			file_map::iterator group_it = files.find(group);
 			if (group_it == files.end())
 			{
-				throw MissingGroup(ERROR::group_not_found);
+				throw MissingGroup(MESSAGE::group_not_found);
 			}
 			else
 			{
@@ -141,7 +141,7 @@ namespace oul
 		{
 			if (cfg.contains(local_name))
 			{
-				report_error(ERROR::component_already_exists);
+				report_error(MESSAGE::component_already_exists);
 				return;
 			}
 
@@ -177,13 +177,13 @@ namespace oul
 		{
 			if (cfg.contains(new_name))
 			{
-				report_error(ERROR::component_already_exists);
+				report_error(MESSAGE::component_already_exists);
 				return;
 			}
 			vector<ITEM>::iterator it = cfg.get_component(original_name);
 			if (it == cfg.components.end())
 			{
-				report_error(ERROR::component_not_found);
+				report_error(MESSAGE::component_not_found);
 				return;
 			}
 
@@ -224,7 +224,7 @@ namespace oul
 				fs::path shifted = shift(entry, component.location);
 				if (is_outside_component(shifted))
 				{
-					report_error(ERROR::file_outside_component, {name, component.location});
+					report_error(MESSAGE::file_outside_component, {name, component.location});
 				}
 				else
 				{
@@ -246,7 +246,7 @@ namespace oul
 				fs::path shifted = shift(entry, component.location);
 				if (is_outside_component(shifted))
 				{
-					report_error(ERROR::file_outside_component);
+					report_error(MESSAGE::file_outside_component);
 				}
 				else
 				{
@@ -269,7 +269,7 @@ namespace oul
 				fs::path shifted = shift(entry, component.location);
 				if (is_outside_component(shifted))
 				{
-					report_error(ERROR::file_outside_component);
+					report_error(MESSAGE::file_outside_component);
 					continue;
 				}
 

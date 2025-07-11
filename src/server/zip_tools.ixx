@@ -26,7 +26,7 @@ namespace oul
 			bool success = call_tool(zip_path, working_dir, zip_file.get_path(), entry);
 			if (!success)
 			{
-				throw new ZippingError(ERROR::zipping_error);
+				throw new ZippingError(MESSAGE::zipping_error);
 			}
 		}
 		/// @brief Rozbalí daný archiv do zadané složky.
@@ -38,7 +38,7 @@ namespace oul
 			bool success = call_tool(unzip_path, working_dir, zip_file.get_path());
 			if (!success)
 			{
-				throw new ZippingError(ERROR::zipping_error);
+				throw new ZippingError(MESSAGE::zipping_error);
 			}
 		}
 	};
@@ -60,7 +60,7 @@ namespace oul
 			bool success = call_tool(zip_path, working_dir, "a", zip_file.get_path(), entry);
 			if (!success)
 			{
-				throw new ZippingError(ERROR::zipping_error);
+				throw new ZippingError(MESSAGE::zipping_error);
 			}
 		}
 		/// @brief Rozbalí daný archiv do zadané složky.
@@ -72,7 +72,7 @@ namespace oul
 			bool success = call_tool(unzip_path, working_dir, "x", zip_file.get_path());
 			if (!success)
 			{
-				throw new ZippingError(ERROR::zipping_error);
+				throw new ZippingError(MESSAGE::zipping_error);
 			}
 		}
 	};

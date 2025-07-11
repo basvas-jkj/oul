@@ -64,7 +64,8 @@ namespace oul
 	}
 
 	/// @brief Výčet všech chybových a jiných hlášek.
-	export enum class ERROR {
+	export enum class MESSAGE
+	{
 		unexpected_error,
 		component_list,
 		component_server_list,
@@ -135,10 +136,10 @@ namespace oul
 		// server errors
 		missing_url
 	};
-	using enum ERROR;
+	using enum MESSAGE;
 
 	/// @brief Objekt zobrazující kódy chybových hlášek na jména.
-	static map<ERROR, string> error_list{
+	static map<MESSAGE, string> error_list{
 		{unexpected_error, "unexpected_error"},
 		{component_list, "component_list"},
 		{component_server_list, "component_server_list"},
@@ -208,14 +209,14 @@ namespace oul
 
 	/// @brief Vypíše výzvu na standardní výstup.
 	/// @param name - kód zprávy
-	export void print_init_prompt(ERROR name)
+	export void print_init_prompt(MESSAGE name)
 	{
 		cr<string> error = error_list[name];
 		print(cout, "{}", messages[error]);
 	}
 	/// @brief Vypíše chybovou hlášku na standardní chybový výstup.
 	/// @param name - kód chybové hlášky
-	export void report_error(ERROR name)
+	export void report_error(MESSAGE name)
 	{
 		cr<string> error = error_list[name];
 		println(cerr, "{}", messages[error]);
@@ -223,7 +224,7 @@ namespace oul
 	/// @brief Vypíše chybovou hlášku doplněnou o hodnotu argumentu na standardní chybový výstup.
 	/// @param name - kód chybové hlášky
 	/// @param arg - argument, která
-	export void report_error(ERROR name, cr<vector<string>> args)
+	export void report_error(MESSAGE name, cr<vector<string>> args)
 	{
 		cr<string> error = error_list[name];
 		string message = messages[error];
@@ -289,12 +290,12 @@ namespace oul
 	/// @brief Základní třída pro výjimky použité v tomto projektu.
 	export class CommonException: exception
 	{
-		ERROR name;
+		MESSAGE name;
 
 	public:
 		/// @brief Konstruktor vytvářející objekty <code>CommonException</code>
 		/// @param n - kód chybové hlášky
-		CommonException(ERROR n): name(n) {}
+		CommonException(MESSAGE n): name(n) {}
 		/// @brief Vypíše hlášku výjimky na standarní chybový výstup.
 		void report() const
 		{
@@ -302,21 +303,21 @@ namespace oul
 		}
 		/// @brief Vrátí kód chyby, kterou tato výjimka oznamuje.
 		/// @return - kód chybové hlášky
-		ERROR get_error_code()
+		MESSAGE get_error_code()
 		{
 			return name;
 		}
 	};
 	export class ArgumentException: exception
 	{
-		ERROR name;
+		MESSAGE name;
 		vector<string> arguments;
 
 	public:
 		/// @brief Konstruktor vytvářející objekty <code>ArgumentException</code>
 		/// @param n - kód chybové hlášky
 		/// @param arg - argument chybové hlášky
-		ArgumentException(ERROR n, cr<vector<string>> args): name(n), arguments(args) {}
+		ArgumentException(MESSAGE n, cr<vector<string>> args): name(n), arguments(args) {}
 		/// @brief Vypíše hlášku výjimky na standarní chybový výstup.
 		void report() const
 		{

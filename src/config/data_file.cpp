@@ -15,7 +15,7 @@ namespace oul
 	/// @param name - jméno chyby, kterou má obsahovat vyhozená výjimka
 	/// @throw <code>InvalidConfiguration</code>, pokud uzel není definován nebo neobsahuje skalární
 	/// hodnotu.
-	static void check_scalar(cr<Node> node, ERROR name)
+	static void check_scalar(cr<Node> node, MESSAGE name)
 	{
 		if (!node.IsDefined() || !node.IsScalar())
 		{
@@ -27,7 +27,7 @@ namespace oul
 	/// @param name - jméno chyby, kterou má obsahovat vyhozená výjimka
 	/// @throw <code>InvalidConfiguration</code>, pokud uzel není definován nebo neobsahuje
 	/// posloupnost hodnot.
-	static void check_sequence(cr<Node> node, ERROR name)
+	static void check_sequence(cr<Node> node, MESSAGE name)
 	{
 		if (!node.IsDefined() || !node.IsSequence())
 		{
@@ -38,7 +38,7 @@ namespace oul
 	/// @param node - ověřovaný uzel
 	/// @param name - jméno chyby, kterou má obsahovat vyhozená výjimka
 	/// @throw <code>InvalidConfiguration</code>, pokud uzel není definován nebo neobsahuje mapu.
-	static void check_map(cr<Node> node, ERROR name)
+	static void check_map(cr<Node> node, MESSAGE name)
 	{
 		if (!node.IsDefined() || !node.IsMap())
 		{
@@ -51,7 +51,7 @@ namespace oul
 	/// @param name - jméno chyby, kterou má obsahovat vyhozená výjimka
 	/// @throw <code>InvalidConfiguration</code>, pokud uzel je definován a neobsahuje skalární
 	/// hodnotu.
-	static void check_optional_scalar(cr<Node> node, ERROR name)
+	static void check_optional_scalar(cr<Node> node, MESSAGE name)
 	{
 		if (node.IsDefined())
 		{
@@ -64,7 +64,7 @@ namespace oul
 	/// @throw <code>InvalidConfiguration</code>, pokud uzel je definován a neobsahuje posloupnost
 	/// hodnot.
 	[[maybe_unused]]
-	static void check_optional_sequence(cr<Node> node, ERROR name)
+	static void check_optional_sequence(cr<Node> node, MESSAGE name)
 	{
 		if (node.IsDefined())
 		{
@@ -75,7 +75,7 @@ namespace oul
 	/// @param node - ověřovaný uzel
 	/// @param name - jméno chyby, kterou má obsahovat vyhozená výjimka
 	/// @throw <code>InvalidConfiguration</code>, pokud uzel je definován a neobsahuje mapu.
-	static void check_optional_map(cr<Node> node, ERROR name)
+	static void check_optional_map(cr<Node> node, MESSAGE name)
 	{
 		if (node.IsDefined())
 		{
@@ -90,7 +90,7 @@ namespace oul
 	/// @param name - jméno chyby, kterou má obsahovat vyhozená výjimka
 	/// @throw <code>InvalidConfiguration</code>, pokud uzel nereprezentuje kategorizovaný seznam
 	/// souborů.
-	static void check_file_map(cr<Node> file_map, bool required, ERROR name)
+	static void check_file_map(cr<Node> file_map, bool required, MESSAGE name)
 	{
 		if (required)
 		{
@@ -123,16 +123,16 @@ namespace oul
 	/// komponenty.
 	static void check_component(cr<Node> component, bool validate_location)
 	{
-		check_map(component, ERROR::invalid_component);
+		check_map(component, MESSAGE::invalid_component);
 
-		check_scalar(component["name"], ERROR::invalid_component_name);
-		check_optional_scalar(component["original_name"], ERROR::invalid_original_name);
-		check_file_map(component["include"], true, ERROR::missing_include);
-		check_file_map(component["exclude"], false, ERROR::invalid_exclude);
+		check_scalar(component["name"], MESSAGE::invalid_component_name);
+		check_optional_scalar(component["original_name"], MESSAGE::invalid_original_name);
+		check_file_map(component["include"], true, MESSAGE::missing_include);
+		check_file_map(component["exclude"], false, MESSAGE::invalid_exclude);
 
 		if (validate_location)
 		{
-			check_scalar(component["location"], ERROR::missing_location);
+			check_scalar(component["location"], MESSAGE::missing_location);
 		}
 	}
 	/// @brief Zkontroluje, zda uzel obsahuje posloupnost konfigirací komponenty.
@@ -141,7 +141,7 @@ namespace oul
 	/// posloupnost konfigurací komponenty.
 	static void check_components_list(cr<Node> list)
 	{
-		check_sequence(list, ERROR::components_not_array);
+		check_sequence(list, MESSAGE::components_not_array);
 
 		for (cr<Node> component : list)
 		{
@@ -159,16 +159,16 @@ namespace oul
 		{
 			Node root = Load(config_file);
 
-			check_map(root, ERROR::root_not_object);
-			check_scalar(root["project_name"], ERROR::missing_project_name);
-			check_scalar(root["default_url"], ERROR::url_not_string);
+			check_map(root, MESSAGE::root_not_object);
+			check_scalar(root["project_name"], MESSAGE::missing_project_name);
+			check_scalar(root["default_url"], MESSAGE::url_not_string);
 			check_components_list(root["components"]);
 
 			return root;
 		}
 		catch (ParserException&)
 		{
-			throw InvalidConfiguration(ERROR::invalid_configuration_format);
+			throw InvalidConfiguration(MESSAGE::invalid_configuration_format);
 		}
 	}
 	/// @brief Načte a zkontroluje konfiguraci komponenty ze souboru
@@ -187,7 +187,7 @@ namespace oul
 		}
 		catch (ParserException&)
 		{
-			throw InvalidConfiguration(ERROR::invalid_configuration_format);
+			throw InvalidConfiguration(MESSAGE::invalid_configuration_format);
 		}
 	}
 

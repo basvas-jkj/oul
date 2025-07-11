@@ -20,7 +20,7 @@ namespace oul
 	export class ConfigurationNotFound: public CommonException
 	{
 	public:
-		ConfigurationNotFound(ERROR name): CommonException(name) {}
+		ConfigurationNotFound(MESSAGE name): CommonException(name) {}
 	};
 	/// @brief Třída ukládající přepínače a jejich argumenty předané jako argumenty příkazové řádky.
 	export class OPTIONS
@@ -36,7 +36,7 @@ namespace oul
 		{
 			if (ranges::find(supported_options, name) == supported_options.end())
 			{
-				throw ArgumentException(ERROR::unknown_option, {name});
+				throw ArgumentException(MESSAGE::unknown_option, {name});
 			}
 
 			auto it = short_variants.find(name);
@@ -92,7 +92,7 @@ namespace oul
 			optional<string> path = CONFIG::find();
 			if (path == nullopt)
 			{
-				throw ConfigurationNotFound(ERROR::config_not_found);
+				throw ConfigurationNotFound(MESSAGE::config_not_found);
 			}
 			else
 			{

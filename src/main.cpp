@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 	}
 	catch (...)
 	{
-		report_error(ERROR::unexpected_error);
+		report_error(MESSAGE::unexpected_error);
 	}
 
 	return 1;

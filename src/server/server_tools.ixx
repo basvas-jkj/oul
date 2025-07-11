@@ -3,7 +3,6 @@ module;
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <yaml-cpp/yaml.h>
-#undef ERROR
 
 export module server:tools;
 export import :base;

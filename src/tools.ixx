@@ -5,7 +5,6 @@ module;
 #include <boost/process.hpp>
 #include <future>
 #include <utility>
-#undef ERROR
 
 export module tools;
 

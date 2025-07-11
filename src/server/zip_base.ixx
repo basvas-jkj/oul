@@ -21,13 +21,13 @@ namespace oul
 	export class MissingZipTool: public CommonException
 	{
 	public:
-		MissingZipTool(ERROR name): CommonException(name) {}
+		MissingZipTool(MESSAGE name): CommonException(name) {}
 	};
 	/// @brief Chyba: vytváření nebo rozbalování archovu selhalo
 	export class ZippingError: public CommonException
 	{
 	public:
-		ZippingError(ERROR name = ERROR::zipping_error): CommonException(name) {}
+		ZippingError(MESSAGE name = MESSAGE::zipping_error): CommonException(name) {}
 	};
 
 	/// @brief Základní typ zipovacích nástrojů.

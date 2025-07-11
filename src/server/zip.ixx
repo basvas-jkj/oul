@@ -2,7 +2,6 @@ module;
 
 #include <boost/filesystem/path.hpp>
 #include <boost/process.hpp>
-#undef ERROR
 
 export module zip;
 import :base;
@@ -31,6 +30,6 @@ namespace oul
 		{
 			return make_unique<TOOL_ZIP>(zip_path, unzip_path);
 		}
-		throw MissingZipTool(ERROR::missing_zip_tool);
+		throw MissingZipTool(MESSAGE::missing_zip_tool);
 	}
 }

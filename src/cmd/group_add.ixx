@@ -15,16 +15,16 @@ namespace oul::args
 		{
 			if (arguments.size() < 1)
 			{
-				report_error(ERROR::missing_component_name);
+				report_error(MESSAGE::missing_component_name);
 			}
 			if (arguments.size() < 2)
 			{
-				report_error(ERROR::missing_group_name);
+				report_error(MESSAGE::missing_group_name);
 				return false;
 			}
 			else if (arguments.size() > 2)
 			{
-				report_error(ERROR::too_much_arguments);
+				report_error(MESSAGE::too_much_arguments);
 				return false;
 			}
 			else

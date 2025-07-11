@@ -21,13 +21,13 @@ namespace oul
 	export class MissingClient: public CommonException
 	{
 	public:
-		MissingClient(): CommonException(ERROR::missing_client) {}
+		MissingClient(): CommonException(MESSAGE::missing_client) {}
 	};
 	/// @brief Chyba: spuštění klienta archovu selhalo
 	export class ClientError: public CommonException
 	{
 	public:
-		ClientError(): CommonException(ERROR::client_error) {}
+		ClientError(): CommonException(MESSAGE::client_error) {}
 	};
 	/// @brief Základní typ klientů.
 	export class CLIENT
