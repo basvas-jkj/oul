@@ -32,15 +32,16 @@ target_link_libraries(oul PRIVATE Boost::filesystem)
 target_link_libraries(oul PRIVATE Boost::process)
 linux_link_library(oul -lstdc++)
 
-add_custom_target(messages
+add_custom_target(english_messages
         COMMAND ${CMAKE_COMMAND} -E copy
                 "${CMAKE_SOURCE_DIR}/msg/english.json"
                 "${CMAKE_BINARY_DIR}/english.json")
-add_custom_target(messages
+add_custom_target(czech_messages
         COMMAND ${CMAKE_COMMAND} -E copy
                 "${CMAKE_SOURCE_DIR}/msg/czech.json"
                 "${CMAKE_BINARY_DIR}/czech.json")
-add_dependencies(oul messages)
+add_dependencies(oul english_messages)
+add_dependencies(oul czech_messages)
 
 # test projects
 

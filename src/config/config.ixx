@@ -109,8 +109,7 @@ namespace oul
 			getline(cin, default_url);
 			trim(default_url);
 
-			string location =
-				(format[0] == 'y') ? "oul.config.yaml" : "oul.config.json";
+			string location = (format[0] == 'y') ? "oul.config.yaml" : "oul.config.json";
 			location = (fs::current_path() / location).string();
 
 			CONFIG cfg;

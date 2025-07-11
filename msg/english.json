@@ -15,6 +15,7 @@
     "help_init": "init                                      Initializes the configuration of the project.",
     "help_install": "install [component] -as=[] -url=[] -w=[]  Downloads the [component] from the server.",
     "help_list": "list                                      Lists the components in the project.",
+    "help_server_list": "list -url=[url]                           Downloads and prints the list of components available on the server [url].",
     "help_remove": "remove [component] [group] [files...]     Detaches [files] from the [group] of the [component].",
     "help_rename": "rename [previous name] [new name]         Renames the [previous name] component to [new name].",
     "help_upload": "upload [component] -as=[] -url=[]         Uploads the [component] to the server.",
@@ -28,10 +29,9 @@
     "component_not_found": "Component of this name doesn't exist.",
 
     "missing_group_name": "Missing group name.",
-    "group_already_exists": "",
+    "group_already_exists": "Group of this name already exists.\nCall this command with different name.",
     "group_not_found": "Group of this name doesn't exist in selected komponent.",
 
-    "file_not_exist": "File included into component has to exist.",
     "empty_file_list": "Missing file list.",
     "file_outside_component": "File '*' is not located in the components directory '*'.",
     "too_much_arguments": "Too much arguments. Run 'oul help' to get an info about the supported argument count.",

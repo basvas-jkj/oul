@@ -81,7 +81,7 @@ namespace oul
 		help_init,
 		help_install,
 		help_list,
-		help_remove,
+		help_server_list help_remove,
 		help_rename,
 		help_upload,
 
@@ -146,6 +146,7 @@ namespace oul
 		{help_init, "help_init"},
 		{help_install, "help_install"},
 		{help_list, "help_list"},
+		{help_server_list, "help_server_list"},
 		{help_remove, "help_remove"},
 		{help_rename, "help_rename"},
 		{help_upload, "help_upload"},
@@ -251,8 +252,8 @@ namespace oul
 	{
 		vector commands = {help_add,	   help_create,		  help_delete, help_exclude,
 						   help_group_add, help_group_remove, help_help,   help_init,
-						   help_install,   help_list,		  help_remove, help_rename,
-						   help_upload};
+						   help_install,   help_server_list,  help_list,   help_remove,
+						   help_rename,	   help_upload};
 
 		cr<string> help_text = error_list[help];
 		println(cout, "{}", messages[help_text]);

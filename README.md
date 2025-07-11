@@ -76,6 +76,9 @@ Je však nutné nastavit proměnnou prostředí VCPKG_ROOT tak, aby ukládala ce
 <dt>oul list</dt>
 <dd>Vypíše seznam komponent v projektu.</dd>
 
+<dt>oul list -url=[url]</dt>
+<dd>Stáhne a vypíše seznam komponent ze serveru [url].</dd>
+
 <dt> oul remove [component] [group] [files...]</dt>
 <dd>Odebere soubory [files] ze skupiny [group] komponenty [component].</dd>
 
@@ -92,6 +95,6 @@ Je však nutné nastavit proměnnou prostředí VCPKG_ROOT tak, aby ukládala ce
     </dl>
 </dd>
 </dl>
-Příkazy add, remove, rename, create ani delete nevytváří, nemažou ani nepřejmenovávají sobory.
-Pouze příkaz add kontroluje existenci přidávaných souborů.
+Příkazy add, remove, rename, create ani delete nevytváří, nemažou ani nepřejmenovávají sobory
+ani nekontrolují jejich existenci.
 Změna se projeví pouze v konfiguraci projektu.
