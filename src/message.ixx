@@ -82,7 +82,6 @@ namespace oul
 		missing_group_name,
 		group_already_exists,
 		group_not_found,
-		file_not_exist,
 		empty_file_list,
 		file_outside_component,
 		too_much_arguments,
@@ -150,7 +149,6 @@ namespace oul
 		{group_already_exists, "group_already_exists"},
 		{group_not_found, "group_not_found"},
 
-		{file_not_exist, "file_not_exist"},
 		{empty_file_list, "empty_file_list"},
 		{file_outside_component, "file_outside_component"},
 		{too_much_arguments, "too_much_arguments"},

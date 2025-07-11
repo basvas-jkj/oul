@@ -34,14 +34,6 @@ namespace oul
 		}
 		return false;
 	}
-	/// @brief Zkontroluje, zda je zadaná položka platná.
-	/// @param entry - cesta nebo vzor
-	/// @return <code>true</code>, pokud cesta odkazuje na existující soubor nebo jde-li o vzor,
-	/// <code>false</code> v opačném případě
-	bool check_entry_validity(cr<string> entry)
-	{
-		return is_pattern(entry) || fs::exists(entry);
-	}
 	/// @brief Je daná položka mimo složku, která ukládá komponentu?
 	/// @param entry - cesta k položce relativní vůči umístění komponenty
 	/// @return <code>true</code>, pokud se položka nachází mimo složku komponenty, jinak
@@ -234,13 +226,9 @@ namespace oul
 				{
 					report_error(ERROR::file_outside_component, {name, component.location});
 				}
-				else if (check_entry_validity(entry))
-				{
-					add_if_not_presented(include_list, shifted.generic_string());
-				}
 				else
 				{
-					report_error(ERROR::file_not_exist);
+					add_if_not_presented(include_list, shifted.generic_string());
 				}
 			}
 		}
