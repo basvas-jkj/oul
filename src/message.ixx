@@ -1,9 +1,11 @@
 module;
 
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem/path.hpp>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <stdlib.h>
 
 export module message;
 
@@ -12,6 +14,7 @@ import support;
 
 using namespace std;
 using namespace nlohmann;
+using boost::algorithm::to_lower;
 
 namespace fs = boost::filesystem;
 namespace oul
@@ -46,7 +49,17 @@ namespace oul
 	/// @param oul_path - cesta k spustitelnému souboru oul
 	export void init_messages(fs::path&& oul_path)
 	{
-		oul_path.replace_filename("english.json");
+		string language = getenv("LANG");
+		to_lower(language);
+
+		if (language == "czech" || language.starts_with("cs_cz"))
+		{
+			oul_path.replace_filename("czech.json");
+		}
+		else
+		{
+			oul_path.replace_filename("english.json");
+		}
 		messages = DICTIONARY(oul_path);
 	}
 

@@ -1,0 +1,62 @@
+{
+    "unexpected_error": "Neočekávané selhání programu.",
+    "component_list": "Seznam komponent použitých v projektu:",
+    "component_server_list": "Seznam komponent dostupných na serveru '*':",
+    "local_only": "(pouze lokální)",
+    "help": "oul [příkaz]",
+
+    "help_add":          "add [komponenta] [skupina] [soubory...]        Zahrne [soubory] do [skupiny] v [komponentě].",
+    "help_create":       "create [komponenta] -w=[umístění]              Vytvoří [komponentu] ve složce [umístění].",
+    "help_delete":       "delete [komponenta]                            Odstraní [komponentu] z projektu.",
+    "help_exclude":      "exclude [komponenta] [skupina] [soubory...]    Vyčlení [soubory] ze [skupiny] v [komponentě].",
+    "help_group_add":    "group add [komponenta] [skupina]               Vytvoří [skupinu] v [komponentě].",
+    "help_group_remove": "group remove [komponenta] [skupina]            Odebere [skupinu] z [komponenty].",
+    "help_help":         "help                                           Vypíše text nápovědy.",
+    "help_init":         "init                                           Inicializuje konfiguraci projektu.",
+    "help_install":      "install [komponenta] -as=[] -url=[] -w=[]      Stáhne [komponentu] ze serveru.",
+    "help_list":         "list                                           Vypíše seznam komponent.",
+    "help_server_list":  "list -url=[url]                             Stáhne a vypíše seznam komponent ze serveru [url].",
+    "help_remove":       "remove [komponenta] [skupina] [soubory...]     Odebere [soubory] ze [skupiny] v [komponentě].",
+    "help_rename":       "rename [původní jméno] [nové jméno]            Přejmenuje komponentu [původní jméno] na [nové jméno].",
+    "help_upload":       "upload [komponenta] -as=[] -url=[]             Nahraje [komponentu] na server.",
+
+    "missing_command": "Chybějící příkaz. Spusťte 'oul help' pro zobrazení seznamu povolených příkazů.",
+    "unknown_command": "Neznámý příkaz. Spusťte 'oul help' pro zobrazení seznamu povolených příkazů.",
+    "missing_group_subcommand": "'oul group' vyžaduje podpříkaz ('add' nebo 'remove').",
+
+    "missing_component_name": "Chybí jméno komponenty.",
+    "component_already_exists": "Komponenta tohoto jména už existuje.\nSpusťte tento příkaz s jiným jménem nebo přejmenujte původní komponentu.",
+    "component_not_found": "Komponenta tohoto jména neexistuje.",
+
+    "missing_group_name": "Chybí jméno skupiny.",
+    "group_already_exists": "Skupina tohoto jména už existuje.\nSpusťte tento příkaz s jiným jménem.",
+    "group_not_found": "Skupina tohoto jména ve zvolené komponentě neexistuje.",
+
+    "empty_file_list": "Chybí seznam souborů.",
+    "file_outside_component": "Soubor '*' není umístěn ve složce komponenty '*'.",
+    "too_much_arguments": "Příliš mnoho argumentů. Spusťte 'oul help' pro získání informací o povolených počtech argumentů.",
+    "unknown_option": "Neznámý přepínač '*'. Spusťte 'oul help' pro získání seznamu povolených přepínačů.",
+
+    "config_found": "Konfigurační soubor už byl vytvořen.",
+    "config_not_found": "Konfigurační sobor nebyl nalezen.\nSpusťtě 'oul init' nebo se přesňte do inicializovaného projektu.",
+    "invalid_configuration_format": "Konfigurační soubor není platný JSON nebo YAML.",
+
+    "root_not_object": "Kořen konfigurace musí být objekt.",
+    "missing_project_name": "V konfiguraci chybí jméno projektu.",
+    "components_not_array": "Seznam komponent je povinný a musí být pole.",
+    "url_not_string": "Url musí být string.",
+    "invalid_component": "Všechny položky v seznamu komponent musí být mapy/objekty.",
+    "invalid_component_name": "Jméno některých komponent chybí nebo není string.",
+    "invalid_original_name": "Původní jméno komponenty musí být string.",
+    "missing_location": "Umístění komponenty chybí nebo není string.",
+    "missing_include": "Seznam souborů zahrnutých do komponenty chybí nebo není mapou polí souborů.",
+    "invalid_exclude": "Seznam souborů vyčleněných z komponenty není mapou polí souborů.",
+
+    "missing_client": "Požadovaný externí klient nebyl nalezen.",
+    "client_error": "Volání externího klienta nebylo úspěšné.",
+    "unknown_client": "Neznámý nebo nepodporovaný externí klient.",
+    "missing_zip_tool": "Nebyl nalezen žádný zipovací nástroj.",
+    "zipping_error": "Vytvoření nebo rozbalení zipového archivu nebylo úspěšné.",
+
+    "missing_url": "Nebyla určena žádná URL."
+}

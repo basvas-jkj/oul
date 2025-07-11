@@ -36,6 +36,10 @@ add_custom_target(messages
         COMMAND ${CMAKE_COMMAND} -E copy
                 "${CMAKE_SOURCE_DIR}/msg/english.json"
                 "${CMAKE_BINARY_DIR}/english.json")
+add_custom_target(messages
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${CMAKE_SOURCE_DIR}/msg/czech.json"
+                "${CMAKE_BINARY_DIR}/czech.json")
 add_dependencies(oul messages)
 
 # test projects
