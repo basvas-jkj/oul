@@ -49,7 +49,13 @@ namespace oul
 	/// @param oul_path - cesta k spustitelnému souboru oul
 	export void init_messages(fs::path&& oul_path)
 	{
-		string language = getenv("LANG");
+		string language;
+		char* lang = getenv("LANG");
+		if (lang != NULL)
+		{
+			language = string(lang);
+		}
+
 		to_lower(language);
 
 		if (language == "czech" || language.starts_with("cs_cz"))
