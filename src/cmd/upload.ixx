@@ -70,7 +70,7 @@ namespace oul::args
 				}
 				else
 				{
-					throw MissingUrl();
+					throw CommonException(ERROR::missing_url);
 				}
 			}
 			else if (component.url == "")

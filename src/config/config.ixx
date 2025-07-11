@@ -1,11 +1,12 @@
 module;
 
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 #include <fstream>
 #include <iostream>
 #include <optional>
 #include <ranges>
+#include <string>
 #include <yaml-cpp/node/node.h>
 
 export module configuration;
@@ -16,6 +17,7 @@ export import item;
 export import :data_file;
 
 using namespace std;
+using boost::algorithm::trim;
 namespace fs = boost::filesystem;
 
 namespace oul
@@ -84,18 +86,31 @@ namespace oul
 		{
 			string name;
 			cout << "Enter the project name: ";
-			cin >> name;
+			getline(cin, name);
+			trim(name);
 
 			string format;
 			cout << "Do you prefer JSON or YAML for the configuration? (j/y): ";
-			cin >> format;
+			getline(cin, format);
+			trim(format);
+			to_lower(format);
+
+			if (format != "y" && format != "yaml" && format[0] == "y")
+			{
+				cout << "Unknown format, using YAML.\n";
+			}
+			else
+			{
+				cout << "Unknown format, using JSON.\n";
+			}
 
 			string default_url;
 			cout << "Enter URL used by default during installing components: ";
-			cin >> default_url;
+			getline(cin, default_url);
+			trim(default_url);
 
 			string location =
-				(format[0] == 'j' || format[0] == 'J') ? "oul.config.json" : "oul.config.yaml";
+				(format[0] == 'y') ? "oul.config.yaml" : "oul.config.json";
 			location = (fs::current_path() / location).string();
 
 			CONFIG cfg;
