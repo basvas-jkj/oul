@@ -1,6 +1,7 @@
 {
     "unexpected_error": "Unexpected program failure.",
     "component_list": "List of components used in this project:",
+    "component_server_list": "List of components available on the '*' server:",
     "local_only": "(local only)",
     "help": "oul [command]",
 

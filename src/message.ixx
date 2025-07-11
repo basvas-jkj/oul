@@ -54,6 +54,7 @@ namespace oul
 	export enum class ERROR {
 		unexpected_error,
 		component_list,
+		component_server_list,
 		local_only,
 		help,
 
@@ -119,6 +120,7 @@ namespace oul
 	static map<ERROR, string> error_list{
 		{unexpected_error, "unexpected_error"},
 		{component_list, "component_list"},
+		{component_server_list, "component_server_list"},
 		{local_only, "local_only"},
 		{help, "help"},
 
@@ -220,6 +222,17 @@ namespace oul
 			cr<string> local_only_text = error_list[local_only];
 			cr<string> url = (i.url.empty()) ? messages[local_only_text] : i.url;
 			println(cout, "\t{}:\t{}\t({})", i.name, i.location, url);
+		}
+	}
+	/// @brief Vypíše seznam komponent ze serveru.
+	/// @param components - seznam komponent k vypsání
+	/// @param url - url serveru
+	export void print_component_list(cr<vector<string>> components, cr<string> url)
+	{
+		report_error(component_server_list, {url});
+		for (cr<string> name : components)
+		{
+			println(cout, "\t{}", name);
 		}
 	}
 	/// @brief Vypíše nápovědu programu.

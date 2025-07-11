@@ -300,10 +300,7 @@ namespace oul
 		{
 			client_ptr client = select_client("", url, "");
 			vector<string> components = client->list_components();
-			for (cr<string> component : components)
-			{
-				println(cout, "{}", component);
-			}
+			print_component_list(components, url);
 		}
 	};
 }
