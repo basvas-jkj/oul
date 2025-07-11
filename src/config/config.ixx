@@ -17,6 +17,7 @@ export import item;
 export import :data_file;
 
 using namespace std;
+using boost::algorithm::to_lower;
 using boost::algorithm::trim;
 namespace fs = boost::filesystem;
 
@@ -85,26 +86,32 @@ namespace oul
 		static void initialize()
 		{
 			string name;
+
+			print_init_prompt(ERROR::init_name);
 			cout << "Enter the project name: ";
 			getline(cin, name);
 			trim(name);
 
 			string format;
+			print_init_prompt(ERROR::init_format);
 			cout << "Do you prefer JSON or YAML for the configuration? (j/y): ";
 			getline(cin, format);
 			trim(format);
 			to_lower(format);
 
-			if (format != "y" && format != "yaml" && format[0] == "y")
+			if (format != "y" && format != "yaml" && format[0] == 'y')
 			{
+				report_error(ERROR::init_yaml_fallback);
 				cout << "Unknown format, using YAML.\n";
 			}
 			else
 			{
+				report_error(ERROR::init_json_fallback);
 				cout << "Unknown format, using JSON.\n";
 			}
 
 			string default_url;
+			print_init_prompt(ERROR::init_url);
 			cout << "Enter URL used by default during installing components: ";
 			getline(cin, default_url);
 			trim(default_url);

@@ -71,6 +71,14 @@ namespace oul
 		local_only,
 		help,
 
+		// init prompts
+		init_name,
+		init_format,
+		init_url,
+		init_json_fallback,
+		init_yaml_fallback,
+
+		// help messages
 		help_add,
 		help_create,
 		help_delete,
@@ -81,7 +89,8 @@ namespace oul
 		help_init,
 		help_install,
 		help_list,
-		help_server_list help_remove,
+		help_server_list,
+		help_remove,
 		help_rename,
 		help_upload,
 
@@ -135,6 +144,12 @@ namespace oul
 		{component_server_list, "component_server_list"},
 		{local_only, "local_only"},
 		{help, "help"},
+
+		{init_name, "init_name"},
+		{init_format, "init_format"},
+		{init_url, "init_url"},
+		{init_json_fallback, "init_json_fallback"},
+		{init_yaml_fallback, "init_yaml_fallback"},
 
 		{help_add, "help_add"},
 		{help_create, "help_create"},
@@ -191,6 +206,13 @@ namespace oul
 
 		{missing_url, "missing_url"}};
 
+	/// @brief Vypíše výzvu na standardní výstup.
+	/// @param name - kód zprávy
+	export void print_init_prompt(ERROR name)
+	{
+		cr<string> error = error_list[name];
+		print(cout, "{}", messages[error]);
+	}
 	/// @brief Vypíše chybovou hlášku na standardní chybový výstup.
 	/// @param name - kód chybové hlášky
 	export void report_error(ERROR name)

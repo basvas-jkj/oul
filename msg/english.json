@@ -5,6 +5,12 @@
     "local_only": "(local only)",
     "help": "oul [command]",
 
+    "init_name": "Enter the project name: ",
+    "init_format": "Do you prefer JSON or YAML for the configuration? (j/y): ",
+    "init_url": "Enter URL used by default during installing and uploading components: ",
+    "init_json_fallback": "Unknown format, using JSON.",
+    "init_yaml_fallback": "Unknown format, using YAML.",
+
     "help_add": "add [component] [group] [files...]        Attaches [files] to the [group] of the [component].",
     "help_create": "create [component] -w=[location]          Creates the [component] in the [location] folder.",
     "help_delete": "delete [component]                        Removes [component] from the project.",

@@ -5,6 +5,12 @@
     "local_only": "(pouze lokální)",
     "help": "oul [příkaz]",
 
+    "init_name": "Zadejte jméno projektu: ",
+    "init_format": "Pro vytvoření konfigurace preferujete JSON nebo YAML? (j/y): ",
+    "init_url": "Zadejte výchozí URL použitou při stahování a nahrávání komponent: ",
+    "init_json_fallback": "Neznámý formát, použije se JSON.",
+    "init_yaml_fallback": "Neznámý formát, použije se YAML.",
+
     "help_add": "add [komponenta] [skupina] [soubory...]        Zahrne [soubory] do [skupiny] v [komponentě].",
     "help_create": "create [komponenta] -w=[umístění]              Vytvoří [komponentu] ve složce [umístění].",
     "help_delete": "delete [komponenta]                            Odstraní [komponentu] z projektu.",
