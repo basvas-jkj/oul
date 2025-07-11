@@ -27,9 +27,13 @@ namespace oul
 		try
 		{
 			static regex pattern("[A-Z]:[\\/].*");
-			if (url.starts_with("http://") || url.starts_with("ftp://"))
+			if (url.starts_with("http://"))
 			{
-				return make_unique<CURL>(component_name, url, component_location);
+				return make_unique<CURL_HTTP>(component_name, url, component_location);
+			}
+			else if (url.starts_with("ftp://"))
+			{
+				return make_unique<CURL_FTP>(component_name, url, component_location);
 			}
 			else if (url.starts_with("scp://"))
 			{

@@ -87,9 +87,9 @@ namespace oul
 			return list;
 		}
 	};
-	/// @brief Reprezentuje nástroj CURL.
+	/// @brief Reprezentuje nástroj CURL pro použití protokolu HTTP.
 	/// (https://curl.se/)
-	export class CURL: public CLIENT
+	export class CURL_HTTP: public CLIENT
 	{
 		string url;
 		zip_tool_ptr tool;
@@ -114,7 +114,7 @@ namespace oul
 		/// @param component_name - jméno komponenty, kterou klient spojuje
 		/// @param url - url, se kterou je klient spojený
 		/// @param cl - umístění komponenty, kterou klient spravuje
-		CURL(cr<string> name, cr<string> url, cr<fs::path> cl): CLIENT(name, cl, "curl")
+		CURL_HTTP(cr<string> name, cr<string> url, cr<fs::path> cl): CLIENT(name, cl, "curl")
 		{
 			this->url = url_append(url, name);
 			tool = select_zip_tool();
@@ -139,6 +139,68 @@ namespace oul
 		vector<string> list_components() override
 		{
 			string output = call_client_read_output(url);
+			Node list = Load(output);
+			try
+			{
+				return list.as<vector<string>>();
+			}
+			catch (YAML::BadConversion&)
+			{
+				throw ClientError();
+			}
+		}
+	};
+	/// @brief Reprezentuje nástroj CURL pro použití protokolu FTP.
+	/// (https://curl.se/)
+	export class CURL_FTP: public CLIENT
+	{
+		string url;
+		zip_tool_ptr tool;
+
+		/// @brief Odešle jeden soubor na server.
+		/// @param url - url serveru
+		/// @param file - cesta k odesílanému souboru
+		void upload_file(cr<string> url, cr<fs::path> file)
+		{
+			call_client("-T", file, url);
+		}
+		/// @brief Stáhne jeden soubor ze serveru.
+		/// @param url - url serveru
+		/// @param where - cesta, na kterou se má soubor stáhnout
+		void download_file(cr<string> url, cr<fs::path> file)
+		{
+			call_client("-o", file, url);
+		}
+
+	public:
+		/// @param component_name - jméno komponenty, kterou klient spojuje
+		/// @param url - url, se kterou je klient spojený
+		/// @param cl - umístění komponenty, kterou klient spravuje
+		CURL_FTP(cr<string> name, cr<string> url, cr<fs::path> cl): CLIENT(name, cl, "curl")
+		{
+			this->url = url_append(url, name);
+			tool = select_zip_tool();
+		}
+		/// @brief Zazipuje komponentu a odešle ji na server.
+		/// @param component - konfigurace odesílané komponenty
+		void upload(cr<ITEM> component) override
+		{
+			TMP_FILE file = tool->zip(component, component_location.string());
+			upload_file(url, file.get_path());
+		}
+		/// @brief Stáhne komponentu ze serveru jako zipový archiv a rozbalí ji.
+		/// @return konfigurace stažené komponenty
+		ITEM download() override
+		{
+			TMP_FILE file("%%%%-%%%%-%%%%-%%%%.zip", false);
+			download_file(url, file.get_path());
+			return tool->unzip(file, component_location.string());
+		}
+		/// @brief Stáhne seznam komponent ze serveru.
+		/// @return Seznam komponent uložených na serveru.
+		vector<string> list_components() override
+		{
+			string output = call_client_read_output("--list-only", url);
 			Node list = Load(output);
 			try
 			{
