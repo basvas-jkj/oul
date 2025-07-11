@@ -51,9 +51,13 @@ namespace oul::args
 			}
 
 			string url = opt.get("-url");
-			if (url == "")
+			if (url == "" && cfg.default_url != "")
 			{
 				url = cfg.default_url;
+			}
+			else
+			{
+				throw CommonException(ERROR::missing_url);
 			}
 
 			string where = opt.get("-w");

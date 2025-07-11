@@ -14,13 +14,6 @@ using namespace std;
 namespace fs = boost::filesystem;
 namespace oul::args
 {
-	/// @brief Chyba: URL nebyla právně zadaná.
-	export class MissingUrl: public CommonException
-	{
-	public:
-		MissingUrl(ERROR name = ERROR::missing_url): CommonException(name) {}
-	};
-
 	/// @brief Reprezentuje příkaz upload - nahrání komponenty na server.
 	export class UPLOAD: public COMMAND
 	{
@@ -53,7 +46,7 @@ namespace oul::args
 			vector<ITEM>::iterator i = cfg.get_component(local_name);
 			if (i == cfg.components.end())
 			{
-				throw MissingComponent();
+				throw CommonException(ERROR::missing_url);
 			}
 			ITEM& component = *i;
 
@@ -70,6 +63,10 @@ namespace oul::args
 				if (component.url != "")
 				{
 					url = component.url;
+				}
+				else if (cfg.default_url != "")
+				{
+					url = cfg.default_url;
 				}
 				else
 				{
