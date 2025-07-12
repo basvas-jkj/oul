@@ -199,16 +199,35 @@ namespace oul
 		/// @return Seznam komponent uložených na serveru.
 		vector<string> list_components() override
 		{
-			string output = call_client_read_output("--list-only", url);
-			Node list = Load(output);
+			istringstream output;
+
 			try
 			{
-				return list.as<vector<string>>();
+				output = istringstream(call_client_read_output("--list-only", url));
 			}
-			catch (YAML::BadConversion&)
+			catch (...)
 			{
 				throw ClientError();
 			}
+
+			vector<string> list;
+			while (output.good())
+			{
+				string line;
+				getline(output, line);
+
+				if (line == "" || line == "\r")
+				{
+					continue;
+				}
+				else if (line.ends_with('\r'))
+				{
+					line.pop_back();
+				}
+
+				list.push_back(std::move(line));
+			}
+			return list;
 		}
 	};
 	/// @brief Reprezentuji lokálního klienta (serverem se myslí lokální složka).
