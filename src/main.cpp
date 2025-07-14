@@ -1,4 +1,3 @@
-#include <iostream>
 #include <memory>
 
 import argument_parser;
@@ -12,7 +11,7 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		init_messages(argv[0]);
+		init_messages();
 		unique_ptr<COMMAND> c = read_args(argc, argv);
 		if (c != nullptr && c->check())
 		{

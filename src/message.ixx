@@ -1,6 +1,8 @@
 module;
 
+#define _CRT_SECURE_NO_DEPRECATE
 #include <boost/algorithm/string.hpp>
+#include <boost/dll/runtime_symbol_info.hpp>
 #include <boost/filesystem/path.hpp>
 #include <fstream>
 #include <iostream>
@@ -14,9 +16,8 @@ import support;
 
 using namespace std;
 using namespace nlohmann;
+using namespace boost::dll;
 using boost::algorithm::to_lower;
-
-namespace fs = boost::filesystem;
 namespace oul
 {
 	/// @brief Třída reprezentující chybové hlášky načtené ze souboru.
@@ -47,7 +48,7 @@ namespace oul
 	static DICTIONARY messages;
 	/// @brief Načte chybové hlášky ze souboru.
 	/// @param oul_path - cesta k spustitelnému souboru oul
-	export void init_messages(fs::path&& oul_path)
+	export void init_messages()
 	{
 		string language;
 		char* lang = getenv("LANG");
@@ -58,6 +59,7 @@ namespace oul
 
 		to_lower(language);
 
+		fs::path oul_path = program_location();
 		if (language == "czech" || language.starts_with("cs_cz"))
 		{
 			oul_path.replace_filename("czech.json");

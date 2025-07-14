@@ -9,7 +9,7 @@ project(oul)
 # find packages
 find_package(yaml-cpp REQUIRED)
 find_package(nlohmann_json REQUIRED)
-find_package(Boost REQUIRED filesystem process)
+find_package(Boost REQUIRED algorithm filesystem process url)
 
 function(linux_link_library target_name library_name)
     if (LINUX)
@@ -28,8 +28,10 @@ set_property(TARGET oul PROPERTY CXX_STANDARD 23)
 
 target_link_libraries(oul PRIVATE yaml-cpp::yaml-cpp)
 target_link_libraries(oul PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(oul PRIVATE Boost::algorithm)
 target_link_libraries(oul PRIVATE Boost::filesystem)
 target_link_libraries(oul PRIVATE Boost::process)
+target_link_libraries(oul PRIVATE Boost::url)
 linux_link_library(oul -lstdc++)
 
 add_custom_target(english_messages
@@ -73,7 +75,10 @@ target_sources(file_iterator_test PUBLIC FILE_SET CXX_MODULES FILES "src/server/
 target_link_libraries(config_test PRIVATE yaml-cpp::yaml-cpp)
 target_link_libraries(config_test PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(config_test PRIVATE Boost::filesystem)
+target_link_libraries(config_test PRIVATE Boost::filesystem)
+target_link_libraries(config_test PRIVATE Boost::url)
 target_link_libraries(file_iterator_test PRIVATE Boost::filesystem)
+target_link_libraries(file_iterator_test PRIVATE Boost::url)
 
 if (MSVC)
     target_compile_options(oul PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/W4>)
