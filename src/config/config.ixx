@@ -107,9 +107,18 @@ namespace oul
 			}
 
 			string default_url;
-			print_init_prompt(MESSAGE::init_url);
-			getline(cin, default_url);
-			trim(default_url);
+			while (true)
+			{
+				print_init_prompt(MESSAGE::init_url);
+				getline(cin, default_url);
+				trim(default_url);
+
+				auto&& rv = parse_absolute_uri(bc::string_view(default_url));
+				if (default_url == "" || validate_url(default_url))
+				{
+					break;
+				}
+			}
 
 			string location = (format[0] == 'y') ? "oul.config.yaml" : "oul.config.json";
 			location = (fs::current_path() / location).string();
@@ -122,7 +131,7 @@ namespace oul
 		/// @brief Najde cestu ke konfiguračnímu souboru.Pokud je soubor nalezen, nastaví pracovní
 		/// složku na jeho umístění.
 		/// @return Pokud byla konfigurace nalezena, vrátí cestu. Jinak vrátí "".
-		static optional<string> find()
+		static std::optional<string> find()
 		{
 			fs::path current = fs::current_path();
 			do

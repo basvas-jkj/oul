@@ -1,14 +1,16 @@
 module;
 
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/url.hpp>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
 export module support;
 
 using namespace std;
+using namespace boost::urls;
 using namespace boost::filesystem;
 
 namespace oul
@@ -71,5 +73,20 @@ namespace oul
 
 		url.append(next);
 		return url;
+	}
+	/// @brief
+	/// @param url
+	/// @return
+	export bool validate_url(cr<string> url)
+	{
+		set<string> supported_schemas = {"file", "http", "ftp", "scp"};
+
+		auto&& parsed = parse_absolute_uri(url);
+		if (parsed.has_value() && supported_schemas.contains(parsed.value().scheme()))
+		{
+			return true;
+		}
+
+		return path(url).is_absolute();
 	}
 }
