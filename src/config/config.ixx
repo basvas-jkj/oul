@@ -113,7 +113,6 @@ namespace oul
 				getline(cin, default_url);
 				trim(default_url);
 
-				auto&& rv = parse_absolute_uri(bc::string_view(default_url));
 				if (default_url == "" || validate_url(default_url))
 				{
 					break;

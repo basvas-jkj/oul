@@ -55,7 +55,7 @@ namespace oul::args
 			{
 				url = cfg.default_url;
 			}
-			else
+			else if (url == "")
 			{
 				throw CommonException(MESSAGE::missing_url);
 			}
