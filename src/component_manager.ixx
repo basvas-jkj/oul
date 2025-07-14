@@ -161,8 +161,13 @@ namespace oul
 		void upload(cr<string> server_name, cr<string> url, cr<fs::path> location,
 					cr<ITEM> component)
 		{
+			ITEM i = component;
+			i.name = server_name;
+			i.original_name = server_name;
+			i.url = url;
+
 			client_ptr client = select_client(server_name, url, location);
-			client->upload(component);
+			client->upload(i);
 		}
 		/// @brief Odebere komponentu z projektu.
 		/// @param name - jméno komponenty
