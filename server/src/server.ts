@@ -49,7 +49,7 @@ async function retrieve_full_body(req: http.IncomingMessage): Promise<Buffer>
 }
 function is_component(entry: fs.Dirent): boolean
 {
-    if (!entry.isDirectory)
+    if (!entry.isDirectory())
     {
         return false;
     }

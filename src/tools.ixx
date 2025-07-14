@@ -34,7 +34,7 @@ namespace oul
 		io_service ios;
 		future<string> buffer;
 
-		child ch(tool_path, std::forward<T>(args)..., std_out > buffer, ios);
+		child ch(tool_path, std::forward<T>(args)..., std_out > buffer, std_err > null, ios);
 
 		ios.run();
 		ch.wait();
