@@ -57,21 +57,23 @@ namespace oul
 		copy_file(source, target, copy_options::update_existing);
 	}
 	/// @brief Připojí řetězec <code>next</code> na konec <code>url</code>.
+	/// Zaručuje, že výstup nikdy nekončí na /.
 	/// Pokud <code>url</code> nekončí na /, připojí ho.
 	/// @param url - prodlužovaná URL
 	/// @param next - nová část
 	export string url_append(string url, cr<string> next)
 	{
-		if (next == "")
-		{
-			return url;
-		}
-		else if (!url.ends_with('/'))
+		if (next != "" && !url.ends_with('/'))
 		{
 			url.append("/");
 		}
 
 		url.append(next);
+
+		if (url.ends_with('/'))
+		{
+			url.pop_back();
+		}
 		return url;
 	}
 	/// @brief

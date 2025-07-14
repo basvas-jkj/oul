@@ -79,8 +79,9 @@ namespace oul
 
 			download_component(tmp_dir);
 
+			fs::path base = tmp_dir / last_path_item(download_url);
 			vector<string> list;
-			fs::directory_iterator it(tmp_dir);
+			fs::directory_iterator it(base);
 			for (cr<fs::directory_entry> entry : it)
 			{
 				if (is_component(entry))
