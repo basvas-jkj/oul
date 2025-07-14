@@ -36,7 +36,7 @@ namespace oul
 		/// @brief Vytvoří zip archiv pro danou komponentu, zapíše do ní konfiguraci.
 		/// @param component - konfigurace komponenty
 		/// @return dočasný soubor reprezentující vytvořený zip archiv
-		TMP_FILE create_zip(cr<ITEM> component)
+		TMP_FILE create_zip(cr<ITEM> component, cr<string> component_location)
 		{
 			path json_path = "oul.component.json";
 			TMP_FILE json(json_path.string(), true);
@@ -46,7 +46,7 @@ namespace oul
 
 			path json_dir = json.get_directory();
 			TMP_FILE zip_file(json_dir / "komponent.zip");
-			add_file(json_dir, zip_file, json.get_path());
+			add_file(json_dir, zip_file, json.get_name());
 
 			return zip_file;
 		}
@@ -82,7 +82,7 @@ namespace oul
 		/// @return objekt reprezentující dočasný soubor zipového archivu
 		TMP_FILE zip(cr<ITEM> component, cr<string> component_location)
 		{
-			TMP_FILE zip_file = create_zip(component);
+			TMP_FILE zip_file = create_zip(component, component_location);
 			FILE_ITERATOR it(component_location, component.include, component.exclude);
 
 			for (cr<path> entry : it)
@@ -112,6 +112,9 @@ namespace oul
 
 			ifstream component_file(name.string());
 			auto&& component = load_component(component_file);
+			component_file.close();
+
+			remove(name);
 			return ITEM(component);
 		}
 		virtual ~ABSTRACT_ZIP_TOOL() = default;

@@ -23,7 +23,8 @@ namespace oul
 		/// @param entry - soubor přidávaný do archivu
 		void add_file(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) override
 		{
-			bool success = call_tool(zip_path, working_dir, zip_file.get_path(), entry);
+			path shifted = relative(entry, working_dir);
+			bool success = call_tool(zip_path, working_dir, zip_file.get_path(), shifted);
 			if (!success)
 			{
 				throw new ZippingError(MESSAGE::zipping_error);
@@ -57,7 +58,8 @@ namespace oul
 		/// @param entry - soubor přidávaný do archivu
 		void add_file(cr<path> working_dir, cr<TMP_FILE> zip_file, cr<path> entry) override
 		{
-			bool success = call_tool(zip_path, working_dir, "a", zip_file.get_path(), entry);
+			path shifted = relative(entry, working_dir);
+			bool success = call_tool(zip_path, working_dir, "a", zip_file.get_path(), shifted);
 			if (!success)
 			{
 				throw new ZippingError(MESSAGE::zipping_error);
