@@ -14,6 +14,12 @@ import temporary_file;
 namespace fs = boost::filesystem;
 namespace oul
 {
+	string last_path_item(cr<string> s)
+	{
+		fs::path p(s);
+		return p.filename().string();
+	}
+
 	/// @brief Reprezentuje nástroj SPC.
 	/// (http://www.openssh.com/)
 	export class SCP: public CLIENT
@@ -38,7 +44,7 @@ namespace oul
 			CLIENT(component_name, cl, "scp")
 		{
 			upload_url = url;
-			download_url = url_append(url, component_name + "/*");
+			download_url = url_append(url, component_name);
 		}
 		/// @brief Odešle komponentu na server.
 		/// @param component - konfigurace odesílané komponenty
@@ -59,8 +65,8 @@ namespace oul
 			fs::path tmp_dir = folder.get_name();
 
 			download_component(tmp_dir);
-			ITEM component = load_config(tmp_dir / "oul.component.json");
-			copy_component(component, tmp_dir, component_location);
+			ITEM component = load_config(tmp_dir / component_name / "oul.component.json");
+			copy_component(component, tmp_dir / component_name, component_location);
 
 			return component;
 		}
