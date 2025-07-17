@@ -13,9 +13,12 @@ Nástroje:
 Knihovny:
 - yaml-cpp                                          (verze 0.8.0)
 - nlohmann-json                                     (verze 3.11.3)
+- boost-algorithm                                   (verze 1.86.0)
 - boost-filesystem                                  (verze 1.86.0)
 - boost-process                                     (verze 1.86.0)
 - boost-test                                        (verze 1.86.0)
+- boost-url                                         (verze 1.86.0)
+- boost-dll                                         (verze 1.86.0)
 
 Knihovny není nutné instalovat manuálně, jejich stažení a překlad zajišťuje CMake automaticky.
 Je však nutné nastavit proměnnou prostředí VCPKG_ROOT tak, aby ukládala cestu ke kořenové složce programu vcpkg.
