@@ -1,7 +1,7 @@
 module;
 
 #include <boost/filesystem.hpp>
-#include <iostream>
+#include <fstream>
 #include <yaml-cpp/yaml.h>
 
 export module server:base;
@@ -85,7 +85,10 @@ namespace oul
 				return result.second;
 			}
 		}
-
+		/// @brief Zkopíruje všechny soubory komponenty.
+		/// @param component - konfigurace kopírované komponenty
+		/// @param source - umístění komponenty
+		/// @param target - složka, do které budou soubory zkopírovány
 		void copy_component(cr<ITEM> component, cr<fs::path> source, cr<fs::path> target)
 		{
 			FILE_ITERATOR it(source, component.include, component.exclude);
@@ -95,7 +98,9 @@ namespace oul
 				copy_file(source, target, shifted);
 			}
 		}
-
+		/// @brief Uloží konfiguraci komponenty do souboru.
+		/// @param component - ukládaná konfigurace
+		/// @param target - cesta k souboru, do kterého bude konfigurace uložena
 		void save_config(cr<ITEM> component, cr<fs::path> target)
 		{
 			create_directories(target.parent_path());
@@ -104,6 +109,9 @@ namespace oul
 			save_json(component, component_file);
 			component_file.close();
 		}
+		/// @brief Načte konfiguraci komponenty ze souboru.
+		/// @param source - cesta k souboru, ze kterého bude konfigurace načtena
+		/// @return načtená konfigurace
 		ITEM load_config(cr<fs::path> source)
 		{
 			ifstream component_file(source.string());
@@ -113,8 +121,9 @@ namespace oul
 			return ITEM(loaded_component);
 		}
 
-		/// @brief
-		/// @param entry -
+		/// @brief Zkontroluje, zda položka souborového systému představuje složku obsahující
+		/// konfigurační soubor komponenty.
+		/// @param entry - kontrolovaná položka souborového systému
 		/// @return <code>true</code>, pokud položka reprezentuje komponentu, <code>false</code> v
 		/// opačném případě
 		bool is_component(cr<fs::directory_entry> entry)

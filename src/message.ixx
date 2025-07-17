@@ -72,8 +72,7 @@ namespace oul
 	}
 
 	/// @brief Výčet všech chybových a jiných hlášek.
-	export enum class MESSAGE
-	{
+	export enum class MESSAGE {
 		unexpected_error,
 		component_list,
 		component_server_list,
@@ -231,7 +230,7 @@ namespace oul
 	}
 	/// @brief Vypíše chybovou hlášku doplněnou o hodnotu argumentu na standardní chybový výstup.
 	/// @param name - kód chybové hlášky
-	/// @param arg - argument, která
+	/// @param arg - seznam argumentů, které budou do chybové hlášky vloženy
 	export void report_error(MESSAGE name, cr<vector<string>> args)
 	{
 		cr<string> error = error_list[name];
@@ -316,6 +315,8 @@ namespace oul
 			return name;
 		}
 	};
+	/// @brief Třída pro výjimky obsahující argumenty, které jsou následně vloženy do textu chybové
+	/// hlášky.
 	export class ArgumentException: exception
 	{
 		MESSAGE name;

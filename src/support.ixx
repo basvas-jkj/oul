@@ -76,9 +76,11 @@ namespace oul
 		}
 		return url;
 	}
-	/// @brief
-	/// @param url
-	/// @return
+	/// @brief Kontroluje, zda je řetězec platná URL s podporovaným schématem nebo absolutní cesta v
+	/// souborovém systému.
+	/// @param url - validovaný řetězec
+	/// @return <code>true</code>, pokud argument představuje validní url, <code>false</code> v
+	/// opačném případě
 	export bool validate_url(cr<string> url)
 	{
 		set<string> supported_schemas = {"file", "http", "ftp", "scp"};

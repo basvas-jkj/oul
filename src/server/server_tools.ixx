@@ -27,10 +27,14 @@ namespace oul
 		string upload_url;
 		string download_url;
 
+		/// @brief Nahraje komponentu na server.
+		/// @param from - složka, ze které má být komponenta nahrána
 		void upload_component(cr<fs::path> from)
 		{
 			call_client("-r", from, upload_url);
 		}
+		/// @brief Stáhne komponentu ze serveru.
+		/// @param where - složka, do které má být komponenta stažena
 		void download_component(cr<fs::path> where)
 		{
 			call_client("-r", download_url, where);
@@ -117,7 +121,7 @@ namespace oul
 		}
 
 	public:
-		/// @param component_name - jméno komponenty, kterou klient spojuje
+		/// @param name - jméno komponenty, kterou klient spojuje
 		/// @param url - url, se kterou je klient spojený
 		/// @param cl - umístění komponenty, kterou klient spravuje
 		CURL_HTTP(cr<string> name, cr<string> url, cr<fs::path> cl): CLIENT(name, cl, "curl")
@@ -179,7 +183,7 @@ namespace oul
 		}
 
 	public:
-		/// @param component_name - jméno komponenty, kterou klient spojuje
+		/// @param name - jméno komponenty, kterou klient spojuje
 		/// @param url - url, se kterou je klient spojený
 		/// @param cl - umístění komponenty, kterou klient spravuje
 		CURL_FTP(cr<string> name, cr<string> url, cr<fs::path> cl): CLIENT(name, cl, "curl")
@@ -243,7 +247,7 @@ namespace oul
 		string url;
 
 	public:
-		/// @param component_name - jméno komponenty, kterou klient spojuje
+		/// @param name - jméno komponenty, kterou klient spojuje
 		/// @param url - url, se kterou je klient spojený (v tomto případě cesta k lokální složce)
 		/// @param cl - umístění komponenty, kterou klient spravuje
 		LOCAL(cr<string> name, cr<string> url, cr<fs::path> cl): CLIENT(name, cl)

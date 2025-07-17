@@ -7,7 +7,7 @@ module;
 #include <optional>
 #include <ranges>
 #include <string>
-#include <yaml-cpp/node/node.h>
+#include <yaml-cpp/yaml.h>
 
 export module configuration;
 
