@@ -5,6 +5,8 @@ module;
 #include <iostream>
 #include <span>
 #include <string>
+#include <ranges>
+#include <vector>
 
 export module component_manager;
 

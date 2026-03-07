@@ -3,6 +3,7 @@ module;
 #include <optional>
 #include <string>
 #include <vector>
+#include <ranges>
 
 export module argument_parser:command;
 

@@ -1,29 +1,53 @@
 {
-    "version": 5,
+    "version": 6,
     "configurePresets": [
         {
-            "name": "debug",
-            "displayName": "Debug",
-            "generator": "Ninja",
+            "name": "base",
+            "hidden": true,
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_COMPILER": "clang",
-                "CMAKE_CXX_COMPILER": "clang",
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
             }
         },
         {
-            "name": "release",
-            "displayName": "Release",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "name": "msvc",
+            "displayName": "MSVC 17",
+            "generator": "Visual Studio 17 2022",
+            "inherits": "base"
+        },
+        {
+            "name": "clang",
+            "displayName": "Clang with Ninja",
+            "generator": "Ninja Multi-Config",
+            "inherits": "base",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_C_COMPILER": "clang",
-                "CMAKE_CXX_COMPILER": "clang",
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+                "CMAKE_CXX_COMPILER": "clang++",
+                "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
+                "VCPKG_HOST_TRIPLET": "x64-mingw-static"
             }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "msvc_debug",
+            "configurePreset": "msvc",
+            "configuration": "Debug"
+        },
+        {
+            "name": "msvc_release",
+            "configurePreset": "msvc",
+            "configuration": "Release"
+        },
+        {
+            "name": "clang_debug",
+            "configurePreset": "clang",
+            "configuration": "Debug"
+        },
+        {
+            "name": "clang_release",
+            "configurePreset": "clang",
+            "configuration": "Release"
         }
     ]
 }

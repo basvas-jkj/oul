@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 3.30)
 
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(oul)
@@ -14,8 +13,11 @@ find_package(Boost REQUIRED algorithm filesystem process url)
 function(linux_link_library target_name library_name)
     if (LINUX)
     target_link_options(${target_name} PRIVATE ${library_name})
-    else()
-    # Windows doesn't require this.
+    endif()
+endfunction()
+function(windows_link_library target_name library_name)
+    if(MINGW)
+    target_link_options(${target_name} PRIVATE ${library_name})
     endif()
 endfunction()
 
@@ -24,7 +26,6 @@ file(GLOB_RECURSE oul_source RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 file(GLOB_RECURSE oul_modules RELATIVE ${CMAKE_SOURCE_DIR} "src/*.ixx")
 add_executable(oul ${oul_source})
 target_sources(oul PUBLIC FILE_SET CXX_MODULES FILES ${oul_modules})
-set_property(TARGET oul PROPERTY CXX_STANDARD 23)
 
 target_link_libraries(oul PRIVATE yaml-cpp::yaml-cpp)
 target_link_libraries(oul PRIVATE nlohmann_json::nlohmann_json)
@@ -32,7 +33,8 @@ target_link_libraries(oul PRIVATE Boost::algorithm)
 target_link_libraries(oul PRIVATE Boost::filesystem)
 target_link_libraries(oul PRIVATE Boost::process)
 target_link_libraries(oul PRIVATE Boost::url)
-linux_link_library(oul -lstdc++)
+windows_link_library(oul -lws2_32)
+linux_link_library(oul -lc++)
 
 add_custom_target(english_messages
         COMMAND ${CMAKE_COMMAND} -E copy
