@@ -1,11 +1,5 @@
-module;
-#include <map>
-#include <optional>
-#include <string>
-#include <vector>
-#include <ranges>
-
 export module argument_parser:command;
+export import std;
 
 import support;
 import message;

@@ -1,8 +1,5 @@
 cmake_minimum_required (VERSION 3.30)
-
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+include("cpp_modules.cmake")
 project(oul)
 
 # find packages
@@ -25,7 +22,7 @@ endfunction()
 file(GLOB_RECURSE oul_source RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 file(GLOB_RECURSE oul_modules RELATIVE ${CMAKE_SOURCE_DIR} "src/*.ixx")
 add_executable(oul ${oul_source})
-target_sources(oul PUBLIC FILE_SET CXX_MODULES FILES ${oul_modules})
+target_modules(oul PUBLIC ${oul_modules})
 
 target_link_libraries(oul PRIVATE yaml-cpp::yaml-cpp)
 target_link_libraries(oul PRIVATE nlohmann_json::nlohmann_json)
@@ -57,8 +54,7 @@ function(declare_test TEST_NAME)
     file(GLOB_RECURSE test_modules RELATIVE ${CMAKE_SOURCE_DIR} "test/${TEST_NAME}/*.ixx")
 
     add_executable(${TEST_NAME} ${test_source})
-    target_sources(${TEST_NAME} PUBLIC FILE_SET CXX_MODULES FILES ${test_modules})
-    set_property(TARGET ${TEST_NAME} PROPERTY CXX_STANDARD 23)
+    target_modules(${TEST_NAME} PUBLIC ${test_modules})
 
     target_link_libraries(${TEST_NAME} PRIVATE Boost::unit_test_framework)
     linux_link_library(${TEST_NAME} -lstdc++)
@@ -71,8 +67,8 @@ declare_test("config_test")
 declare_test("file_iterator_test")
 
 target_sources(config_test PUBLIC "src/config/data_file.cpp")
-target_sources(config_test PUBLIC FILE_SET CXX_MODULES FILES "src/message.ixx" "src/config/data_file.ixx" "src/config/config.ixx" "src/config/item.ixx" "src/support.ixx")
-target_sources(file_iterator_test PUBLIC FILE_SET CXX_MODULES FILES "src/server/file_iterator.ixx" "src/support.ixx")
+target_modules(config_test PUBLIC "src/message.ixx" "src/config/data_file.ixx" "src/config/config.ixx" "src/config/item.ixx" "src/support.ixx")
+target_modules(file_iterator_test PUBLIC "src/server/file_iterator.ixx" "src/support.ixx")
 
 target_link_libraries(config_test PRIVATE yaml-cpp::yaml-cpp)
 target_link_libraries(config_test PRIVATE nlohmann_json::nlohmann_json)

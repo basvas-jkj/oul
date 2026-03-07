@@ -1,7 +1,6 @@
 module;
 
 #include <boost/filesystem.hpp>
-#include <fstream>
 #include <yaml-cpp/yaml.h>
 
 export module server:base;
@@ -11,6 +10,7 @@ import message;
 import file_iterator;
 import configuration;
 import temporary_file;
+import std;
 
 using namespace std;
 using namespace YAML;

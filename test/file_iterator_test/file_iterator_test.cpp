@@ -1,7 +1,6 @@
 #define BOOST_TEST_MODULE file_terator_test
 #include <boost/filesystem/path.hpp>
 #include <boost/test/included/unit_test.hpp>
-#include <vector>
 
 import file_iterator;
 import mock_filesystem;

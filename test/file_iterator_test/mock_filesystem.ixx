@@ -1,9 +1,9 @@
 module;
 
 #include <boost/filesystem/path.hpp>
-#include <vector>
 
 export module mock_filesystem;
+export import std;
 export import support;
 
 using namespace std;

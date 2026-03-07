@@ -1,9 +1,9 @@
 module;
 
-#include <string>
 #include <yaml-cpp/yaml.h>
 
 export module item;
+import std;
 import support;
 
 using namespace std;

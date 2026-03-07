@@ -2,14 +2,14 @@ module;
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <fstream>
-#include <iostream>
-#include <optional>
-#include <ranges>
-#include <string>
 #include <yaml-cpp/yaml.h>
 
 export module configuration;
+import std;
+
+//import <boost/algorithm/string.hpp>;
+//import <boost/filesystem.hpp>;
+//import <yaml-cpp/yaml.h>;
 
 import support;
 import message;

@@ -1,13 +1,12 @@
 #define BOOST_TEST_MODULE config_test
 #include <boost/test/included/unit_test.hpp>
-#include <iostream>
-#include <string>
 
 #define json(...) #__VA_ARGS__
 #define CO ","
 #define LF "\n"
 #define BOOST_TEST_OUL_ERROR(ACTUAL, EXPECTED) BOOST_TEST(((int)ACTUAL) == ((int)EXPECTED))
 
+import std;
 import configuration;
 import message;
 import support;

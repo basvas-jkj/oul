@@ -2,12 +2,9 @@ module;
 
 #include <boost/filesystem.hpp>
 #include <boost/url.hpp>
-#include <map>
-#include <set>
-#include <string>
-#include <vector>
 
 export module support;
+import std;
 
 using namespace std;
 using namespace boost::urls;

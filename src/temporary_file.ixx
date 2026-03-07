@@ -2,10 +2,9 @@ module;
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-#include <fstream>
-#include <string>
 
 export module temporary_file;
+import std;
 
 import message;
 import support;

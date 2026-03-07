@@ -3,12 +3,9 @@ module;
 #include <boost/filesystem/directory.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-#include <iterator>
-#include <ranges>
-#include <regex>
-#include <set>
 
 export module file_iterator;
+import std;
 
 import support;
 

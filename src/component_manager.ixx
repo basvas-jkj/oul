@@ -2,13 +2,9 @@ module;
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-#include <iostream>
-#include <span>
-#include <string>
-#include <ranges>
-#include <vector>
 
 export module component_manager;
+import std;
 
 import support;
 import server;

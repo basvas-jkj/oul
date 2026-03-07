@@ -1,11 +1,5 @@
-module;
-
-#include <memory>
-#include <string>
-#include <tuple>
-#include <vector>
-
 export module argument_parser;
+import std;
 
 import support;
 import message;
