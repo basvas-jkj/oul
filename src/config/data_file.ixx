@@ -1,12 +1,7 @@
-module;
-
-#include <nlohmann/json.hpp>
-#include <yaml-cpp/yaml.h>
-
 export module configuration:data_file;
 
-//import <nlohmann/json.hpp> ;
-//import <yaml-cpp/yaml.h>;
+import <nlohmann/json.hpp>;
+import <yaml-cpp/yaml.h>;
 
 import item;
 import support;

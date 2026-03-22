@@ -1,10 +1,8 @@
-module;
-
-#include <boost/filesystem.hpp>
-#include <boost/url.hpp>
-
 export module support;
 import std;
+import <set>;
+import <boost/filesystem.hpp>;
+import <boost/url.hpp>;
 
 using namespace std;
 using namespace boost::urls;

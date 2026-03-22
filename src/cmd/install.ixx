@@ -1,8 +1,5 @@
-module;
-
-#include <boost/filesystem/operations.hpp>
-
 export module argument_parser:install;
+import <boost/filesystem.hpp>;
 
 import :command;
 import support;

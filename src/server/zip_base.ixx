@@ -1,10 +1,9 @@
-module;
-
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-
 export module zip:base;
 
+import <fstream>;
+import <ranges>;
+import <boost/filesystem.hpp>;
+import std;
 import tools;
 import support;
 import message;

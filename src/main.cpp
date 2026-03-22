@@ -1,7 +1,7 @@
-import std;
 import argument_parser;
 import message;
 import support;
+import <memory>;
 
 using namespace std;
 using namespace oul;

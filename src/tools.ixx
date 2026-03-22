@@ -1,11 +1,8 @@
-module;
-
-#include <boost/asio.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/process.hpp>
-
 export module tools;
 import std;
+import <boost/asio.hpp>;
+import <boost/filesystem.hpp>;
+import <boost/process.hpp>;
 
 import support;
 

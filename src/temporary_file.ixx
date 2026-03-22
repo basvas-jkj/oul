@@ -1,9 +1,6 @@
-module;
-
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-
 export module temporary_file;
+import <boost/filesystem.hpp>;
+import <fstream>;
 import std;
 
 import message;

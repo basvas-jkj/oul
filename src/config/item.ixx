@@ -1,9 +1,7 @@
-module;
-
-#include <yaml-cpp/yaml.h>
-
 export module item;
 import std;
+import <nlohmann/json.hpp>;
+import <yaml-cpp/yaml.h>;
 import support;
 
 using namespace std;

@@ -1,10 +1,8 @@
-module;
-
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-
 export module component_manager;
 import std;
+import <map>;
+import <ranges>;
+import <boost/filesystem.hpp>;
 
 import support;
 import server;

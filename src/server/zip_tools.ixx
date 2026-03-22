@@ -1,8 +1,5 @@
-module;
-
-#include <boost/filesystem.hpp>
-
 export module zip:tools;
+import <boost/filesystem.hpp>;
 import :base;
 
 namespace oul

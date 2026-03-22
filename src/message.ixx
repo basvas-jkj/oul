@@ -1,13 +1,9 @@
-module;
-
-#define _CRT_SECURE_NO_DEPRECATE
-#include <boost/algorithm/string.hpp>
-#include <boost/dll/runtime_symbol_info.hpp>
-#include <boost/filesystem/path.hpp>
-#include <nlohmann/json.hpp>
-
 export module message;
 import std;
+import <nlohmann/json.hpp>;
+import <boost/filesystem.hpp>;
+import <boost/algorithm/string.hpp>;
+import <boost/dll.hpp>;
 
 import item;
 import support;

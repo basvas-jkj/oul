@@ -1,10 +1,6 @@
-module;
-
-#include <boost/filesystem/directory.hpp>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-
 export module file_iterator;
+import <map>;
+import <boost/filesystem.hpp>;
 import std;
 
 import support;

@@ -1,5 +1,8 @@
 export module argument_parser:command;
 export import std;
+import <map>;
+import <vector>;
+import <ranges>;
 
 import support;
 import message;
@@ -11,6 +14,7 @@ namespace oul
 {
 	/// @brief Objekt zobrazující dlouhé přepínače na krátké.
 	const map<string, string> short_variants = {{"-version", "-v"}, {"-where", "-w"}};
+	
 	/// @brief Chyba: konfigurace nenalezena.
 	export class ConfigurationNotFound: public CommonException
 	{

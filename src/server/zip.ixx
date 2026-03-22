@@ -1,11 +1,8 @@
-module;
-
-#include <boost/filesystem/path.hpp>
-#include <boost/process.hpp>
-
 export module zip;
 import :base;
 import :tools;
+import <boost/filesystem.hpp>;
+import <boost/process.hpp>;
 
 using namespace boost::process;
 using namespace boost::filesystem;

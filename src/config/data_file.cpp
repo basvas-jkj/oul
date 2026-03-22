@@ -1,8 +1,3 @@
-module;
-
-#include <nlohmann/json.hpp>
-#include <yaml-cpp/yaml.h>
-
 module configuration;
 
 using namespace YAML;
