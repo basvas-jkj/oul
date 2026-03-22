@@ -2,52 +2,75 @@
     "version": 6,
     "configurePresets": [
         {
-            "name": "base",
+            "name": "clang_base",
             "hidden": true,
+            "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-            }
-        },
-        {
-            "name": "msvc",
-            "displayName": "MSVC 17",
-            "generator": "Visual Studio 17 2022",
-            "inherits": "base"
-        },
-        {
-            "name": "clang",
-            "displayName": "Clang with Ninja",
-            "generator": "Ninja Multi-Config",
-            "inherits": "base",
-            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
                 "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
                 "VCPKG_HOST_TRIPLET": "x64-mingw-static"
             }
+        },
+        {
+            "name": "clang_debug",
+            "displayName": "Clang with Ninja, Debug configuration",
+            "inherits": "clang_base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "clang_release",
+            "displayName": "Clang with Ninja, Release configuration",
+            "inherits": "clang_base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ],
     "buildPresets": [
         {
-            "name": "msvc_debug",
-            "configurePreset": "msvc",
-            "configuration": "Debug"
-        },
-        {
-            "name": "msvc_release",
-            "configurePreset": "msvc",
-            "configuration": "Release"
-        },
-        {
             "name": "clang_debug",
-            "configurePreset": "clang",
+            "configurePreset": "clang_debug",
+            "targets": [ "oul" ],
             "configuration": "Debug"
         },
         {
             "name": "clang_release",
-            "configurePreset": "clang",
+            "configurePreset": "clang_release",
+            "targets": [ "oul" ],
             "configuration": "Release"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "clang_debug",
+            "steps": [
+                {
+                    "name": "clang_debug",
+                    "type": "configure"
+                },
+                {
+                    "name": "clang_debug",
+                    "type": "build"
+                }
+            ]
+        },
+        {
+            "name": "clang_release",
+            "steps": [
+                {
+                    "name": "clang_release",
+                    "type": "configure"
+                },
+                {
+                    "name": "clang_release",
+                    "type": "build"
+                }
+            ]
         }
     ]
 }
