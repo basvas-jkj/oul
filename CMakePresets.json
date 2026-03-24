@@ -9,22 +9,44 @@
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
                 "CMAKE_C_COMPILER": "clang",
-                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "windows_base",
+            "hidden": true,
+            "cacheVariables": {
                 "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
                 "VCPKG_HOST_TRIPLET": "x64-mingw-static"
             }
         },
         {
-            "name": "clang_debug",
-            "displayName": "Clang with Ninja, Debug configuration",
+            "name": "windows_debug",
+            "displayName": "Clang with Ninja, Debug configuration for Windows",
+            "inherits": [ "clang_base", "windows_base" ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "windows_release",
+            "displayName": "Clang with Ninja, Release configuration for Windows",
+            "inherits": [ "clang_base", "windows_base" ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "linux_debug",
+            "displayName": "Clang with Ninja, Debug configuration for Linux",
             "inherits": "clang_base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
-            "name": "clang_release",
-            "displayName": "Clang with Ninja, Release configuration",
+            "name": "linux_release",
+            "displayName": "Clang with Ninja, Release configuration for Linux",
             "inherits": "clang_base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
@@ -33,41 +55,79 @@
     ],
     "buildPresets": [
         {
-            "name": "clang_debug",
-            "configurePreset": "clang_debug",
+            "name": "windows_debug",
+            "configurePreset": "windows_debug",
             "targets": [ "oul" ],
             "configuration": "Debug"
         },
         {
-            "name": "clang_release",
-            "configurePreset": "clang_release",
+            "name": "windows_release",
+            "configurePreset": "windows_release",
+            "targets": [ "oul" ],
+            "configuration": "Release"
+        },
+        {
+            "name": "linux_debug",
+            "configurePreset": "linux_debug",
+            "targets": [ "oul" ],
+            "configuration": "Debug"
+        },
+        {
+            "name": "linux_release",
+            "configurePreset": "linux_release",
             "targets": [ "oul" ],
             "configuration": "Release"
         }
     ],
     "workflowPresets": [
         {
-            "name": "clang_debug",
+            "name": "windows_debug",
             "steps": [
                 {
-                    "name": "clang_debug",
+                    "name": "windows_debug",
                     "type": "configure"
                 },
                 {
-                    "name": "clang_debug",
+                    "name": "windows_debug",
                     "type": "build"
                 }
             ]
         },
         {
-            "name": "clang_release",
+            "name": "windows_release",
             "steps": [
                 {
-                    "name": "clang_release",
+                    "name": "windows_release",
                     "type": "configure"
                 },
                 {
-                    "name": "clang_release",
+                    "name": "windows_release",
+                    "type": "build"
+                }
+            ]
+        },
+        {
+            "name": "linux_debug",
+            "steps": [
+                {
+                    "name": "linux_debug",
+                    "type": "configure"
+                },
+                {
+                    "name": "linux_debug",
+                    "type": "build"
+                }
+            ]
+        },
+        {
+            "name": "linux_release",
+            "steps": [
+                {
+                    "name": "linux_release",
+                    "type": "configure"
+                },
+                {
+                    "name": "linux_release",
                     "type": "build"
                 }
             ]
