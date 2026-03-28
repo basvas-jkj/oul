@@ -1,0 +1,74 @@
+┏━━━━━━━━━━━━━━━━━━━┓
+┃ cpp_modules.cmake ┃
+┗━━━━━━━━━━━━━━━━━━━┛
+This project serves primarily as a demonstration of how to use C++ modules
+and the `cpp_modules.cmake` script in a small but non‑trivial project.
+
+The original purpose of the program oul was to simplify composite development
+of the project. Although the project was completed to a usable state, it does
+not compete well with other tools of similar focus.
+
+┌──────────────┐
+│ Requirements │
+└──────────────┘
+CMake 3.30  
+Ninja 1.11  
+Clang 18.1.2  
+
+Windows:  
+    MSVC is not able to compile this project.  
+    The official Clang distribution does not include the module interface
+    for the standard library.  
+    I therefore recommend using llvm-mingw.
+
+Linux:  
+    Support for header units in GCC is not implemented in my script,
+    so it is necessary to use the Clang compiler with libc++.  
+    (Linking against libstdc++ may cause issues.)
+
+┌──────────────────────────┐
+│ How to build the project │
+└──────────────────────────┘
+git clone "https://github.com/basvas-jkj/oul.git"  
+cd oul  
+cmake --workflow [windows_release | linux_release]
+
+This command builds only the oul program. Unfortunately, the tests could not
+be fully converted to use C++ modules, so they are excluded from the build.
+
+┌─────────┐
+│ History │
+└─────────┘
+I first used C++ modules in this project in December 2024. At that time,
+the ecosystem was not yet ready, so I managed to use modules only in my own
+code, while all dependencies still had to be included in the traditional way.
+This had a negative impact on build times as well as on the readability of
+the source code.
+
+During 2025 the situation improved. This allowed me to create a CMake script
+that makes it easier to fully adopt C++ modules, and with its help I was able
+to clean up and modernize this project.
+
+Approximate build times:
+┌─────────────────┬─────────────────────────────┬─────────────────────────────┐
+│                 │       own modules only      │  import std + header units  │
+│                 │  oul program |  full build  │  oul program |  full build  │
+├─────────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│  windows_debug  │ 1min 54,012s │ 2min  2,421s │ 0min 43,998s │ 1min 25,735s │
+├─────────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│ windows_release │ 1min 58,333s │ 2min  0,115s │ 0min 55,262s │ 1min 46,777s │
+├─────────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│   linux_debug   │ 2min 56,716s │ 2min 57,150s │ 1min 16,820s │ 2min 34,207s │
+├─────────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│  linux_release  │ 3min  1,022s │ 3min 24,591s │ 1min 10,069s │ 2min 31,128s │
+└─────────────────┴──────────────┴──────────────┴──────────────┴──────────────┘
+– measured on Windows 11 and FedoraLinux 43 (WSL)  
+– „full build“ includes the std module and header units from libraries  
+– rebuilding only the oul program can be triggered using `touch support.ixx`  
+– I did not measure the build time of oul without modules at all, because
+  I used named modules for most of the development
+
+Although these build times are imprecise and tied to my machine, they clearly
+show that full use of C++ modules and header units significantly reduces build
+times and therefore speeds up development. This applies to full builds and
+especially to repeated partial builds.

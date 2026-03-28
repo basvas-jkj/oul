@@ -1,5 +1,5 @@
+#define BOOST_NO_CXX23_HDR_STDFLOAT
 #define BOOST_TEST_MODULE file_terator_test
-#include <boost/filesystem/path.hpp>
 #include <boost/test/included/unit_test.hpp>
 
 import file_iterator;

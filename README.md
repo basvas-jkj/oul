@@ -1,3 +1,11 @@
+If you are looking for an example of how to use the `cpp_modules.cmake` script,
+refer to the `info.txt` file. This file contains basic information about this
+project, but it is somewhat outdated and the project as a whole has not been
+fully polished or brought to the level of similar tools. Most of this project
+is written in Czech language, but it still serves well as a demonstration of
+how to use C\++20 modules and C++23 standard library std module in practice.
+
+
 # OUL
 Oul je nástroj podporující kompozitní vývoj projektu. Umožňuje v projektu vytvářet komponenty, 
 nahrávat je na server nebo je naopak stahovat. Díky tomu je snadné stejnou komponentu používat
@@ -11,7 +19,7 @@ Nástroje:
 - vcpkg                                             (tag 2025-02-14)
 
 Knihovny:
-- yaml-cpp                                          (verze 0.8.0)
+- yaml-cpp                                          (verze 0.9.0)
 - nlohmann-json                                     (verze 3.11.3)
 - boost-algorithm                                   (verze 1.86.0)
 - boost-filesystem                                  (verze 1.86.0)
